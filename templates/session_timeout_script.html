@@ -1,0 +1,17 @@
+<script src="./ngControllers/__timeOut.js"></script>
+<!-- TIME OUT SESSION HERE -->
+<script src="./assets/js/bootstrap-session-timeout.min.js"></script>
+<script>
+    $.sessionTimeout({
+        keepAliveUrl: 'keep-alive.html',
+        logoutUrl: 'logout',
+        redirUrl: 'logout',
+        // 15 minutes
+        warnAfter: 900000,
+
+        // 20 minutes
+        redirAfter: 1000000,
+
+        countdownBar: true
+    });
+</script>

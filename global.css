@@ -1,0 +1,130 @@
+/*  Postfix with __ belong to that file
+    Examples
+        #card-for-task__tasks -> tasks.html
+        #exampleDiv__sample -> sample.html
+*/
+
+#card-for-task__tasks {
+  margin-bottom: 20px;
+}
+
+#welcome_logo {
+  height: 65px;
+  width: 165px;
+}
+
+#welcome_centered_img {
+  height: 300px;
+  width: 510px;
+}
+
+#body_weolcome_bg {
+  background-color: #ffffff;
+}
+
+#card-task__tasks {
+  position: relative;
+}
+
+#card-percentage__tasks {
+  position: absolute;
+  right: 20px;
+  top: 40%;
+  height: 60px;
+  width: 60px;
+  font-size: 20px;
+}
+
+#comment-box__task_detail {
+  max-height: 390px;
+  height: 390px;
+}
+
+#comm_box_height {
+  max-height: 390px;
+  height: 390px;
+  overflow-y: hidden;
+  overflow-y: scroll;
+  width: 100%;
+}
+
+#div_comment-box__task_detail {
+  max-height: 450px;
+  height: 450px;
+}
+
+#message-bubble-user__task_detail {
+  font-size: 11px;
+  padding: 5px;
+  margin-left: 50px;
+  margin-bottom: 5px;
+}
+
+#message-bubble-others__task_detail {
+  font-size: 11px;
+  padding: 5px;
+  /* margin-right: 50px; */
+}
+
+#reply-message-bubble-others__task_detail {
+  margin-top: 2px;
+  font-size: 11px;
+  padding: 5px;
+  margin-left: 50px;
+  margin-bottom: 0px;
+}
+
+#message-bubble-div__task_detail {
+  font-size: 11px;
+  padding: 5px;
+}
+
+#task_detail_paragraph__task_detail {
+  font-size: 13px;
+}
+
+#hr_remove_margin {
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
+}
+
+#task_card_font_size__tasks {
+  font-size: 12px;
+}
+
+#comment-box__task_detail {
+  position: absolute;
+
+  overflow-y: scroll;
+
+  overflow-x: hidden;
+}
+
+.dash_card {
+  cursor: pointer;
+}
+
+/*
+ *  SCROLLBAR STYLE 1
+ */
+
+#style-1::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #F5F5F5;
+  border-radius: 10px;
+}
+
+#style-1::-webkit-scrollbar {
+  width: 10px;
+  background-color: #F5F5F5;
+}
+
+#style-1::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-image: -webkit-gradient(linear,
+      left bottom,
+      left top,
+      color-stop(0.44, rgb(122, 153, 217)),
+      color-stop(0.72, rgb(73, 125, 189)),
+      color-stop(0.86, rgb(28, 58, 148)));
+}

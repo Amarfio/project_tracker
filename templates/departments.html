@@ -1,0 +1,404 @@
+<style>
+  #users_list_in_department {
+    max-height: 600px;
+    height: 600px;
+    overflow-y: hidden;
+    overflow-y: scroll;
+    width: 100%;
+  }
+</style>
+<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main"><br>
+  <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+</nav>
+
+<div class="main-content">
+  <!-- Navbar -->
+  <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+    <div class="container-fluid">
+      <!-- Brand -->
+      <a class="h4 mb-0 text-white text-uppercase  " id="route_title">All Departments</a>
+      <a class="h4 mb-0 text-white text-uppercase return_to_department " ng-click="return_to_department()"
+        style="cursor: pointer"> <i class="fa fa-arrow-left 2x"></i>&nbsp;&nbsp; {{ route_title }} Department</a>
+
+      <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
+        <div class="form-group mb-0">
+          <div class="input-group input-group-alternative">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-search"></i></span>
+            </div>
+            <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: auto;">
+          </div>
+        </div>
+      </form>
+
+      <!-- User -->
+      <ul class="navbar-nav align-items-center d-none d-md-flex">
+        <li class="nav-item dropdown">
+          <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <div class="media align-items-center">
+
+              <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true == null">
+                <span ng-if="user_info.gender == 'Male'">
+                  <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle">
+                </span>
+                <span ng-if="user_info.gender == 'Female'">
+                  <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle">
+                </span>
+                <!-- <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg"> -->
+              </span>
+
+              <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true != null">
+                <img alt="Image placeholder" ng-src="{{ profile_pic }}">
+              </span>
+
+
+              <div class="media-body ml-2 d-none d-lg-block">
+                <span class="mb-0 text-sm  font-weight-bold text-uppercase">{{user_info.username}}</span>
+              </div>
+            </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+            <div class=" dropdown-header noti-title">
+              <h6 class="text-overflow m-0">Welcome {{user_info.username}}</h6>
+            </div>
+            <a href="profile" class="dropdown-item">
+              <i class="ni ni-single-02"></i>
+              <span>My profile</span>
+            </a>
+            <a class="dropdown-item">
+              <i class="ni ni-settings-gear-65"></i>
+              <span>Settings</span>
+            </a>
+            <a class="dropdown-item">
+              <i class="ni ni-calendar-grid-58"></i>
+              <span>Activity</span>
+            </a>
+            <a class="dropdown-item">
+              <i class="ni ni-support-16"></i>
+              <span>Support</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" ng-click="logout()">
+              <i class="ni ni-user-run"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- End Navbar -->
+  <!-- Header -->
+  <div class="header bg-gradient-primary pb-5 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body">
+
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row" id="department_list">
+
+      <div class="col-md-2"></div>
+
+      <div class="col-md-8">
+        <span class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block">( {{departments.length}} ) -
+          Departments</span>
+
+        <div class="card shadow">
+          <!-- <div class="card-header border-0">
+                <button class="btn btn-sm btn-primary"  data-toggle="modal" data-target="#modal-form">Add Department<span class="ni ni-fat-add"></span> </button>
+            </div> -->
+          <div class="table-responsive">
+            <legend></legend>
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col"> Code</th>
+                  <th scope="col"> Department</th>
+                  <th scope="col">Department Head</th>
+                  <th scope="col" colspan="1">Actions</th>
+
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr ng-repeat="department in departments | filter: tableSearch">
+                  <th scope="row">
+                    {{$index + 1}}
+                  </th>
+                  <td>
+                    {{ department.department_init_desc }}
+                  </td>
+                  <td>
+                    <span class="text-primary" ng-click="view_department(department.department_id, department.department_init_desc,
+                      department.department_desc)" style="cursor: pointer">
+                      {{ department.department_desc }}
+                    </span>
+
+                  </td>
+                  <td ng-show="department.department_head != null">
+                    {{department.department_head}}
+                  </td>
+                  <td ng-show="department.department_head == null">
+                    None
+                  </td>
+                  <td>
+                    <span class="fas fa-pencil-alt text-blue"></span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="fas fa-trash text-red"></span>
+                  </td>
+
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-md-2"></div>
+
+    </div>
+
+
+    <!-- Table -->
+    <div class="row" id="department_detail">
+
+
+
+      <!-- <span class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block">( {{departments.length}} ) -
+          Departments</span> -->
+
+      <div class="card shadow col-md-12">
+        <div class="row">
+          <div class="col-md-4">
+            <p>
+              <div class="table-responsive" id="users_list_in_department">
+                <legend></legend>
+                <table class="table align-items-center table-flush" style="min-height: 370px; overflow-y: hidden;">
+                  <thead class="thead-light">
+                    <tr>
+
+                      <th scope="col">photo</th>
+                      <th scope="col"> Username</th>
+                      <!-- <th scope="col"> </th> -->
+
+
+
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <tr ng-repeat="user in department_users | filter: tableSearch">
+
+                      <td class="text-truncate" style="width: 20px;">
+
+
+                        <span class="avatar avatar-sm rounded-circle" ng-if="user.profile_pic == null">
+                          <span ng-if="user.gender == 'Male'">
+                            <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle">
+                          </span>
+                          <span ng-if="user.gender == 'Female'">
+                            <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle">
+                          </span>
+                          <!-- <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg"> -->
+                        </span>
+
+                        <span class="avatar avatar-sm rounded-circle" ng-if="user.profile_pic != null">
+                          <img alt="Image placeholder" ng-src="{{ users_prifile_path }}{{ user.profile_pic }}">
+                        </span>
+
+
+                      </td>
+                      <td>
+                        <span class="text-primary" ng-click="view_user(user)" style="cursor: pointer">
+                          {{ user.f_name }} {{ user.l_name }}
+                        </span>
+                        &nbsp;&nbsp;
+                        <span class="badge badge-success">4</span>
+
+                      </td>
+                      <!-- <td>
+                      <span class="badge badge-success">4</span>
+
+                    </td> -->
+
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </p>
+          </div>
+          <div class="col-md-8  bg-secondary">
+            <!-- <p>
+              {{ department_user_info }}
+            </p> -->
+            <div class="row">
+
+              <div class="col-md-5 mb-5 mb-xl-0 " ng-if="department_user_info != null">
+                <br><br><br>
+                <div class="card card-profile shadow ">
+                  <div class="row justify-content-center">
+                    <div class="col-lg-3 order-lg-2">
+                      <div class="card-profile-image">
+                        <a href="#">
+                          <span class="" ng-if="department_user_info.profile_pic == null">
+                            <span ng-if="department_user_info.gender == 'Male'">
+                              <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle">
+                            </span>
+                            <span ng-if="department_user_info.gender == 'Female'">
+                              <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle">
+                            </span>
+                            <!-- <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg"> -->
+                          </span>
+
+                          <span class="" ng-if="department_user_info.profile_pic != null">
+                            <img alt="Image placeholder"
+                              ng-src="{{ users_prifile_path }}{{ department_user_info.profile_pic }}">
+                          </span>
+
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                    <div class="d-flex justify-content-between">
+                      <a href="#" class="btn btn-sm btn-info mr-4">Connect</a>
+                      <a href="#" class="btn btn-sm btn-default float-right">Message</a>
+                    </div>
+                  </div>
+                  <div class="card-body pt-0 pt-md-4">
+                    <br><br>
+                    <div class="text-center">
+                      <h3>
+                        {{ department_user_info.f_name }} {{ department_user_info.l_name }}
+                      </h3>
+                      <div class="h5 font-weight-300">
+                        <i class="ni location_pin mr-2"></i>{{ department_user_info.city }}:
+                        {{ department_user_info.country }}
+                      </div>
+                      <div class="h5 mt-4">
+                        <i class="ni business_briefcase-24 mr-2"></i>Email: {{ department_user_info.email }}
+                      </div>
+                      <div>
+                        <i class="ni education_hat mr-2"></i>UNION GLOBAL SYSTEMS
+                      </div>
+                      <hr class="my-4" />
+                      <p>{{ department_user_info.bio }}</p>
+                      <!-- <a href="#">Show more</a> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-7 " ng-if="department_user_info != null"
+                style="min-height: 600px; overflow-y: hidden;">
+                <br>
+                <div class="chat_box ">
+                  <div class="card">
+                    <p class="card-body" style="min-height: 500px;">
+                      fghjbklm;,
+                    </p>
+                  </div>
+
+                </div>
+                <div class="input-group">
+
+
+                  <textarea name="" id="" class="form-control" id="task_comment_input" placeholder="Type here ..."
+                    aria-describedby="validationTooltipUsernamePrepend" required ng-model="comment_message">
+
+                                    </textarea>
+                  <div class="input-group-prepend" ng-click="sendComment(task_id, comment_message, user_info.user_id)">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">
+                      <i class="ni ni-send text-primary"></i>
+                    </span>
+                  </div>
+                </div>
+
+
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <!-- modal -->
+    <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+      <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-body p-0">
+            <div class="card bg-secondary shadow border-0">
+
+              <div class="card-body px-lg-5 py-lg-4">
+                <div class="text-center text-muted ">
+                  <legend></legend>
+                  <h4>Add Department</h4>
+                  <br>
+                </div>
+                <form role="form">
+                  <div class="form-group mb-3">
+                    <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="ni ni-building"></i></span>
+                      </div>
+
+                      <input class="form-control" placeholder="Depatment name" type="text">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                      </div>
+                      <select class="form-control">
+                        <option value=""> -- Select Department Head --</option>
+                        <option value=""> -- Select Department --</option>
+                        <option value=""> -- Select Department --</option>
+                      </select>
+
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Close</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- End modal -->
+
+
+
+
+  </div>
+</div>
+
+<script>
+  $(function () {
+    $('#department_detail').hide();
+    $('.return_to_department').hide();
+    $('.route_title').show();
+  });
+</script>

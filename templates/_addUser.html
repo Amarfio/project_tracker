@@ -1,0 +1,285 @@
+<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main"><br>
+    <ng-include src="'./side_nav.html'"></ng-include>
+</nav>
+
+<div class="main-content">
+    <!-- Navbar -->
+    <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="#" data-toggle="modal"
+                data-target="#modal-form">Add Client <span class="ni ni-fat-add"></span></a>
+
+
+
+            <!-- User -->
+            <ul class="navbar-nav align-items-center d-none d-md-flex">
+                <li class="nav-item dropdown">
+                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <div class="media align-items-center">
+                            <span class="avatar avatar-sm rounded-circle">
+                                <img alt="Image placeholder" src="assets/img/theme/team-4-800x800.jpg">
+                            </span>
+                            <div class="media-body ml-2 d-none d-lg-block">
+                                <span
+                                    class="mb-0 text-sm  font-weight-bold text-uppercase">{{user_info.username}}</span>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                        <div class=" dropdown-header noti-title">
+                            <h6 class="text-overflow m-0">Welcome!</h6>
+                        </div>
+                        <a href="examples/profile.html" class="dropdown-item">
+                            <i class="ni ni-single-02"></i>
+                            <span>My profile</span>
+                        </a>
+                        <a href="examples/profile.html" class="dropdown-item">
+                            <i class="ni ni-settings-gear-65"></i>
+                            <span>Settings</span>
+                        </a>
+                        <a href="examples/profile.html" class="dropdown-item">
+                            <i class="ni ni-calendar-grid-58"></i>
+                            <span>Activity</span>
+                        </a>
+                        <a href="examples/profile.html" class="dropdown-item">
+                            <i class="ni ni-support-16"></i>
+                            <span>Support</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#!" class="dropdown-item">
+                            <i class="ni ni-user-run"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-5 pt-5 pt-md-8">
+        <div class="container-fluid">
+            <div class="header-body">
+
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mt--7">
+
+        <div class="row">
+            <div class="col-md-1"></div>
+
+            <div class="col-md-10">
+                
+
+                <div class="jumbotron-fluid bg-secondary container-fluid">
+<br><br>
+                                    <form role="form"
+                                        ng-submit="addUser(first_name_, last_name_, username_, gender_, email_, phone_number_, country_, city_, postal_address_, department_, is_manager, role_)">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
+                                                        </div>
+                                    
+                                                        <input class="form-control" placeholder="First Name" type="text" ng-model="first_name_" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
+                                                        </div>
+                                    
+                                                        <input class="form-control" placeholder="Last Name" type="text" ng-model="last_name_" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
+                                                        </div>
+                                    
+                                                        <input class="form-control" placeholder="Username" type="text" ng-model="username_" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                                        <select class="form-control" ng-model="gender_" required>
+                                                            <option value=""> Gender</option>
+                                                            <option value="M">Male</option>
+                                                            <option value="F">Female</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                                                        </div>
+                                    
+                                                        <input class="form-control" placeholder="Email" type="email" ng-model="email_" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                    
+                                    
+                                        </div>
+                                    
+                                        <div class="row">
+                                    
+                                            <div class="col-4">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="ni ni-mobile-button"></i></span>
+                                                        </div>
+                                    
+                                                        <input class="form-control" placeholder="Phone Number" type="text" ng-model="phone_number_"
+                                                            required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="col-4">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                                        <select class="form-control" ng-model="country_">
+                                                            <option value="">Country</option>
+                                                            <option ng-repeat="country in all_countries" ng-value="country.name">{{country.name}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="ni ni-building"></i></span>
+                                                        </div>
+                                    
+                                                        <input class="form-control" placeholder="City" type="text" ng-model="city_" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                        </div>
+                                    
+                                        <div class="row">
+                                    
+                                            <div class="col-12">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                    
+                                                        <input class="form-control" placeholder="Postal Address" type="text" ng-model="postal_address_"
+                                                            required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                    
+                                    
+                                        </div>
+                                    
+                                        <div class="row">
+                                    
+                                            <div class="col-5">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                                        <select class="form-control" ng-model="department_" required>
+                                                            <option value=""> Department </option>
+                                                            <option ng-repeat="dpt in departments" ng-value="dpt.code_desc_id">
+                                                                {{dpt.code_desc}} </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                    
+                                            <div class="col-3">
+                                                <label for="">Department Head?</label>
+                                    
+                                            </div>
+                                    
+                                            <div class="col-2">
+                                                <div class="custom-control custom-radio mb-0">
+                                                    <input name="custom-radio-2" class="custom-control-input" id="customRadio5" type="radio"
+                                                        ng-model="is_manager" ng-value="1" required>
+                                                    <label class="custom-control-label" for="customRadio5">Yes</label>
+                                                </div>
+                                    
+                                            </div>
+                                    
+                                            <div class="col-2">
+                                                <div class="custom-control custom-radio mb-0">
+                                                    &nbsp;&nbsp;
+                                                    <input name="custom-radio-2" class="custom-control-input" id="customRadio6" type="radio" checked
+                                                        ng-model="is_manager" ng-value="0" required>
+                                                    <label class="custom-control-label" for="customRadio6">No</label>
+                                                </div>
+                                    
+                                            </div>
+                                    
+                                    
+                                    
+                                            <div class="col-3">
+                                                <div class="form-group mb-3">
+                                                    <div class="input-group input-group-alternative">
+                                                        <select class="form-control" ng-model="role_" required>
+                                                            <option value="">User Role</option>
+                                                            <option ng-repeat="rol in roles" ng-value="rol.code_desc_id">
+                                                                {{rol.code_desc}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                        </div>
+                                    
+                                    
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">Add </button>
+                                            <button type="button" class="btn btn-link " data-dismiss="modal">Close</button>
+                                        </div>
+                                    </form>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#data_table').DataTable();
+        $('#client_message_error').hide();
+        $('#client_message_success').hide();
+    });
+</script>

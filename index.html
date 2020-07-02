@@ -1,0 +1,139 @@
+<!--
+
+=========================================================
+* Argon Dashboard - v1.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
+<!DOCTYPE html>
+<html lang="en" ng-app="sheetApp">
+
+<head>
+  <meta charset="utf-8" />
+  <base href="/project_tracker/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>
+    Work Sheet
+  </title>
+  <!-- Favicon -->
+  <link href="./assets/img/brand/usg_logo.png" rel="icon" type="image/png">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+  <!-- Icons -->
+  <link href="./assets/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
+  <link href="./assets/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+  <!-- CSS Files -->
+  <link href="./assets/css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/b-html5-1.6.1/b-print-1.6.1/r-2.2.3/sc-2.0.1/sl-1.3.1/datatables.min.css" />
+  <!-- <link href="./assets/DataTables/datatables.min.css" rel="stylesheet" />
+  <link href="./assets/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+  <link href="./assets/DataTables/Buttons-1.5.6/css/buttons.bootstrap4.min.css" rel="stylesheet" /> -->
+  <link href="./assets/js/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+  <link href="./app/lib/sweetalert2.min.css" rel="stylesheet" />
+  <link href="./global.css" rel="stylesheet" />
+
+  <style>
+    #data_table_wrapper {
+      padding: 5px;
+      font-size: 12px;
+    }
+
+    .main-content-login {
+      width: 100%;
+      height: 100vh;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      background-attachment: fixed;
+
+      /* background: url(./assets/img/brand/qqq.png) no-repeat 50% fixed / cover; */
+    }
+  </style>
+</head>
+
+
+<body>
+  <!-- <ng-include src="'side_nav.html'" ng-controller="SideNavCtrl"></ng-include> -->
+
+  <ng-view></ng-view>
+
+  <!--   Core   -->
+  <script src="./assets/DataTables/jquery-3.3.1.js"></script>
+  <script src="./assets/js/plugins/jquery/dist/jquery.min.js"></script>
+  <script src="./assets/js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <!--   Optional JS   -->
+  <script src="./assets/js/plugins/chart.js/dist/Chart.min.js"></script>
+  <script src="./assets/js/plugins/chart.js/dist/Chart.extension.js"></script>
+  <!--   Argon JS   -->
+  <script src="./assets/js/argon-dashboard.min.js?v=1.1.0"></script>
+  <!-- <script src="./assets/js/session-timeout/jquery.sessionTimeout.min.js"></script> -->
+  <!-- <script src="./assets/js/session-timeout/session-timeout-init.js"></script> -->
+  <script src="./assets/js/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+  <script type="text/javascript"
+    src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/b-html5-1.6.1/b-print-1.6.1/r-2.2.3/sc-2.0.1/sl-1.3.1/datatables.min.js">
+  </script>
+  <!-- <script src="./assets/DataTables/jquery.dataTables.min.js"></script>
+  <script src="./assets/DataTables/Buttons-1.5.6/js/dataTables.buttons.min.js"></script>
+  <script src="./assets/DataTables/Buttons-1.5.6/js/buttons.bootstrap4.min.js"></script>
+  <script src="./assets/DataTables/DataTables-1.10.18/ajax/libs/jszip/jszip.min.js"></script>
+  <script src="./assets/DataTables/DataTables-1.10.18/ajax/libs/pdfmake/pdfmake.min.js"></script>
+  <script src="./assets/DataTables/DataTables-1.10.18/ajax/libs/pdfmake/vfs_fonts.js"></script>
+  <script src="./assets/DataTables/Buttons-1.5.6/js/buttons.html5.min.js"></script>
+  <script src="./assets/DataTables/Buttons-1.5.6/js/buttons.print.min.js"></script>
+  <script src="./assets/DataTables/Buttons-1.5.6/js/buttons.colVis.min.js"></script>
+  <script src="./assets/DataTables/Buttons-1.5.6/css/buttons.bootstrap4.min.css"></script> -->
+  <script src="./app/lib/angular.min.js"></script>
+  <script src="./app/lib/sweetalert2.all.min.js"></script>
+  <script src="./app/lib/angular-route.min.js"></script>
+  <script src="./app/lib/ng-storage.min.js"></script>
+  <script src="./app/lib/angular-cookies.min.js"></script>
+  <script src="./app.js"></script>
+  <script src="./config.js"></script>
+  <script src="./ngControllers/WelcomeCtrl.js"></script>
+  <script src="./ngControllers/SideNavCtrl.js"></script>
+  <script src="./ngControllers/DashboardCtrl.js"></script>
+  <script src="./ngControllers/DashboardCtrl_.js"></script>
+  <script src="./ngControllers/ChatCtrl.js"></script>
+  <script src="./ngControllers/ProfileCtrl.js"></script>
+  <script src="./ngControllers/DepartmentCtrl.js"></script>
+  <script src="./ngControllers/UserCtrl.js"></script>
+  <script src="./ngControllers/ProjectCtrl.js"></script>
+  <script src="./ngControllers/TaskCtrl.js"></script>
+  <script src="./ngControllers/TaskDetailCtrl.js"></script>
+  <script src="./ngControllers/AddProjectCtrl.js"></script>
+  <script src="./ngControllers/AddTaskCtrl.js"></script>
+  <script src="./ngControllers/EditProjectCtrl.js"></script>
+  <script src="./ngControllers/EditTaskCtrl.js"></script>
+  <script src="./ngControllers/AllTasksCtrl.js"></script>
+  <script src="./ngControllers/CodexCtrl.js"></script>
+  <script src="./ngControllers/LoginCtrl.js"></script>
+  <script src="./ngControllers/SetPasswordCtrl.js"></script>
+  <script src="./ngControllers/forgotPasswordCtrl.js"></script>
+  <script src="./ngControllers/ClientCtrl.js"></script>
+  <script src="./ngControllers/LogActivityCtrl.js"></script>
+  <script src="./ngControllers/LogoutCtrl.js"></script>
+
+
+
+  <script>
+    $(document).ready(function () {
+
+      $('.hide-f').hide();
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,191 @@
+<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main"><br>
+    <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+</nav>
+
+<div class="main-content">
+    <!-- Navbar -->
+    <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="add_task">
+                TASKS
+                <!-- <button type="button" class="text-uppercase btn btn-secondary btn-sm">
+                            Create Task
+                            <span class="ni ni-fat-add"></span>
+                        </button> -->
+            </a>
+
+            <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
+                <div class="form-group mb-0">
+                    <div class="input-group input-group-alternative">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        </div>
+                        <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch"
+                            style="height: auto;">
+                    </div>
+                </div>
+            </form>
+
+            <!-- User -->
+            <ul class="navbar-nav align-items-center d-none d-md-flex">
+                <li class="nav-item dropdown">
+                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <div class="media align-items-center">
+
+                            <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true == null">
+                                <span ng-if="user_info.gender == 'Male'">
+                                    <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle">
+                                </span>
+                                <span ng-if="user_info.gender == 'Female'">
+                                    <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle">
+                                </span>
+                                <!-- <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg"> -->
+                            </span>
+
+                            <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true != null">
+                                <img alt="Image placeholder" ng-src="{{ profile_pic }}">
+                            </span>
+
+
+                            <div class="media-body ml-2 d-none d-lg-block">
+                                <span
+                                    class="mb-0 text-sm  font-weight-bold text-uppercase">{{user_info.username}}</span>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                        <div class=" dropdown-header noti-title">
+                            <h6 class="text-overflow m-0">Welcome {{user_info.username}}</h6>
+                        </div>
+                        <a href="profile" class="dropdown-item">
+                            <i class="ni ni-single-02"></i>
+                            <span>My profile</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-settings-gear-65"></i>
+                            <span>Settings</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-calendar-grid-58"></i>
+                            <span>Activity</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-support-16"></i>
+                            <span>Support</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" ng-click="logout()">
+                            <i class="ni ni-user-run"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-5 pt-5 pt-md-8">
+        <div class="container-fluid">
+            <div class="header-body">
+
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mt--7">
+        <!-- Table -->
+        <div class="row">
+            <div class="col">
+                <div class="card shadow">
+
+                    <div class="table-responsive"> <br>
+                        <table class="table align-items-center table-flush" id="data_table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Task ID</th>
+                                    <th scope="col">Task</th>
+                                    <th scope="col">Project ID</th>
+                                    <th scope="col">Project</th>
+                                    <th scope="col">Priority</th>
+                                    <th scope="col">Clients</th>
+                                    <th scope="col">Start</th>
+                                    <th scope="col">End</th>
+                                    <th scope="col">Developer</th>
+                                    <th scope="col">( % )</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="task in all_tasks | filter: tableSearch">
+                                    <td scope="row">
+                                        <div class="media align-items-center">
+                                            <a href="task_detail/{{task.task_id}}">PROJ0000{{task.project_id}}-REF0{{$index + 1}}
+                                            </a>
+                                            <!-- REF-0000{{task.task_id}} -->
+                                        </div>
+                                    </td>
+                                    <td style="max-width: 170px;">
+                                        <div class="col-12 text-truncate" data-toggle="tooltip" data-placement="top"
+                                            title="{{task.task_description}}">
+                                            {{task.task_description}}
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+                                        <div class="col-12 text-truncate">
+                                            <a href="project/{{task.project_id}}">PROJ0000{{task.project_id}} </a>
+                                        </div>
+
+                                    </td>
+                                    <td style="max-width: 170px;">
+                                        <div class="col-12 text-truncate" data-toggle="tooltip" data-placement="top"
+                                            title="{{task.project_name}}">
+                                            {{task.project_name}}
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-dot mr-4">
+                                            <i class="bg-warning"></i> {{task.priority}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{task.client}}
+                                    </td>
+                                    <td>
+                                        {{task.start_date}}
+                                    </td>
+                                    <td>
+                                        {{task.end_date}}
+                                    </td>
+
+                                    <td>
+                                        {{task.assigned_to}}
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge badge-warning">{{task.completion}}</span>
+                                        </div>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#data_table').DataTable();
+    });
+</script>

@@ -1,0 +1,211 @@
+<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+    <br />
+    <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+</nav>
+
+<div class="main-content">
+    <!-- Navbar -->
+    <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" ng-href="project/{{ project_id }}">
+                <i class="fa fa-arrow-left 2x"></i>&nbsp;&nbsp; &nbsp;&nbsp;Return to
+                Projects</a>
+            <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block">Modify Project</a>
+
+            <!-- User -->
+            <ul class="navbar-nav align-items-center d-none d-md-flex">
+                <li class="nav-item dropdown">
+                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <div class="media align-items-center">
+
+                            <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true == null">
+                                <span ng-if="user_info.gender == 'Male'">
+                                    <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle">
+                                </span>
+                                <span ng-if="user_info.gender == 'Female'">
+                                    <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle">
+                                </span>
+                                <!-- <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg"> -->
+                            </span>
+
+                            <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true != null">
+                                <img alt="Image placeholder" ng-src="{{ profile_pic }}">
+                            </span>
+
+
+                            <div class="media-body ml-2 d-none d-lg-block">
+                                <span
+                                    class="mb-0 text-sm  font-weight-bold text-uppercase">{{user_info.username}}</span>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                        <div class=" dropdown-header noti-title">
+                            <h6 class="text-overflow m-0">Welcome {{user_info.username}}</h6>
+                        </div>
+                        <a href="profile" class="dropdown-item">
+                            <i class="ni ni-single-02"></i>
+                            <span>My profile</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-settings-gear-65"></i>
+                            <span>Settings</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-calendar-grid-58"></i>
+                            <span>Activity</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-support-16"></i>
+                            <span>Support</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" ng-click="logout()">
+                            <i class="ni ni-user-run"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-5 pt-5 pt-md-8">
+        <div class="container-fluid">
+            <div class="header-body"></div>
+        </div>
+    </div>
+    <div class="container-fluid mt--7">
+        <!-- Table -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-stats mb-4 mb-lg-0">
+                    <div class="card-body">
+                        <p>
+                            <h4>Project Name: &nbsp; <span class="text-primary"> {{ project.name }} </span></h5>
+                                <h4>Version: &nbsp; <span class="text-primary"> {{ project.version_name }} </span></h5>
+                                    <h4>Department: &nbsp; <span class="text-primary"> {{ project.department }} </span>
+                                        </h5>
+                                        <h4>Start Date: &nbsp; <span class="text-primary"> {{ project.start_date }}
+                                            </span></h5>
+                                            <h4>End Date: &nbsp; <span class="text-primary"> {{ project.end_date }}
+                                                </span></h4>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="">
+                    <div class="card card-stats mb-4 mb-lg-0">
+                        <div class="card-body">
+
+                            <form id="add_project_form"
+                                ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_description_)">
+
+
+                                <div class="col-sm-12">
+                                    <label for="inputPassword" class=" text-primary">Name</label>
+                                    <input type="text" class="form-control" id="project_name" maxlength="60"
+                                        placeholder="Project Name" ng-value="project.name" ng-model="project_name_"
+                                        required />
+                                </div>
+
+
+                                <!-- <div class="form-group row">
+                                        <label for="inputPassword"
+                                            class="col-sm-3 col-form-label text-primary">Version</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="inputPassword" maxlength="20"  
+                                                placeholder="Version Control" ng-model="version_no_">
+                                        </div>
+                                    </div> -->
+
+                                <div class="col-sm-12">
+                                    <label for="inputPassword" class=" col-form-label text-primary">Versions</label>
+                                    <select class="form-control" required ng-model="version_no_"
+                                        id="project_version_no">
+                                        <option value="">Select
+                                            Version</option>
+                                        <option ng-value="version.code_desc_id" ng-repeat="version in versions">
+                                            {{ version.code_desc }}</option>
+                                    </select>
+                                </div>
+
+
+                                <div class="col-sm-12">
+                                    <label for="inputPassword" class=" col-form-label text-primary">Department</label>
+                                    <select class="form-control" required ng-model="department_id_"
+                                        id="project_department_id">
+                                        <option value="">Select
+                                            Department</option>
+                                        <option ng-value="department.code_desc_id"
+                                            ng-repeat="department in departments">
+                                            {{ department.code_desc }}</option>
+                                    </select>
+                                </div>
+
+
+                                <div class="col-sm-12">
+                                    <label for="inputPassword" class=" col-form-label text-primary">Start
+                                        Date</label>
+                                    <input class="form-control" id="project_start_date" ng-value="project.start_date"
+                                        type="date" ng-model="start_date_" />
+                                </div>
+
+
+
+
+                                <div class="col-sm-12">
+                                    <label for="inputPassword" class=" col-form-label text-primary">End
+                                        Date</label>
+                                    <input class="form-control" id="project_end_date" ng-value="project.end_date"
+                                        type="date" ng-model="end_date_" />
+                                </div>
+
+
+
+                                <div class="col-sm-12">
+                                    <label for="inputPassword" class=" col-form-label text-primary">Description</label>
+                                    <textarea class="form-control " id="project_description" maxlength="200"
+                                        placeholder="Required example textarea" required ng-model="project_description_"
+                                        ng-value="project.description">
+                    </textarea>
+                                </div>
+
+                                <br>
+                                <div class="form-group row">
+
+                                    <label for="inputPassword" class="col-sm-6 col-form-label text-primary"></label>
+                                    <div class="col-sm-6">
+                                        <button type="submit" class="btn btn-primary">
+                                            Update
+                                        </button>
+                                        <a ng-href="project/{{ project_id }}">
+                                            <button type="button" class="btn btn-warning">
+                                                Cancel
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".datepicker").datepicker({
+            format: "dd/mm/yyyy"
+        });
+    });
+</script>

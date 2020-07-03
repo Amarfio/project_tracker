@@ -78,7 +78,7 @@ if (
 
         $to = $email;
         $subject = "Change Password Link, USG Project Tracker";
-        $txt = 'http://192.168.1.74/project_tracker/set_password/' . $set_password;
+        $txt = 'http://192.168.1.195:84/project_tracker/set_password/' . $set_password;
         // $headers = "From: project.tracker@unionsg.com" . "\r\n" .
         $headers = "From: USG" ;
            

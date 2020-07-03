@@ -43,7 +43,7 @@ if (isset($_GET['email'])) {
 
             $to = $email;
             $subject = "UNION SYSTEMS GLOBAL";
-            $txt = 'http://192.168.1.74/project_tracker/set_password/' . $set_password;
+            $txt = 'http://192.168.1.195:84/project_tracker/set_password/' . $set_password;
             $headers = "From: UNION SYSTEMS GLOBAL" ;
             
 
@@ -52,7 +52,7 @@ if (isset($_GET['email'])) {
                 array(
                     'message' => 'Check email for password reset link',
                     'status' => 'success',
-                    'set_password' => 'http://192.168.1.74/project_tracker/set_password/' . $set_password
+                    'set_password' => 'http://192.168.1.195:84/project_tracker/set_password/' . $set_password
                 )
             );
             exit($message);

@@ -37,7 +37,7 @@ if (isset($_GET['project_id']) && isset($_GET['approvedBy']) && isset($_GET['com
     
 //         $to = "ampahkwabena55@gmail.com" ;
 //         $subject = "New Project has been assigned to your department";
-//         $txt = 'http://192.168.1.74/project_tracker/login/';
+//         $txt = 'http://192.168.1.195:84/project_tracker/login/';
 //         // $headers = "From: project.tracker@unionsg.com" . "\r\n" .
 //         $headers = "From: ampahkwabena55@gmail.com" . "\r\n" .
 //         "CC: " . $email_list ;
@@ -53,7 +53,7 @@ if (isset($_GET['project_id']) && isset($_GET['approvedBy']) && isset($_GET['com
 
 //         $to = "ampahkwabena55@gmail.com" ;
 //          $subject = "New Project has been assigned to your department";
-//         $txt = 'http://192.168.1.74/project_tracker/login/';
+//         $txt = 'http://192.168.1.195:84/project_tracker/login/';
 //         // $headers = "From: project.tracker@unionsg.com" . "\r\n" .
 //         $headers = "From: ampahkwabena55@gmail.com" . "\r\n" ;
 

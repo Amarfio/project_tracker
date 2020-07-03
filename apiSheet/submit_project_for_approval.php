@@ -61,7 +61,7 @@ require_once 'connect.php';
 
             $to = 'ampahkwabena55@gmail.com';
             $subject = "UNION SYSTEMS GLOBAL";
-              $txt = "New Project has been created and approved: ".  "http://192.168.1.74/project_tracker/login". "\r\n" ;
+              $txt = "New Project has been created and approved: ".  "http://192.168.1.195:84/project_tracker/login". "\r\n" ;
             $txt = $txt . 'Project ID: PRO-0000' . $project_id . "\r\n" ;
             $txt = $txt . 'Description: ' . $description . "\r\n" ;
             $txt = $txt . 'Version : ' . $version_name . "\r\n" ;

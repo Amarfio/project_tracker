@@ -116,11 +116,11 @@
 
       <!-- <li class="nav-item" active="" ng-repeat="item in sideNav" ng-show="item.role != 'admin'">
           <a class="nav-link" ng-href="{{item.route}}">
-            <i ng-class="item.iconStyle"></i>
+            <i ng-class="item.iconStyle"></i> 
             {{item.label}}
           </a>
         </li> -->
-      <li class="nav-item" ng-show="user_info.role == 'assigner' ">
+      <li class="nav-item" ng-show="user_info.role == 'assigner'|| user_info.is_dept_head == '1' ">
         <a class="nav-link " href="add_project">
           <i class="ni ni-books text-primary"></i><span class="text-primary">Create Projects</span>
         </a>

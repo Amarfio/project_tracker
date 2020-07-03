@@ -45,7 +45,7 @@ if(
             // $to = "elijahashitey002@gmail.com";
             $to = $row['email'];
             $subject = "UNION SYSTEMS GLOBAL";
-            $txt = "New Project has been created: visit: http://192.168.1.74/login";
+            $txt = "New Project has been created: visit: http://192.168.1.195:84/login";
             $headers = "UNION SYSTEMS GLOBAL" . "\r\n" . "CC: usg@gmail.com";
 
               if (true) { 

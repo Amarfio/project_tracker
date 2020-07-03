@@ -9,7 +9,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 require_once 'connect.php'; 
     function get_name_of_department_head ($department_id, $conn){
-        $query = "SELECT CONCAT(u.f_name, ' ', u.l_name) department_head FROM users u WHERE u.dept = '$department_id' AND u.is_dpt_head = 1";
+        $query = "SELECT CONCAT(u.f_name, ' ', u.l_name) department_head FROM users u, code_desc c  WHERE u.dept = '$department_id', c.id = '$department_id' AND u.is_dpt_head = '1'";
 
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_assoc($result);
@@ -35,8 +35,8 @@ require_once 'connect.php';
                 'department_id' => $row['id'],
                 'department_init' => $row['init'],
                 'department_init_desc' => $row['init_desc'],
-                'department_desc' => $row['desc'],
-                'department_head' => get_name_of_department_head($row['id'], $conn)
+                'department_desc' => $row['desc']
+                // 'department_head' => get_name_of_department_head($row['id'], $conn)
             );
          }
          echo json_encode($departments);

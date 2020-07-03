@@ -96,7 +96,7 @@ if ($count_dept_head > 0) {
     
         $to = "ampahkwabena55@gmail.com" ;
         $subject = "A project PROJ-0000".$project_id." has been re-assigned to your department ";
-        $txt = "<a href='http://192.168.1.74/project_tracker/login' target='_blank'>Visit USG Project Tracker</a>". "\r\n" ;
+        $txt = "<a href='http://192.168.1.195:84/project_tracker/login' target='_blank'>Visit USG Project Tracker</a>". "\r\n" ;
       
         $txt = $txt . "<strong>Project ID: PROJ-0000". $project_id ."</strong>". "\r\n" ;
         $txt = $txt . "<strong>Comment: </strong>".$comment. "\r\n" ;
@@ -117,7 +117,7 @@ if ($count_dept_head > 0) {
 
         $to = "ampahkwabena55@gmail.com" ;
         $subject = "A project PROJ-0000".$project_id." has been re-assigned to your department ";
-        $txt = "<a href='http://192.168.1.74/project_tracker/login' target='_blank'>Visit USG Project Tracker</a>". "\r\n" ;
+        $txt = "<a href='http://192.168.1.195:84/project_tracker/login' target='_blank'>Visit USG Project Tracker</a>". "\r\n" ;
       
         $txt = $txt . "<strong>Project ID: PROJ-0000". $project_id ."</strong>". "\r\n" ;
         $txt = $txt . "<strong>Comment: </strong>".$comment. "\r\n" ;

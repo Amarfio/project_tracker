@@ -110,15 +110,85 @@
 
                 <div class="row">
                   <div class="col-md-9">
-                    <span class="card-title text-primary text-uppercase">PRO-0000{{ project.project_id }} -
+                    <h2 class="card-title text-primary text-uppercase">PRO-0000{{ project.project_id }} -
                       {{ project.name }}
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
-                    </span>
+                    </h2>
 
                   </div>
                   <div class="col-md-3 text-center">
+
+                    <div class="dropdown float-right">
+                      <a class="btn btn-default btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        ACTIONS
+                      </a>
+                    
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+                        <a class="dropdown-item text-uppercase" data-toggle="modal"
+                        data-target="#modal-approve" ng-if="project.project_status == 'drafts'"
+                        ng-hide="user_info.role != 'assigner' (user_info.is_dept_head == '1' && user_info.department_id ==
+                        project.department_id)" ng-hide="!project.tasks.length" >
+                          Submit for approval
+                        </a>
+
+                        <a class="dropdown-item text-uppercase" data-toggle="modal"
+                      data-target="#modal-approve" ng-if="(project.project_status == 'unapproved' && user_info.can_approve == '1' &&
+                      project.department_id == user_info.department_id) || (user_info.role == 'admin' &&
+                      project.project_status == 'unapproved' && user_info.can_approve == '1' &&
+                      project.department_id == user_info.department_id)">
+                          Approve
+                      </a>
+
+                        <a class="dropdown-item text-uppercase" data-toggle="modal"
+                      data-target="#modal-approve" ng-href="add_task?project_id={{project.project_id}}&project_name={{project.name}}&department_id={{project.department_id}}&start_date={{project.start_date}}&end_date={{project.end_date}}"
+                      ng-if="user_info.role == 'assigner' || ( user_info.is_dept_head == '1' && user_info.department_id ==
+                      project.department_id)">
+                          Add Task
+                      </a>
+
+                        <a class="dropdown-item text-uppercase" ng-href="edit_project/{{project.project_id}}" ng-if="user_info.role == 'assigner' || ( user_info.is_dept_head == '1' && user_info.department_id ==
+                        project.department_id)">
+                          Edit Project
+                      </a>
+
+                        <a class="dropdown-item text-uppercase" data-toggle="modal"
+                        data-target="#modal-reassign" ng-if="user_info.is_dept_head == '1' && user_info.department_id ==
+                        project.department_id">
+                        Re-assign Project
+                      </a>
+
+                      </div>
+                    </div>
+
+<!--                     
+                    <a class="h4 ml-5 text-white text-uppercase d-none d-lg-inline-block"
+                      ng-href="add_task?project_id={{project.project_id}}&project_name={{project.name}}&department_id={{project.department_id}}&start_date={{project.start_date}}&end_date={{project.end_date}}"
+                      ng-if="user_info.role == 'assigner'">
+                      <button type="button" class="text-uppercase btn btn-primary btn-sm">
+                        Add Task
+                        <span class="ni ni-fat-add"></span>
+                      </button>
+                    </a> -->
+
+
+                    <!-- <a class="h4 ml-5 text-white text-uppercase d-none d-lg-inline-block"
+                      ng-href="edit_project/{{project.project_id}}" ng-if="user_info.role == 'assigner'">
+                      <button type="button" class="text-uppercase btn btn-warning btn-sm">
+                        Edit Project Task
+                        <span class="ni ni-fat-add"></span>
+                      </button>
+                    </a> -->
+
+                    <!-- <button type="button" class="text-uppercase btn btn-warning btn-sm float-right" data-toggle="modal"
+                      data-target="#modal-reassign" ng-if="user_info.is_dept_head == '1' && user_info.department_id ==
+                      project.department_id">
+                      Re-assign Project
+                    
+                    </button> -->
+
                     <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
                     <!-- <button class="btn btn-sm btn-success text-uppercase float-right" data-toggle="modal"
                       data-target="#modal-approve" ng-if="user_info.can_approve == '1'">
@@ -130,19 +200,19 @@
                       {{ project.project_status}}
                     </button> -->
 
-                    <button class="btn btn-sm btn-info text-uppercase float-right" data-toggle="modal"
+                    <!-- <button class="btn btn-sm btn-info text-uppercase float-right" data-toggle="modal"
                       data-target="#modal-approve" ng-if="project.project_status == 'drafts'"
                       ng-hide="user_info.role != 'assigner'" ng-hide="!project.tasks.length">
                       Submit for approval
-                    </button>
+                    </button> -->
 
-                    <button class="btn btn-sm btn-info text-uppercase float-right" data-toggle="modal"
+                    <!-- <button class="btn btn-sm btn-info text-uppercase float-right" data-toggle="modal"
                       data-target="#modal-approve" ng-if="(project.project_status == 'unapproved' && user_info.can_approve == '1' &&
                       project.department_id == user_info.department_id) || (user_info.role == 'admin' &&
                       project.project_status == 'unapproved' && user_info.can_approve == '1' &&
                       project.department_id == user_info.department_id)">
                       Approve
-                    </button>
+                    </button> -->
 
                     <!-- <button class="btn btn-sm btn-success float-right" ng-if="approve_btn"
                       ng-click="approve_project(user_info.user_id, project.project_id)" data-toggle="modal"
@@ -198,7 +268,7 @@
                   <div class="col-md-3"></div>
                   <div class="col-md-3"></div>
                   <div class="col-md-6 ">
-
+<!-- 
                     <a class="h4 ml-5 text-white text-uppercase d-none d-lg-inline-block"
                       ng-href="add_task?project_id={{project.project_id}}&project_name={{project.name}}&department_id={{project.department_id}}&start_date={{project.start_date}}&end_date={{project.end_date}}"
                       ng-if="user_info.role == 'assigner'">
@@ -221,8 +291,8 @@
                       data-target="#modal-reassign" ng-if="user_info.is_dept_head == '1' && user_info.department_id ==
                       project.department_id">
                       Re-assign Project
-                      <!-- <span class="ni ni-fat-add"></span> -->
-                    </button>
+                    
+                    </button> -->
 
                   </div>
                 </div>

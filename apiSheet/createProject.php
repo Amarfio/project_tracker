@@ -68,7 +68,7 @@ if(
     // }
 
 
-    $query = "INSERT INTO `projects` (`project_id`, `version_no`, `name`, `description`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`) VALUES (NULL, '$version_no', '$name', '$description', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date')";
+    $query = "INSERT INTO `projects` (`project_id`, `version_no`, `name`, `description`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`, `created_at`) VALUES (NULL, '$version_no', '$name', '$description', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date', NOW() )";
     $result = mysqli_query($conn, $query);
 
     if ($result == 1) {

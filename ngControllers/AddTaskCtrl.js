@@ -200,7 +200,7 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
                             $('#add_task_form')[0].reset()
                             $('#customRadio4').val('')
                             $('#customRadio6').val('')
-                            $timeout(window.location = 'project/' + $scope.url_project_id, 2000);
+                            $timeout(window.location = '', 2000);
                             // $timeout($location.path('/project/' + $scope.url_project_id), 2000);
                         }, 2000);
                     } else {

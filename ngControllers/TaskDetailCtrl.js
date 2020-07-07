@@ -86,7 +86,10 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
             console.log($scope.project.task_end_date)
             var task_start_date = new Date($scope.project.task_start_date)
             var task_end_date = new Date($scope.project.task_end_date)
-            var today_date = new Date()
+            var today_date = new Date('yyyy-mm-dd')
+
+            $scope.get_get_actual_no_days_in_milliseconds = task_end_date.getTime() - today_date.getTime() 
+            $scope.number_of_actual_days_till_end = ($scope.get_get_actual_no_days_in_milliseconds) / (1000 * 60 * 60 * 24)
 
             $scope.get_total_task_date_in_milliseconds = task_end_date.getTime() - task_start_date.getTime()
             $scope.number_of_days_till_end = ($scope.get_total_task_date_in_milliseconds) / (1000 * 60 * 60 * 24)

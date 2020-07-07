@@ -122,16 +122,25 @@
 
                     <div class="dropdown float-right">
                       <a class="btn btn-default btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        ACTIONS
-                        
+                       PROJECT ACTIONS
+
                       </a>
                     
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
                         <a class="dropdown-item text-uppercase" data-toggle="modal"
                         data-target="#modal-approve" ng-if="project.project_status == 'drafts'"
-                        ng-hide="user_info.role != 'assigner' (user_info.is_dept_head == '1' && user_info.department_id ==
+                        ng-hide="user_info.role == 'assigner' || (user_info.is_dept_head == '1' && user_info.department_id ==
                         project.department_id)" ng-hide="!project.tasks.length" >
+                          Submit for approval
+                        </a>
+                         -->
+                         
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+                        <a class="dropdown-item text-uppercase" data-toggle="modal"
+                        data-target="#modal-approve" ng-if="project.project_status == 'drafts' && (user_info.role == 'assigner' || (user_info.is_dept_head == '1' && user_info.department_id ==
+                        project.department_id) )" ng-hide="!project.tasks.length" >
                           Submit for approval
                         </a>
 
@@ -143,8 +152,7 @@
                           Approve
                       </a>
 
-                        <a class="dropdown-item text-uppercase" data-toggle="modal"
-                      data-target="#modal-approve" ng-href="add_task?project_id={{project.project_id}}&project_name={{project.name}}&department_id={{project.department_id}}&start_date={{project.start_date}}&end_date={{project.end_date}}"
+                        <a class="dropdown-item text-uppercase"  ng-href="add_task?project_id={{project.project_id}}&project_name={{project.name}}&department_id={{project.department_id}}&start_date={{project.start_date}}&end_date={{project.end_date}}"
                       ng-if="user_info.role == 'assigner' || ( user_info.is_dept_head == '1' && user_info.department_id ==
                       project.department_id)">
                           Add Task

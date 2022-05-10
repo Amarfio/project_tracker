@@ -145,8 +145,7 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
 
 
 
-    $scope.createTask = function (project_id_, priority_, task_, developer_,
-        client_id_, start_date_, end_date_) {
+    $scope.createTask = function (project_id_, priority_, task_, developer_, client_id_, start_date_, end_date_) {
         // console.log(project_id_)
         // console.log(priority_)
         // console.log(task_)
@@ -156,22 +155,11 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
         // console.log(end_date_)
         var p_start_date = Date.parse($scope.p_start_date)
         var p_end_date = Date.parse($scope.p_end_date)
+        var start_date_ = Date.parse($scope.start_date_)
+        var end_date_ = Date.parse($scope.end_date_)
 
-        var data = {
-            user_id: $scope.user_info.user_id,
-            project_id: project_id_.trim(),
-            priority: priority_.trim(),
-            task_name: task_.trim(),
-            client_id: client_id_.trim(),
-            assigned_to: developer_.trim(),
-            assigned_by: $scope.user_id.trim(),
-            t_start_date: start_date_,
-            t_end_date: end_date_,
-            p_start_date: p_start_date,
-            p_end_date: p_end_date
-        }
-        console.log(data);
-
+        
+        // return false;
         var sendRequest = function () {
 
             // $http POST function
@@ -200,8 +188,8 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
                             $('#add_task_form')[0].reset()
                             $('#customRadio4').val('')
                             $('#customRadio6').val('')
-                            $timeout(window.location = '', 2000);
-                            // $timeout($location.path('/project/' + $scope.url_project_id), 2000);
+                            // $timeout(window.location = '', 2000);
+                            $timeout($location.path('/project/' + $scope.url_project_id), 2000);
                         }, 2000);
                     } else {
                         Swal.fire({
@@ -230,6 +218,16 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
 
 
         }
+        // console.log(p_start_date);
+        // console.log(start_date_);
+        // if ( p_start_date > end_date_){
+        //     console.log("true");
+        // }
+        // else {
+        //     console.log("false");
+        // }
+        // return false;
+
 
         if (p_start_date > start_date_) {
             Swal.fire({
@@ -241,13 +239,19 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
             Swal.fire({
                 type: 'error',
                 title: 'Invalid Date',
-                text: 'Task end date can not be earlier than Project start date',
+                text: 'Project end date can not be earlier than task start date',
             })
         } else if (p_end_date < end_date_) {
             Swal.fire({
                 type: 'error',
                 title: 'Invalid Date',
                 text: 'Task end date can not go beyond than Project end date',
+            })
+        } else if(end_date_ < start_date_){
+            Swal.fire({
+                type: 'error',
+                title: 'Invalid Date',
+                text: 'Task end date can not be less than task start date',
             })
         } else if (p_start_date > end_date_) {
             Swal.fire({
@@ -256,6 +260,26 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
                 text: 'Task start date can not go beyond than Project end date',
             })
         } else {
+
+            start_date_ = new Date(start_date_).toISOString().substring(0, 10);
+            console.log(start_date_);
+            end_date_ = new Date(end_date_).toISOString().substring(0,10);
+            console.log(end_date_);
+            // return false;
+            var data = {
+                user_id: $scope.user_info.user_id,
+                project_id: project_id_.trim(),
+                priority: priority_.trim(),
+                task_name: task_.trim(),
+                client_id: client_id_.trim(),
+                assigned_to: developer_.trim(),
+                assigned_by: $scope.user_id.trim(),
+                t_start_date: start_date_,
+                t_end_date: end_date_,
+                p_start_date: p_start_date,
+                p_end_date: p_end_date
+            }
+            console.log(data);
             sendRequest()
         }
 

@@ -71,6 +71,10 @@ sheetApp.config(
           templateUrl: "./templates/task_detail.html",
           controller: "TaskDetailCtrl",
         })
+        .when("/test_detail/:test_id", {
+          templateUrl: "./templates/test_detail.html",
+          controller: "TestDetailCtrl",
+        })
         .when("/departments", {
           templateUrl: "./templates/departments.html",
           controller: "DepartmentCtrl",

@@ -84,12 +84,35 @@ sheetApp.controller("EditProjectCtrl", function (
   };
   $scope.get_departments("dpt");
 
+  $scope.get_all_users = function (department_id) {
+    // console.log('Department_id = ' + department_id) 
+    $http({
+        method: 'GET',
+        url: myConfig.url + '/getAllUsers.php'
+
+    }).then(function successCallback(response) {
+
+        $scope.all_users = response.data;
+        console.log($scope.all_users)
+
+    }, function errorCallback(response) {
+        Swal.fire({
+            type: 'warning',
+            title: 'Network Connection Erro',
+            text: 'Users Could not loaded'
+        })
+
+    });
+}
+$scope.get_all_users($scope.url_department_id)
+
   $scope.UpdateProject = function (
     project_name_,
     version_no_,
     department_id_,
     start_date_,
     end_date_,
+    project_owner_,
     project_description_
   ) {
 
@@ -99,18 +122,25 @@ sheetApp.controller("EditProjectCtrl", function (
     var start_date = $('#project_start_date').val();
     var end_date = $('#project_end_date').val();
     var project_description = $('#project_description').val();
+    // var project_owner = $("#project_owner_").val();
+    // console.log(project_owner);
 
-
+    console.log(department_id_);
+    console.log(project_owner_);
     var data = {
       project_id: $scope.project_id,
       project_name: project_name,
       version_no: version_no_,
       project_description: project_description,
+      project_owner: project_owner_,
       dept_id: department_id_,
       user_id: $scope.user_id,
       start_date: new Date(start_date),
       end_date: new Date(end_date)
     };
+
+    // console.log(data);
+    // return false;
 
 
     Swal.queue([{
@@ -144,7 +174,7 @@ sheetApp.controller("EditProjectCtrl", function (
 
               // //    Swal.fire($res.status, "success");
 
-              $("#add_project_form")[0].reset();
+              // $("#add_project_form")[0].reset();
 
               $timeout(
                 window.location = "project/ " + $scope.project_id,

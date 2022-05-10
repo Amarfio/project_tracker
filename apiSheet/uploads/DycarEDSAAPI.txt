@@ -1,0 +1,1 @@
+http://dycarvend.dyndns.org/OCAReadyPayApiTest/swagger/ui/index

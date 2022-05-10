@@ -9,7 +9,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 require_once 'connect.php';
 
-$query = "SELECT * FROM clients";
+$query = "SELECT * FROM clients WHERE is_active = 1";
 
 $result = mysqli_query($conn, $query);
 

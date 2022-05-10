@@ -262,17 +262,41 @@
                     &nbsp;&nbsp;{{ project.end_date | date: mediumDate }}
                   </div>
                   <div class="col-md-4">
-
+                    <span class="text-primary">Created On:</span>
+                    &nbsp;&nbsp;{{ project.created_at | date: mediumDate }}
                   </div>
                   <div class="col-md-4">
                     <span class="text-primary">Project Status:</span> &nbsp;&nbsp;
                     <span class=" badge badge-info">{{ project.project_status}}</span>
+                  </div>
+                  <div class="col-md-4">
+                    <span class="text-primary">Created by:</span> &nbsp;&nbsp; 
+                    {{ project.posted_by_name }}
                   </div>
                   <div class="col-md-4" ng-if="project.project_status == 'approved'">
                     <span class="text-primary">Approved by:</span> &nbsp;&nbsp;
                     {{ project.approved_by_name}}
                     <!-- <span class=" badge badge-info">{{ project.comment_by_name}}</span> -->
                   </div>
+                  <div class="col-md-4">
+                    <span class="text-primary">Document:</span>
+                    <span class=""><a ng-href="{{myConfig_file_url}}{{project.attach}}" target="_blank" download>
+                      <!-- <strong ng-if="project.attach != ''">
+                        &nbsp; &nbsp; <i class="fa fa-paperclip text-blue" id=""></i>
+                      </strong> -->
+                      {{ project.attach }}
+                    
+                      </a>
+                    </span>
+                  </div>
+                  <div class="col-md-4">
+                    <span class="text-primary">Owner:</span> &nbsp;&nbsp; 
+                    {{ project.project_owner }}
+                  </div>
+                  
+                  <div class="col-md-4"></div>
+                  <div class="col-md-4"></div>
+
                   <div class="col-md-8"></div>
                   <div class="col-md-3"></div>
                   <div class="col-md-3"></div>
@@ -466,6 +490,7 @@
                   <th scope="col">End</th>
                   <th scope="col">Developer</th>
                   <th scope="col">( % )</th>
+                  <th scope="col">Last Update</th>
                 </tr>
               </thead>
 

@@ -90,7 +90,7 @@
                         <div class="card-body">
                             <br>
                             <form id="add_project_form"
-                                ng-submit="createProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_description_)">
+                                ng-submit="createProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_description_, project_owner_)">
 
                                 <div class="form-group row">
                                     <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Name</label>
@@ -158,13 +158,34 @@
                                     <label for="inputPassword"
                                         class="col-sm-3 col-form-label text-primary">Description</label>
                                     <div class="col-sm-9">
-                                        <textarea class="form-control " id="" maxlength="200"
+                                        <textarea class="form-control " id=""
                                             placeholder="Required example textarea" required
                                             ng-model="project_description_">
                                             </textarea>
 
                                     </div>
                                 </div>
+
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Attach Document</label>
+                                    <div class="col-sm-9">
+                                        <input type="file" class="form-control" id="attached-file"
+                                            placeholder="Upload Document" ng-click="get_file_input()">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Owner</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control"  ng-model="project_owner_" required>
+                                            <option value="">-- Select developer from department --</option>
+                                            <option ng-repeat="user in all_users" ng-value="user.user_id"
+                                                ng-hide="user.user_id == '1'">
+                                                {{user.f_name}} {{user.l_name}} </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
 
                                 <div class="form-group row">
                                     <label for="inputPassword" class="col-sm-6 col-form-label text-primary"></label>

@@ -28,7 +28,7 @@ if(
     $user_id = mysqli_real_escape_string($conn, $data->user_id);
     $start_date = mysqli_real_escape_string($conn, $data->start_date);
     $end_date = mysqli_real_escape_string($conn, $data->end_date);
-    // $ip_address = mysqli_real_escape_string($conn, $data->ip_address);
+    $project_owner = mysqli_real_escape_string($conn, $data->project_owner);
     // $location = mysqli_real_escape_string($conn, $data->location); 
     $start_date = date("Y-m-d", strtotime($start_date));
     $end_date = date("Y-m-d", strtotime($end_date));
@@ -68,7 +68,7 @@ if(
     // }
 
 
-    $query = "UPDATE `projects` SET `name` = '$name', `version_no`= '$version_no',`description` = '$description', `dept_id` = '$dept_id', `start_date` = '$start_date', `end_date` = '$end_date'   WHERE `projects`.`project_id` = '$project_id'";
+    $query = "UPDATE `projects` SET `name` = '$name', `version_no`= '$version_no',`description` = '$description', `dept_id` = '$dept_id', `start_date` = '$start_date', `end_date` = '$end_date', `owner` = '$project_owner'   WHERE `projects`.`project_id` = '$project_id'";
 
     
     $result = mysqli_query($conn, $query);

@@ -10,6 +10,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 
 require_once 'connect.php';
+require_once 'mailer.php';
+
 
 $data = json_decode(file_get_contents("php://input"));
 // if (
@@ -76,15 +78,61 @@ if (
   
 
 
-        $to = $email;
+        $from = "Project Tracker App";
+        $name="no-reply";
         $subject = "Change Password Link, USG Project Tracker";
-        $txt = 'http://192.168.1.195:84/project_tracker/set_password/' . $set_password;
+        // $txt = "<a href='http://192.168.1.195:84/project_tracker/set_password/$set_password'>reset link </a> ";
+        $txt = "
+        Hello , $f_name 
+        <br /><br />
+        Your account has been created successfully for the <b>Project Tracker</b>.
+        <br />
+        Kindly <a href='http://192.168.1.195:84/project_tracker/set_password/$set_password'>click here</a> to reset your password.
+        <br /><br/>
+        Kind regards,
+        <br/>
+        <a href='http://unionsg.com/' target='_blank'>UNION SYSTEMS GLOBAL</a>.
+        <br/>
+        <img  src='http://issues.unionsg.com/images/logo.png' class='img-circle'/>
+        ";
         // $headers = "From: project.tracker@unionsg.com" . "\r\n" .
         $headers = "From: USG" ;
            
+        // echo json_encode(
+        //         array('email'=>$email,
+        //               'caption'=>$name,
+        //               'subject'=>$subject,
+        //               'text'=>$txt)
+        //     );die();
+        // echo mail($to,$subject,$txt,$headers); die;
 
-        // mail($to,$subject,$txt,$headers);
-        if (mail($to,$subject,$txt,$headers)) {
+        // sending the email to the user
+        // require_once "PHPMailer/PHPMailer.php";
+        // require_once "PHPMailer/SMTP.php";
+        // require_once "PHPMailer/Exception.php";
+
+        // $mail = new PHPMailer();
+
+        // //STMP Settings
+        // $mail->isSMTP();
+        // $mail->Host = "server.unionsg.com";
+        // $mail->SMTPAuth=true;
+        // $mail->Username="hr@unionsg.com";
+        // $mail->Password="(qLwOdQ3F3cm";
+        // $mail->Port = 587;
+        // $mail->SMTPSecure = "tls";
+
+        //Email Settings
+        $mail->isHTML(true);
+        $mail->setFrom("hr.unionsg.com", $name);
+        $mail->addAddress($email);
+        $mail->Subject=$subject;
+        $mail->Body = $txt;
+        $done = $mail->send();
+        
+        // $sent = sendEmail($email, $name, $subject, $txt);
+        // exit(json_encode($done));
+        if ($done) {
 
             $query = "INSERT INTO `users` (`id`, `f_name`, `l_name`,`username`, `dept`, `role`, `can_approve`, `position`, `is_dpt_head`, `email`, `phone`, `country`, `city`, `postal_addr`, `reset`) VALUES (NULL, '$f_name', '$l_name', '$username', '$dept', '$role', '$can_approve', NULL, '$is_dpt_head', '$email', '$phone', '$country', '$city', '$postal_addr', '$set_password')";
             $result = mysqli_query($conn, $query);

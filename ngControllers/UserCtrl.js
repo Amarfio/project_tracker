@@ -145,6 +145,7 @@ sheetApp.controller('UserCtrl', function ($scope, $http, check_auth, myConfig, $
         }).then(function successCallback(response) {
             $res = response.data
             console.log($res.status)
+            console.log($res);
 
             if ($res.status == 'success') {
 

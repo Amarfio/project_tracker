@@ -125,6 +125,11 @@
           <i class="ni ni-books text-primary"></i><span class="text-primary">Create Projects</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" ng-show="user_info.is_dept_head == '1' " href="./apiSheet/projectReportByDeptId.php" >
+          <i class="ni ni-books text-primary"></i><span class="text-primary">Last Update</span>
+        </a>
+      </li>
       <!-- <li class="nav-item" ng-show="user_info.role == 'admin'">
         <a class="nav-link " href="/all_projects">
           <i class="ni ni-bullet-list-67 text-info"></i>All Projects

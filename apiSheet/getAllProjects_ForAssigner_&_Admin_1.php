@@ -21,7 +21,7 @@ function project_avg_percentage($project_id, $conn){
 
 
 function query_status_projects($status_id, $conn){
-    $query_status_projects = "SELECT pro.*, co.id version_id, co.desc version, co_dept.id department_id, co_dept.desc department FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id WHERE pro.status = '$status' ORDER BY pro.project_id DESC";
+    $query_status_projects = "SELECT pro.*, co.id version_id, co.desc version, co_dept.id department_id, co_dept.desc department FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id WHERE pro.status = '$status_id' ORDER BY pro.project_id DESC";
 
     $result = mysqli_query($conn, $query_status_projects);
     $num = mysqli_num_rows($result);

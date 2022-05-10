@@ -8,7 +8,8 @@
     <div class="container-fluid">
       <!-- Brand -->
       <!-- <span class="text-white"><i class="fa fa-arrow-left 2x"></i>&nbsp;&nbsp; &nbsp;&nbsp;Return to Tasks</span> -->
-      <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="project/{{project.project_id}}"> <i
+      <!-- href="project/{{project.project_id}} -->
+      <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"  onclick="window.history.back()"> <i
           class="fa fa-arrow-left 2x"></i>&nbsp;&nbsp; &nbsp;&nbsp;Return </a>
 
       <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
@@ -161,7 +162,7 @@
                   </div>
 
                 </div>
-                <h5 class="text-{{progress_bar_percentage_color}} text-center">Number of days Left:
+                <h5 class="text-{{progress_bar_percentage_color}} text-center">Number of days to complete task:
                   {{ number_of_days_till_end }} </h5>
                 <br>
                 <!-- <h5 class="card-title">
@@ -442,7 +443,8 @@
           <!-- <form method="post" enctype="multipart/form-data" id="comment_input_form" ng-if="user_info.role != 'assigner' " ng-hide="project.is_approved == '0' "
             ng-if=" user_info.role != 'guest'"> -->
           <form method="post" enctype="multipart/form-data" id="comment_input_form"
-            ng-hide="project.is_approved == '0' " ng-if="project.assigned_to_id == user_info.user_id">
+            ng-hide="project.is_approved == '0' " >
+            <!-- ng-if="project.assigned_to_id == user_info.user_id" -->
             <div class="col-md-12">
               <div class="small">
                 Attachment: <span class="text-primary" id="show_attach_name">{{attachment_file}}</span>
@@ -529,8 +531,10 @@
     $('#attachment-icon').click(function (e) {
       e.preventDefault();
       var attachment = $('#attachment-file').val();
-
-
     });
+
+    function goBack(){
+      window.history.back();
+    }
   });
 </script>

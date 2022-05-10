@@ -54,6 +54,7 @@ sheetApp.controller("LoginCtrl", function (
                     var user_auth = response.data["auth"];
                     var user_token = response.data["token"];
                     var user_message = response.data["status"];
+                    console.log(user_info);
 
                     localStorage.setItem("user_token", user_token);
 
@@ -74,6 +75,7 @@ sheetApp.controller("LoginCtrl", function (
                             title: response.data["message"]
                         });
                         $("#login-signin-btn").text("Sign in");
+                        console.log(response.data["data"]);
                     }
                 },
                 function errorCallback(response) {

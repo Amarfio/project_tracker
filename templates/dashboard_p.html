@@ -14,14 +14,22 @@
         </a>
       </span>
 
+      <span ng-if="admin_or_assigner_can_see">
+        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block badge badge-info" href="#"
+          ng-click="get_statics_developer_for_assigner_and_admin('sta')">
+          Admin Dashboard
+        </a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+      </span>
+
       <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
         <div class="form-group mb-0">
-          <div class="input-group input-group-alternative">
+          <!-- <div class="input-group input-group-alternative">
             <div class="input-group-prepend">
               <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>
             <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: auto;" />
-          </div>
+          </div> -->
         </div>
       </form>
 
@@ -151,7 +159,9 @@
       </div>
       <div class="col-md-8">
         <div class="row">
-          <div class="col-xl-3"></div>
+          <div class="col-xl-3">
+            <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: auto;">
+          </div>
           <div class="col-xl-4">
             <select class="form-control " required ng-model="tableSearch_by_department_id">
               <option value="">--Filter by Department--</option>
@@ -184,6 +194,14 @@
         </h5>
 
         <div class="table-responsive" ng-if="projects">
+          <form ng-submit="downloadExcelSheet()" ng-show="user_info.is_dept_head == '1' ">
+            <div class="col-4 text-left" >
+              
+              <input type="number" hidden class="form-control" id="dept_id" ng-value="" ng-model="dept_id">
+              <button type="submit" class="btn btn-sm btn-primary">last Update</button>
+              <!-- <a href="#!">Save Changes</a> -->
+            </div>
+          </form>
           <legend></legend>
 
           <table class="table align-items-center table-flush" id="data_table">
@@ -195,8 +213,10 @@
                 <th scope="col">Status</th>
                 <th scope="col">Start</th>
                 <th scope="col">End</th>
+                <th scope="col">Age(days)</th>
                 <th scope="col">Completion</th>
                 <th scope="col">Department</th>
+                
               </tr>
             </thead>
             <tbody>
@@ -230,8 +250,8 @@
                     ng-if="project.status_desc == 'approved'">{{ project.status_desc }}</span>
                   <span class="badge badge-secondary"
                     ng-if="project.status == 'scheduled'">{{ project.status_desc }}</span>
-                  <span class="badge badge-danger"
-                    ng-if="project.status_desc == 'cancelled'">{{ project.status_desc }}</span>
+                  <span class="badge badge-info"
+                    ng-if="project.status_desc == 'in progress'">{{ project.status_desc }}</span>
                   <span class="badge badge-primary"
                     ng-if="project.status_desc == 'completed'">{{ project.status_desc }}</span>
                 </td>
@@ -243,6 +263,9 @@
                   {{ project.end_date | date: mediumDate}}
                 </td>
 
+                <td>
+                  {{ project.age | number }} days
+                </td>
                 <td>
                   <div class="d-flex align-items-center" ng-if="project.completion == null">
                     <span class="mr-2">0 %</span>

@@ -8,6 +8,7 @@ sheetApp.controller('TaskCtrl', function ($scope, $http, $routeParams, check_aut
     $scope.profile_pic_true = $localStorage.profile_pic
     $scope.profile_pic = myConfig.file_url + $scope.profile_pic_true
     console.log($scope.profile_pic)
+    $scope.myConfig_file_url = myConfig.file_url
 
 
     //logout funtion 

@@ -38,7 +38,20 @@ function get_status_count($status_id, $conn){
         
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
+   
     $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  p.status  = '$status_id'";
+   
+    
+
+    if($status_id == 116){
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (CURRENT_DATE > end_date AND p.is_approved=1) AND (SELECT AVG(t.completion)<100 from tasks t WHERE t.project_id = p.project_id) ";
+    }
+    elseif($status_id == 85){
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (p.is_approved=1)";
+    }
+    // elseif($status_id == 86){
+    //     $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  (p.is_approved=1) AND (p.start_date > CURRENT_DATE)";    
+    // }
     $result = mysqli_query($conn, $query);
     // $num = mysqli_num_rows($result);
     $count_total_status = array();

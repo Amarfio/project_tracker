@@ -25,9 +25,11 @@ if(
     $name = mysqli_real_escape_string($conn, $data->project_name);
     $description = mysqli_real_escape_string($conn, $data->project_description);
     $dept_id = mysqli_real_escape_string($conn, $data->dept_id);
+    $file_name = mysqli_real_escape_string($conn, $data->fileName);
     $user_id = mysqli_real_escape_string($conn, $data->user_id);
     $start_date = mysqli_real_escape_string($conn, $data->start_date);
     $end_date = mysqli_real_escape_string($conn, $data->end_date);
+    $owner = mysqli_real_escape_string($conn, $data->owner);
     // $ip_address = mysqli_real_escape_string($conn, $data->ip_address);
     // $location = mysqli_real_escape_string($conn, $data->location); 
     $start_date = date("Y-m-d", strtotime($start_date));
@@ -68,7 +70,7 @@ if(
     // }
 
 
-    $query = "INSERT INTO `projects` (`project_id`, `version_no`, `name`, `description`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`, `created_at`) VALUES (NULL, '$version_no', '$name', '$description', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date', NOW() )";
+    $query = "INSERT INTO `projects` (`project_id`, `version_no`, `name`, `description`, `attach`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`, `created_at`, `owner`) VALUES (NULL, '$version_no', '$name', '$description', '$file_name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date', NOW(),'$owner' )";
     $result = mysqli_query($conn, $query);
 
     if ($result == 1) {

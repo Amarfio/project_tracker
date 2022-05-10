@@ -5,6 +5,7 @@ sheetApp.controller('DashboardCtrl', function ($scope, dataService, check_auth, 
     $scope.user_role = $scope.user_info.role
     var user_role = $localStorage.user_info.data
     console.log($scope.user_info.user_id)
+    console.log($scope.user_info.department_id)
 
     // PROFILE PHOTO
     $scope.profile_pic_true = $localStorage.profile_pic
@@ -78,6 +79,88 @@ sheetApp.controller('DashboardCtrl', function ($scope, dataService, check_auth, 
     $scope.clear_filter = function () {
         $scope.tableSearch_by_department_id = ''
         $scope.tableSearch_by_status_id = ''
+    }
+
+     dept_ID = $scope.user_info.department_id;
+    $scope.downloadExcelSheet = function (){
+        var _url = 'projectReportByDeptId.php?dept_id='+dept_ID;
+        console.log("inside the download excel method "+dept_ID);
+        // return false;
+
+        $http({
+
+            method: 'GET',
+            url: myConfig.url + '/projectReportByDeptId.php?dept_id=' + dept_ID
+
+        }).then(function successCallback(response) {
+            console.log("it is done");
+            console.log(response);
+            // var $res = response.data;
+            // console.log($res.status)
+            // console.log(res);
+            // return false;
+
+
+            // if ($res.status == 'success') {
+
+            //     Swal.fire({
+            //         type: 'success',
+            //         title: 'PROJ-0000' + $res.project_id,
+            //         text: $res.message
+            //     })
+            //     // //    Swal.fire($res.status, "success");
+
+            //     $('#add_project_form')[0].reset()
+
+            //     $timeout(
+            //         window.location = 'add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_ + '&start_date=' + start_date_ + '&end_date=' + end_date_
+
+            //         // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
+
+            //         , 1000);
+
+            //     // $timeout(
+            //     //     window.location = 'add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_ + '&start_date=' + $res.start_date + '&end_date=' + $res.end_date
+
+            //     //     // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
+
+            //     //     , 2000);
+
+
+            // } else {
+            //     Swal.fire({
+            //         type: 'error',
+            //         title: $res.status,
+            //         text: $res.message,
+            //     })
+
+            // }
+
+
+
+
+        }, function errorCallback(response) {
+
+            Swal.fire({
+                type: 'warning',
+                title: 'Sorry',
+                text: 'Something went wrong',
+            })
+
+        });
+        // dataService.downloadSheet(_url)
+        //     .then(function successCallback(response) {
+
+        //         console.log("it is done download completed. ");
+        //         // $scope.projects = response.data['data'];
+        //         // console.log($scope.projects)
+
+        //     }, function errorCallback(response) {
+
+        //         // alert("Error. Try Again!");
+
+        //     });
+            return false;
     }
 
     // $scope.apply_filter = function (filter_department, filter_status) {

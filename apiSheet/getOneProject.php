@@ -64,7 +64,12 @@ if (isset($_GET['project_id'])) {
     // $query = "SELECT p.*, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no WHERE project_id = '$project_id '";
 
 
-    $query = "SELECT p.*, p.status status_id, co_sta.desc status_name, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name, CONCAT(u_a.f_name, ' ', u_a.l_name) approved_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by LEFT JOIN users u_a ON u_a.id = p.approved_by  WHERE project_id = '$project_id'";
+    // $query = "SELECT p.*, p.status status_id, co_sta.desc status_name, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name, CONCAT(u_a.f_name, ' ', u_a.l_name) approved_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by LEFT JOIN users u_a ON u_a.id = p.approved_by  WHERE project_id = '$project_id'";
+    // $query = "SELECT p.*, p.status status_id, co_sta.desc status_name, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name, CONCAT(u_a.f_name, ' ', u_a.l_name) approved_by_name, CONCAT(u_p.f_name, ' ', u_p.l_name) posted_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by LEFT JOIN users u_a ON u_a.id = p.approved_by LEFT JOIN users u_p ON u_p.id = p.posted_by  WHERE project_id = '$project_id'";
+
+    // $query = "SELECT p.*, p.status status_id, co_sta.desc status_name, p.owner project_owner, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name, CONCAT(u_a.f_name, ' ', u_a.l_name) approved_by_name, CONCAT(u_p.f_name, ' ', u_p.l_name) posted_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by LEFT JOIN users u_a ON u_a.id = p.approved_by LEFT JOIN users u_p ON u_p.id = p.posted_by  WHERE project_id = '$project_id'";
+
+    $query = "SELECT p.*, p.status status_id, co_sta.desc status_name, p.owner owner_id, CONCAT(u_o.f_name, ' ', u_o.l_name) project_owner, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name, CONCAT(u_a.f_name, ' ', u_a.l_name) approved_by_name, CONCAT(u_p.f_name, ' ', u_p.l_name) posted_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by LEFT JOIN users u_a ON u_a.id = p.approved_by LEFT JOIN users u_p ON u_p.id = p.posted_by LEFT JOIN users u_o ON u_o.id = p.owner  WHERE project_id = '$project_id'";
 
     $result = mysqli_query($conn, $query);
     
@@ -85,16 +90,21 @@ if (isset($_GET['project_id'])) {
                 "version_name"   => $row['version_name'],
                 "name" => $row['name'],
                 "description" => $row['description'],
+                "attach" => $row['attach'],
                 "is_approved" => $row['is_approved'],
                 "approved_by_id" => $row['approved_by'],
                 "approved_by_name" => $row['approved_by_name'],
+                "created_at" => $row['created_at'],
                 "project_status_id" => $row['status_id'],
                 "project_status" => $row['status_name'],
+                "owner_id" => $row['owner_id'],
+                "project_owner" => $row['project_owner'],
                 "department_id" => $row['dept_id'],
                 "department" => get_department_name($row['dept_id'], $conn), 
                 "comment" => $row['comment'],
                 "comment_by_id" => $row['comment_by_id'], 
                 "comment_by_name" => $row['comment_by_name'], 
+                "posted_by_name" => $row['posted_by_name'],
                 "start_date" => $row['start_date'],
                 "end_date" => $row['end_date'],
                 "tasks" => get_all_tasks($row['project_id'], $conn)

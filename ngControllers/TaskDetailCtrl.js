@@ -400,6 +400,7 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
         console.log(taskStatus)
         console.log(ready_for_test)
         console.log(percentage_completion)
+        // return false;
 
         if (ready_for_test == undefined || ready_for_test == '') {
             var ready_for_test = false
@@ -420,6 +421,9 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
                 text: 'Change task status from "Not Started"',
             })
         } else {
+            if(taskStatus == '61') {
+                percentage_completion = 100;
+            }
             var data = {
                 user_id: $scope.user_info.user_id,
                 task_id: $scope.task_id,
@@ -427,7 +431,16 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
                 ready_for_test: ready_for_test,
                 percentage_completion: percentage_completion
             }
+            console.log(data);
+            // return false;
             $scope.sendTaskUpdate(data)
+
+            if (ready_for_test == undefined || ready_for_test == '') {
+                var ready_for_test = false
+            }
+            else {
+                
+            }
         }
 
         // console.log(data)
@@ -493,6 +506,10 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
 
         });
 
+    }
+
+    $scope.sendForTest = function(data){
+        
     }
 
 });

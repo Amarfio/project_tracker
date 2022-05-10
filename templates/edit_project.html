@@ -81,22 +81,6 @@
     <div class="container-fluid mt--7">
         <!-- Table -->
         <div class="row">
-            <div class="col-md-6">
-                <div class="card card-stats mb-4 mb-lg-0">
-                    <div class="card-body">
-                        <p>
-                            <h4>Project Name: &nbsp; <span class="text-primary"> {{ project.name }} </span></h5>
-                                <h4>Version: &nbsp; <span class="text-primary"> {{ project.version_name }} </span></h5>
-                                    <h4>Department: &nbsp; <span class="text-primary"> {{ project.department }} </span>
-                                        </h5>
-                                        <h4>Start Date: &nbsp; <span class="text-primary"> {{ project.start_date }}
-                                            </span></h5>
-                                            <h4>End Date: &nbsp; <span class="text-primary"> {{ project.end_date }}
-                                                </span></h4>
-                        </p>
-                    </div>
-                </div>
-            </div>
 
             <div class="col-md-6">
                 <div class="">
@@ -104,7 +88,7 @@
                         <div class="card-body">
 
                             <form id="add_project_form"
-                                ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_description_)">
+                                ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_owner_, project_description_)">
 
 
                                 <div class="col-sm-12">
@@ -139,7 +123,7 @@
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Department</label>
                                     <select class="form-control" required ng-model="department_id_"
-                                        id="project_department_id">
+                                        id="project_department_id" ng-value="project.department_id">
                                         <option value="">Select
                                             Department</option>
                                         <option ng-value="department.code_desc_id"
@@ -166,24 +150,43 @@
                                         type="date" ng-model="end_date_" />
                                 </div>
 
-
-
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Description</label>
-                                    <textarea class="form-control " id="project_description" maxlength="200"
+                                    <textarea class="form-control " id="project_description"
                                         placeholder="Required example textarea" required ng-model="project_description_"
                                         ng-value="project.description">
-                    </textarea>
+                                    </textarea>
                                 </div>
 
-                                <br>
-                                <div class="form-group row">
+                                <!-- <div class="col-sm-12">
+                                    <label for="inputPassword" class=" col-form-label text-primary">Attach Document</label>
+                    
+                                        <input type="file" class="form-control" id="attached-file"
+                                            placeholder="Upload Document" ng-value="project.attach" ng-click="get_file_input()">
+                                    
+                                </div> -->
 
-                                    <label for="inputPassword" class="col-sm-6 col-form-label text-primary"></label>
+                               <div class="col-sm-12">
+                                    <label for="inputPassword" class="col-form-label text-primary">Owner</label>
+                                        <select class="form-control" required ng-model="project_owner_" id="project_owner_id"  ng-value="project.owner_id">
+                                            <option value="">-- Select project owner from list --</option>
+                                            <option ng-value="user.user_id" ng-repeat="user in all_users" 
+                                                ng-hide="user.user_id == '1'">
+                                                {{user.f_name}} {{user.l_name}} </option>
+                                        </select>
+                                </div> 
+
+                                
+                                <br>
+                                <div class="col-sm-12 row">
+
+                                    <!-- <label for="inputPassword" class="col-sm-6 col-form-label text-primary"></label> -->
                                     <div class="col-sm-6">
                                         <button type="submit" class="btn btn-primary">
                                             Update
                                         </button>
+                                    </div>
+                                    <div class="col-sm-6">
                                         <a ng-href="project/{{ project_id }}">
                                             <button type="button" class="btn btn-warning">
                                                 Cancel
@@ -196,6 +199,24 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-6">
+                <div class="card card-stats mb-4 mb-lg-0">
+                    <div class="card-body">
+                        <p>
+                            <h4>Project Name: &nbsp; <span class="text-primary"> {{ project.name }} </span></h5>
+                                <h4>Version: &nbsp; <span class="text-primary"> {{ project.version_name }} </span></h5>
+                                    <h4>Department: &nbsp; <span class="text-primary"> {{ project.department }} </span>
+                                        </h5>
+                                        <h4>Start Date: &nbsp; <span class="text-primary"> {{ project.start_date }}
+                                            </span></h5>
+                                            <h4>End Date: &nbsp; <span class="text-primary"> {{ project.end_date }}
+                                                </span></h4>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="col-md-2"></div>
         </div>

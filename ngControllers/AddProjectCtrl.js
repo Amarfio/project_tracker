@@ -66,27 +66,116 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
     $scope.get_departments('dpt')
 
 
+    // ATTACHMENT ICON FUNCTION
 
-    $scope.createProject = function (project_name_, version_no_, department_id_, start_date_, end_date_, project_description_, ) {
+    $scope.attachment_file = 'None';
+    $scope.get_file_input = function () {
+        // $("#upload_file").click(function () {
+        //     $("#id_file_field").trigger('click');
+        // });
+        var fileName= "";
+        $('#attached-file').change(function () {
+            var value = this.value;
+             fileName = typeof value == 'string' ? value.match(/[^\/\\]+$/)[0] : value[0]
+            console.log(fileName);
+            $scope.attachment_file = fileName;
+            // $('#attached-text').text(fileName);
+        })
+
+
+    }
+    // END ATTACHMENT ICON FUNCTION
+
+    $scope.get_all_users = function (department_id) {
+        // console.log('Department_id = ' + department_id) 
+        $http({
+            method: 'GET',
+            url: myConfig.url + '/getAllUsers.php'
+
+        }).then(function successCallback(response) {
+
+            $scope.all_users = response.data;
+            console.log($scope.all_users)
+
+        }, function errorCallback(response) {
+            Swal.fire({
+                type: 'warning',
+                title: 'Network Connection Erro',
+                text: 'Users Could not loaded'
+            })
+
+        });
+    }
+    $scope.get_all_users($scope.url_department_id)
+
+    //code to get uploaded file value
+    $scope.upload = function () {
+        var file = $scope.uploadfile;
+        var fd = new FormData();
+        var files = document.getElementById('attached-file').files[0];
+        fd.append('file', files);
+
+        $http({
+            method: 'post',
+            url: myConfig.url + '/uploadFile.php',
+            data: fd,
+            headers: {
+                'Content-Type': undefined   
+            },
+        }).then(function successCallback(response) {
+            // Store response data
+            $scope.response = response.data;
+            console.log($scope.response)
+            // $('#show_attach_name').text('None');
+            // $scope.attachment_file = 'None'
+        });
+    }
+
+    $scope.createProject = function (project_name_, version_no_, department_id_, start_date_, end_date_, project_description_,project_owner_ ) {
         console.log(project_name_)
         console.log(version_no_)
         console.log(department_id_)
         console.log(start_date_)
         console.log(end_date_)
         console.log(project_description_)
+        console.log($scope.attachment_file)
         console.log($scope.user_id)
+        console.log($scope.project_owner_)
+
+        // return false;
 
 
-        var data = {
-            user_id: $scope.user_info.user_id,
-            project_name: project_name_.trim(),
-            version_no: version_no_.trim(),
-            project_description: project_description_.trim(),
-            dept_id: department_id_.trim(),
-            user_id: $scope.user_id.trim(),
-            start_date: start_date_,
-            end_date: end_date_
+        var data = null;
+
+        //check if the user selected a file
+        if($scope.attachment_file=='None'){
+            data = {
+                user_id: $scope.user_info.user_id,
+                project_name: project_name_.trim(),
+                version_no: version_no_.trim(),
+                project_description: project_description_.trim(),
+                dept_id: department_id_.trim(),
+                user_id: $scope.user_id.trim(),
+                start_date: start_date_,
+                fileName: null,
+                end_date: end_date_,
+                owner: project_owner_
+            }
+        }else{
+            data = {
+                user_id: $scope.user_info.user_id,
+                project_name: project_name_.trim(),
+                version_no: version_no_.trim(),
+                project_description: project_description_.trim(),
+                dept_id: department_id_.trim(),
+                user_id: $scope.user_id.trim(),
+                start_date: start_date_,
+                fileName: $scope.attachment_file,
+                end_date: end_date_,
+                owner: project_owner_
+            }
         }
+        
 
 
 
@@ -172,13 +261,14 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
             })
         } else {
 
+            $scope.upload()
+
             sendRequest()
-
-
-
 
         }
 
     }
+
+    
 
 });

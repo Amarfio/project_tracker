@@ -37,6 +37,12 @@ function get_status_count($status_id, $conn, $department_id)
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
     $query = "SELECT COUNT(t.status) total_task_status FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE p.is_approved = 1 AND t.status = '$status_id' AND p.dept_id = '$department_id'";
+    
+    //check for the overdue status and query for its total number
+    if($status_id==117){
+    $query = "SELECT COUNT(t.status) total_task_status FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE p.is_approved = 1 AND (CURRENT_DATE >t.end_date AND t.completion <> 100) AND p.dept_id = '$department_id'";
+      
+    }
     $result = mysqli_query($conn, $query);
     // $num = mysqli_num_rows($result);
     $count_total_status = array();

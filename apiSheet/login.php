@@ -1,6 +1,4 @@
 <?php
-
-
 header('Access-Control-Allow-Origin: *');
 header("Content-Type: application/json; charset=UTF-8");
 header('Access-Control-Allow-Methods: POST');
@@ -10,8 +8,12 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 
 require_once 'connect.php';
+require_once 'functions/checkProjsInProgress.php';
+require_once 'functions/checkProjsCompleted.php';
+require_once 'functions/checkOverdueTasks.php';
 require_once 'functions/get_IP_Location.php';
 require_once 'functions/activity_logs.php';
+// require_once 'projectReport.php';
 
 $data = json_decode(file_get_contents("php://input"));
 if (isset($data)) {
@@ -37,6 +39,8 @@ if (isset($data)) {
         // $query = "SELECT * FROM users,code_desc  WHERE (email = '$username' OR username = '$username') AND hash_pass = '$password' AND users.role = code_desc.id LIMIT 1";
 
         $query = "SELECT u.id as user_id, u.f_name, u.profile_pic, u.bio, u.l_name, u.gender, u.username, u.is_dpt_head, u.can_approve, u.email, u.phone, u.country, u.city, u.postal_addr AS address, u.reset as token, c.id AS department_id, c.desc department, d.id AS role_id, d.desc as role from users u LEFT JOIN code_desc c ON u.dept = c.id left JOIN code_desc d ON u.role = d.id WHERE (LOWER(u.email) = '$username' OR LOWER(u.username) = '$username') AND hash_pass = '$password' LIMIT 1";
+
+        // echo $result; die();
         $result = mysqli_query($conn, $query);
         $num = mysqli_num_rows($result);
         if ($num > 0) {
@@ -48,8 +52,20 @@ if (isset($data)) {
             $activity =  ' tried to login ';
             $status = 'success';
             log_activity($conn, $user, $activity, $status, getSecurity());
+            
+            //check and update projects in progress
+            checkProjsInProgress($conn);
+
+            //check and update project completed
+            checkProjsCompleted($conn);
+            
+            
+
 
             // END LOG ACTIVITY
+
+        echo json_encode('result', $result);
+
             
             echo json_encode(
                 array(
@@ -87,6 +103,15 @@ if (isset($data)) {
             $activity =  $data->username . ' tried to login ';
             $status = 'failed';
             log_activity($conn, $user, $activity, $status, getSecurity());
+            
+            //code to update the projects that are overdue...
+            overdue_projects($conn);
+            checkProjsInProgress($conn);
+
+            //check projects completed
+            checkProjsCompleted($conn);
+           
+
 
             // END LOG ACTIVITY
             

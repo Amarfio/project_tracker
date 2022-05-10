@@ -56,7 +56,8 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
 
     $scope.get_tasks_by_is_approved = function (user_id, is_approved, statistics_description_name, _user_info_role, department_id) {
         console.log('by approved: ' + _user_info_role)
-        // console.log(user_id)
+        console.log('am here');
+        console.log('user id: '+user_id)
         // console.log(status_id)
         $scope.statistics_description_name = statistics_description_name
 
@@ -65,7 +66,7 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
         } else if (_user_info_role == 'assigner_and_admin') {
             var _url = myConfig.url + '/getAllTasks_ForAssigner_&_Admin.php?is_approved=' + is_approved
         } else if (_user_info_role == 'department_head') {
-            var _url = myConfig.url + '/getAllTasks_ForDepartmentHead.php?is_approved=' + is_approved + '&department_id=' + department_id
+            var _url = myConfig.url + '/getAllTasks_ForDepartmentHead.php?is_approved=' + is_approved + '&department_id=' + department_id + '&user_id=' + user_id
         }
         $http({
             method: 'GET',
@@ -86,7 +87,7 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
 
     $scope.get_tasks_by_status_id = function (user_id, status_id, statistics_description_name, _user_info_role, department_id) {
         console.log('by status id: ' + _user_info_role)
-        // console.log(user_id)
+        console.log('user id: ' + user_id)
         // console.log(status_id)
         $scope.statistics_description_name = statistics_description_name
 
@@ -98,7 +99,7 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
         } else if (_user_info_role == 'assigner_and_admin') {
             var _url = myConfig.url + '/getAllTasks_ForAssigner_&_Admin.php?status_id=' + status_id
         } else if (_user_info_role == 'department_head') {
-            var _url = myConfig.url + '/getAllTasks_ForDepartmentHead.php?status_id=' + status_id + '&department_id=' + department_id
+            var _url = myConfig.url + '/getAllTasks_ForDepartmentHead.php?status_id=' + status_id + '&department_id=' + department_id + '&user_id' + user_id
         }
 
         $http({

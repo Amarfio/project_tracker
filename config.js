@@ -5,6 +5,7 @@ sheetApp.constant("myConfig", {
     "url": "http://192.168.1.195:84/project_tracker/apiSheet",
     "file_url": "http://192.168.1.195:84/project_tracker/apiSheet/uploads/",
 
+    
     "profile_pic": localStorage.profile_pic,
 
     "baseURL": "project_tracker"

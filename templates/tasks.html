@@ -246,12 +246,12 @@
                     <span class="text-primary">Department:</span>
                     &nbsp;&nbsp;<span class="">{{ project.department }}</span>
                   </div>
-                  <div class="col-md-4">
+                  <!-- <div class="col-md-4"> -->
                     <!-- <div class="icon icon-shape bg-{{percentage_color}} text-white rounded-circle shadow "
                       id="card-percentage__tasks">
                       {{project_avg | number: 0}}%
                     </div> -->
-                  </div>
+                  <!-- </div> -->
 
                   <div class="col-md-4">
                     <span class="text-primary">Start Date:</span>
@@ -278,6 +278,12 @@
                     {{ project.approved_by_name}}
                     <!-- <span class=" badge badge-info">{{ project.comment_by_name}}</span> -->
                   </div>
+                  
+                  <div class="col-md-4">
+                    <span class="text-primary">Owner:</span> &nbsp;&nbsp; 
+                    {{ project.project_owner }}
+                  </div>
+
                   <div class="col-md-4">
                     <span class="text-primary">Document:</span>
                     <span class=""><a ng-href="{{myConfig_file_url}}{{project.attach}}" target="_blank" download>
@@ -288,10 +294,6 @@
                     
                       </a>
                     </span>
-                  </div>
-                  <div class="col-md-4">
-                    <span class="text-primary">Owner:</span> &nbsp;&nbsp; 
-                    {{ project.project_owner }}
                   </div>
                   
                   <div class="col-md-4"></div>

@@ -198,7 +198,7 @@
             <div class="col-4 text-left" >
               
               <input type="number" hidden class="form-control" id="dept_id" ng-value="" ng-model="dept_id">
-              <button type="submit" class="btn btn-sm btn-primary">last Update</button>
+              <button onclick = downloadExcel() class="btn btn-sm btn-primary">last Update</button>
               <!-- <a href="#!">Save Changes</a> -->
             </div>
           </form>
@@ -302,5 +302,9 @@
   $(document).ready(function () {
     $("#data_table").DataTable();
   });
+
+  function downloadExcel(){
+    window.location.href= "./apiSheet/projectReportByDeptId.php";
+  }
 </script>
 </div>

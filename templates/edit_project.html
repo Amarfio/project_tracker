@@ -204,14 +204,18 @@
                 <div class="card card-stats mb-4 mb-lg-0">
                     <div class="card-body">
                         <p>
-                            <h4>Project Name: &nbsp; <span class="text-primary"> {{ project.name }} </span></h5>
-                                <h4>Version: &nbsp; <span class="text-primary"> {{ project.version_name }} </span></h5>
-                                    <h4>Department: &nbsp; <span class="text-primary"> {{ project.department }} </span>
-                                        </h5>
-                                        <h4>Start Date: &nbsp; <span class="text-primary"> {{ project.start_date }}
-                                            </span></h5>
-                                            <h4>End Date: &nbsp; <span class="text-primary"> {{ project.end_date }}
-                                                </span></h4>
+                            <h4>Project Name: &nbsp; <span class="text-primary"> {{ project.name }} </span></h4>
+                            <h4>Version: &nbsp; <span class="text-primary"> {{ project.version_name }} </span></h4>
+                            <h4>Department: &nbsp; <span class="text-primary"> {{ project.department }} </span></h4>
+                            <h4>Start Date: &nbsp; <span class="text-primary"> {{ project.start_date }}</span></h4>
+                            <h4>End Date: &nbsp; <span class="text-primary"> {{ project.end_date }}</span></h4>
+                            <h4>Project Document: &nbsp; <a ng-href="{{myConfig_file_url}}{{project.attach}}" target="_blank" download>
+                                <!-- <strong ng-if="project.attach != ''">
+                                  &nbsp; &nbsp; <i class="fa fa-paperclip text-blue" id=""></i>
+                                </strong> -->
+                                {{ project.attach }}
+                              
+                                </a></h4>
                         </p>
                     </div>
                 </div>

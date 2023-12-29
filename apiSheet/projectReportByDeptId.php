@@ -5,12 +5,6 @@ require_once 'connect.php';
 $_GET['dept_id']= 106;
 
 $output = "";
-<<<<<<< HEAD
-
-$output = "";
-=======
->>>>>>> 68260f8ab7a1ced087b9ae8e09ceb8dc94bc41c4
-
 // echo($data->dept_id); die();
 if(isset($_GET['dept_id'])){
 

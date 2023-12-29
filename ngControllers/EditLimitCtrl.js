@@ -31,7 +31,7 @@ sheetApp.controller('EditLimitCtrl', function (
   $scope.get_one_limit = function () {
     $http({
       method: "GET",
-      url: myConfig.url + "/getOneUser.php?user_id=" + $scope.newUser_id
+      url: myConfig.url + "/getOneLimit.php?user_id=" + $scope.newUser_id
     }).then(function successCallback(response) {
       $scope.user = response.data['data'];
       //   $scope.user = response;

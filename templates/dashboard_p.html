@@ -245,7 +245,11 @@
             <div class="col-4 text-left" >
               
               <input type="number" hidden class="form-control" id="dept_id" ng-value="" ng-model="dept_id">
+<<<<<<< HEAD
               <button ng-click = downloadExcel() class="btn btn-sm btn-primary">last Update</button> -->
+=======
+              <button onclick = downloadExcel() class="btn btn-sm btn-primary">last Update</button>
+>>>>>>> 68260f8ab7a1ced087b9ae8e09ceb8dc94bc41c4
               <!-- <a href="#!">Save Changes</a> -->
             <!-- </div>
           </form> -->
@@ -452,6 +456,7 @@
 
             $("#btnExport").click(function (e) {
 
+<<<<<<< HEAD
               var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
               var textRange; var j=0;
               tab = document.getElementById('statusTable'); // id of table
@@ -483,5 +488,14 @@
             });
 
     });
+=======
+  $(document).ready(function () {
+    $("#data_table").DataTable();
+  });
+
+  function downloadExcel(){
+    window.location.href= "./apiSheet/projectReportByDeptId.php";
+  }
+>>>>>>> 68260f8ab7a1ced087b9ae8e09ceb8dc94bc41c4
 </script>
 </div>

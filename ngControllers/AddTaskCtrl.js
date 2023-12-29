@@ -145,7 +145,7 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
 
 
 
-    $scope.createTask = function (project_id_, priority_, task_, developer_, client_id_, start_date_, end_date_) {
+    $scope.createTask = function (project_id_, task_, priority_, developer_, client_id_, start_date_, end_date_) {
         // console.log(project_id_)
         // console.log(priority_)
         // console.log(task_)
@@ -153,12 +153,34 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
         // console.log(client_id_)
         // console.log(start_date_)
         // console.log(end_date_)
-        var p_start_date = Date.parse($scope.p_start_date)
-        var p_end_date = Date.parse($scope.p_end_date)
-        var start_date_ = Date.parse($scope.start_date_)
-        var end_date_ = Date.parse($scope.end_date_)
+        // console.log("This is start date:");
+        // console.log(new Date($scope.p_start_date));
+        // console.log("This is end date:");
+        // console.log($scope.p_end_date);
+        // // return false;
+        // var p_start_date = Date.parse($scope.p_start_date)
+        // console.log(p_start_date);
+        // var p_end_date = Date.parse($scope.p_end_date)
+        // var start_date_ = Date.parse($scope.start_date_)
+        // console.log(start_date_);
+        // // return false;
+        // var end_date_ = Date.parse($scope.end_date_)
 
         
+        console.log("This is start date:");
+        var p_date = new Date($scope.p_start_date).toISOString().slice(0, 10);
+        console.log("yeah ",p_date); 
+
+        console.log("This is end date:");
+        console.log($scope.p_end_date);
+        // return false;
+        var p_start_date = new Date($scope.p_start_date).toISOString().slice(0,10);
+        console.log(p_start_date);
+        var p_end_date = new Date($scope.p_end_date).toISOString().slice(0,10);
+        var start_date_ = $scope.start_date_
+        console.log(start_date_);
+        // return false;
+        var end_date_ = $scope.end_date_
         // return false;
         var sendRequest = function () {
 
@@ -218,9 +240,11 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
 
 
         }
+        //check this code
         // console.log(p_start_date);
-        // console.log(start_date_);
-        // if ( p_start_date > end_date_){
+        // console.log(end_date_);
+        
+        // if ( p_start_date > start_date_){
         //     console.log("true");
         // }
         // else {
@@ -229,47 +253,50 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
         // return false;
 
 
-        if (p_start_date > start_date_) {
-            Swal.fire({
-                type: 'error',
-                title: 'Invalid Date',
-                text: 'Task start date can not be earlier than Project start date',
-            })
-        } else if (p_end_date < start_date_) {
-            Swal.fire({
-                type: 'error',
-                title: 'Invalid Date',
-                text: 'Project end date can not be earlier than task start date',
-            })
-        } else if (p_end_date < end_date_) {
-            Swal.fire({
-                type: 'error',
-                title: 'Invalid Date',
-                text: 'Task end date can not go beyond than Project end date',
-            })
-        } else if(end_date_ < start_date_){
-            Swal.fire({
-                type: 'error',
-                title: 'Invalid Date',
-                text: 'Task end date can not be less than task start date',
-            })
-        } else if (p_start_date > end_date_) {
-            Swal.fire({
-                type: 'error',
-                title: 'Invalid Date',
-                text: 'Task start date can not go beyond than Project end date',
-            })
-        } else {
+        // if ( p_start_date > start_date_) {
+        //     Swal.fire({
+        //         type: 'error',
+        //         title: 'Invalid Date',
+        //         text: 'Task start date can not be earlier than Project start date',
+        //     })
+        // } else 
+        // if (p_end_date < start_date_) {
+        //     Swal.fire({
+        //         type: 'error',
+        //         title: 'Invalid Date',
+        //         text: 'Project end date can not be earlier than task start date',
+        //     })
+        // } else if (p_end_date < end_date_) {
+        //     Swal.fire({
+        //         type: 'error',
+        //         title: 'Invalid Date',
+        //         text: 'Task end date can not go beyond than Project end date',
+        //     })
+        // } else if(end_date_ < start_date_){
+        //     Swal.fire({
+        //         type: 'error',
+        //         title: 'Invalid Date',
+        //         text: 'Task end date can not be less than task start date',
+        //     })
+        // } 
+        // else if (p_start_date > end_date_) {
+        //     Swal.fire({
+        //         type: 'error',
+        //         title: 'Invalid Date',
+        //         text: 'Project Start Date Cannot Greater Than Task End Date',
+        //     })
+        // }
+        //  else {
 
             start_date_ = new Date(start_date_).toISOString().substring(0, 10);
             console.log(start_date_);
             end_date_ = new Date(end_date_).toISOString().substring(0,10);
             console.log(end_date_);
-            // return false;
+            // return false;    
             var data = {
                 user_id: $scope.user_info.user_id,
                 project_id: project_id_.trim(),
-                priority: priority_.trim(),
+                priority: priority_,
                 task_name: task_.trim(),
                 client_id: client_id_.trim(),
                 assigned_to: developer_.trim(),
@@ -279,9 +306,9 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
                 p_start_date: p_start_date,
                 p_end_date: p_end_date
             }
-            console.log(data);
+            console.log(data); 
             sendRequest()
-        }
+        // }
 
     }
 

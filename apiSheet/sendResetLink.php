@@ -66,7 +66,7 @@ if (isset($_GET['email'])) {
             <br /><br />
             The password to your <b>Project Tracker</b> account has been reset successfully.
             <br />
-            Kindly <a href='http://192.168.1.195:84/project_tracker/set_password/$set_password'>click here</a> to set your password. 
+            Kindly <a href='http://localhost:8081/project_tracker/set_password/$set_password'>click here</a> to set your password. 
             <br /><br/>
             Kind regards,
             <br/>

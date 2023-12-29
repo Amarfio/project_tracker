@@ -17,7 +17,7 @@ function get_total_project_count( $conn){
         
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
-    $query = "SELECT COUNT(p.project_id) total_project_count FROM projects p";
+    $query = "SELECT COUNT(p.project_id) total_project_count FROM projects p WHERE p.is_archive = 0";
     $result = mysqli_query($conn, $query);
     // $num = mysqli_num_rows($result);
     $count_total_status = array();
@@ -39,15 +39,15 @@ function get_status_count($status_id, $conn){
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
    
-    $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  p.status  = '$status_id'";
+    $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  p.status  = '$status_id' AND p.is_archive = 0";
    
     
 
     if($status_id == 116){
-        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (CURRENT_DATE > end_date AND p.is_approved=1) AND (SELECT AVG(t.completion)<100 from tasks t WHERE t.project_id = p.project_id) ";
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (CURRENT_DATE > end_date AND p.is_approved=1) AND p.is_archive = 0 AND (SELECT AVG(t.completion)<100 from tasks t WHERE t.project_id = p.project_id) ";
     }
     elseif($status_id == 85){
-        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (p.is_approved=1)";
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (p.is_approved=1) AND p.is_archive = 0";
     }
     // elseif($status_id == 86){
     //     $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  (p.is_approved=1) AND (p.start_date > CURRENT_DATE)";    
@@ -96,6 +96,7 @@ if (isset($_GET['init'])  ) {
                 'status_init' => $row['init'],
                 "status_init_desc" => $row['init_desc'],
                 "status" => $row['desc'],
+                "code_color" => $row['color'],
                 "status_count" =>get_status_count($row['id'], $conn)
             );
         }

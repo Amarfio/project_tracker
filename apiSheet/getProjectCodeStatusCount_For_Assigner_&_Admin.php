@@ -38,7 +38,7 @@ function get_status_count($status_id, $conn){
         
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
-    $query = "SELECT COUNT(p.status) total_projects_status FROM projects p WHERE  p.status = '$status_id' ";
+    $query = "SELECT COUNT(p.status) total_projects_status FROM projects p WHERE  p.status = '$status_id' AND p.archive = 0 ";
     $result = mysqli_query($conn, $query);
     // $num = mysqli_num_rows($result);
     $count_total_status = array();

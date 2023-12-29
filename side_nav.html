@@ -97,10 +97,16 @@
             class="text-primary">Projects</span>
         </a>
       </li> -->
-      <li class="nav-item  class="
-        ng-show="user_info.role == 'assigner' || user_info.role == 'admin' || user_info.is_dept_head == '1'">
-        <a class=" nav-link active " href="dashboard_p"> <i class="ni ni-tv-2 text-primary"></i> <span
+      <!-- class="
+        ng-show="user_info.role == 'assigner' || user_info.role == 'admin' || user_info.is_dept_head == '1' -->
+      <li class="nav-item  ">
+        <a class=" nav-link active " href="dashboard_p"> <i class="ni ni-chart-bar-32 text-primary"></i> <span
             class="text-primary">Projects</span>
+        </a>
+      </li>
+      <li class="nav-item" ng-show="user_info.role == 'admin' || user_info.role =='assigner'">
+        <a class=" nav-link active " href="project_updates"> <i class="ni ni-tv-2 text-primary"></i> <span
+            class="text-primary">Project Updates</span>
         </a>
       </li>
       <li class="nav-item  class=">
@@ -114,27 +120,38 @@
         </a>
       </li>
 
+      <!-- <li class="nav-item" ng-show="user_info.role == 'admin'">
+        <a class=" nav-link " href="add_change"> <i class="ni ni-settings-gear-65 text-primary"></i> <span
+            class="text-primary">Change Mgt</span>
+        </a>
+      </li> -->
+
       <!-- <li class="nav-item" active="" ng-repeat="item in sideNav" ng-show="item.role != 'admin'">
           <a class="nav-link" ng-href="{{item.route}}">
             <i ng-class="item.iconStyle"></i> 
             {{item.label}}
           </a>
         </li> -->
-      <li class="nav-item" ng-show="user_info.role == 'assigner'|| user_info.is_dept_head == '1' ">
+      <li class="nav-item" ng-show="user_info.role == 'assigner'|| user_info.is_dept_head == '1' || user_info.role == 'developer' ">
         <a class="nav-link " href="add_project">
           <i class="ni ni-books text-primary"></i><span class="text-primary">Create Projects</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" ng-show="user_info.is_dept_head == '1' " href="./apiSheet/projectReportByDeptId.php" >
+      <li class="nav-item" ng-show="user_info.is_dept_head == '1' " ng-click = "downloadExcel()" style="cursor: pointer;" title="download project last update">
+        <a class="nav-link">
           <i class="ni ni-books text-primary"></i><span class="text-primary">Last Update</span>
         </a>
       </li>
-      <!-- <li class="nav-item" ng-show="user_info.role == 'admin'">
-        <a class="nav-link " href="/all_projects">
-          <i class="ni ni-bullet-list-67 text-info"></i>All Projects
+      <li class="nav-item" ng-show="user_info.is_dept_head == '1' " style="cursor: pointer;" title="Hand over">
+        <a class="nav-link" href="handover">
+          <i class="ni ni-books text-primary"></i><span class="text-primary">Hand Over</span>
         </a>
-      </li> -->
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="my_issues">
+          <i class="ni ni-bullet-list-67 text-info"></i>Issues
+        </a>
+      </li>
       <li class="nav-item" ng-show="user_info.role == 'admin'">
         <a class="nav-link " href="departments">
           <i class="ni ni-building text-primary"></i> <span class="text-primary">Departments</span>
@@ -153,6 +170,11 @@
       <li class="nav-item" ng-show="user_info.role == 'admin'">
         <a class="nav-link " href="codex">
           <i class="ni ni-atom text-primary"></i> <span class="text-primary">Codes</span>
+        </a>
+      </li>
+      <li class="nav-item" ng-show="user_info.role == 'admin'">
+        <a class="nav-link " href="limits">
+          <i class="ni ni-atom text-primary"></i> <span class="text-primary">Limits</span>
         </a>
       </li>
       <li class="nav-item">

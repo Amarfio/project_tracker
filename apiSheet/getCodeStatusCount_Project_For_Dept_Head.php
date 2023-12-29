@@ -50,6 +50,10 @@ function get_status_count($status_id, $department_id, $conn){
         // $query = "SELECT COUNT(project_id) total_overdue FROM projects WHERE NOW()>end_date AND dept_id = '$department_id'";
         $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE ( p.is_approved=1) AND p.dept_id = '$department_id'";
     }
+    elseif($status_id == 126 ){
+        // $query = "SELECT COUNT(project_id) total_overdue FROM projects WHERE NOW()>end_date AND dept_id = '$department_id'";
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE ( p.priority=73) AND p.dept_id = '$department_id'";
+    }
     // elseif($status_id == 88){
     //     $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (p.is_approved=1) AND (SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id = p.project_id) AND p.dept_id = '$department_id'";
       
@@ -102,6 +106,7 @@ if (isset($_GET['init'])  ) {
                 'status_init' => $row['init'],
                 "status_init_desc" => $row['init_desc'],
                 "status" => $row['desc'],
+                "code_color" => $row['color'],
                 "status_count" =>get_status_count($row['id'],$department_id, $conn)
             );
         }

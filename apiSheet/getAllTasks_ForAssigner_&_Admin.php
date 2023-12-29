@@ -49,7 +49,11 @@ function query_total_tasks(){
     $query_task_by_is_approved = "";
 
     if($is_approved==1){
-        $query_task_by_is_approved = "SELECT * FROM `vw_approved_tasks_last_update` ORDER BY task_id DESC";
+
+      $query_task_by_is_approved = "SELECT t.task_id as task_id, pro.project_id project_id , pro.name project_name, t.description as task_description,t.start_date, t.end_date, pro.dept_id department_id, c_dpt.desc department, t.completion, cl.name as client, t.assigned_to as assigned_to_id, CONCAT(u_by.f_name, ' ' , u_by.l_name) as assigned_by, t.assigned_by as assigned_by_id, CONCAT(u_to.f_name, ' ' , u_to.l_name) as assigned_to, c_pri.desc as priority, c_sta.id status_id, c_sta.desc as status  FROM tasks t LEFT JOIN users u_by ON u_by.id = t.assigned_by  LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN code_desc c_pri ON c_pri.id = t.priority LEFT JOIN code_desc c_sta ON c_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id LEFT JOIN projects pro ON pro.project_id = t.project_id LEFT JOIN code_desc c_dpt ON c_dpt.id = pro.dept_id WHERE  pro.is_approved = '$is_approved' ORDER BY t.task_id  DESC";
+
+
+        // $query_task_by_is_approved = "SELECT * FROM `vw_approved_tasks_last_update` ORDER BY task_id DESC";
     }
     else if ($is_approved==0){
         $query_task_by_is_approved = "SELECT * FROM `vw_unapproved_tasks` ORDER BY task_id DESC";

@@ -211,8 +211,8 @@
                                     <label for="inputPassword"
                                         class="col-sm-2 col-form-label text-primary">Priority</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control" required ng-model="priority_">
-                                            <option value="">-- Select Priority --</option>
+                                        <select class="form-control" ng-model="priority_">
+                                            <option value="">{{oneTask.priority}}</option>
                                             <option ng-repeat="code in code_desc" ng-value="code.code_desc_id">
                                                 {{code.code_desc}}
                                             </option>
@@ -233,8 +233,8 @@
 
                                     <label for="" class="col-sm-2 col-form-label text-primary">Client</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control" required ng-model="client_id_">
-                                            <option value="">-- Select Clients --</option>
+                                        <select class="form-control" ng-model="client_id_">
+                                            <option value="">{{ oneTask.client}}</option>
                                             <option ng-repeat="client in all_clients" ng-value="client.client_id">
                                                 {{client.name}}
                                             </option>
@@ -244,8 +244,8 @@
                                     <label for="inputPassword"
                                         class="col-sm-2 col-form-label text-primary">Developer</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control" required ng-model="developer_">
-                                            <option value="">-- Select developer from department --</option>
+                                        <select class="form-control" id="develop_id" ng-model="developer_">
+                                            <option value="">{{ oneTask.assigned_to}}</option>
                                             <option ng-repeat="user in all_users" ng-value="user.user_id">
                                                 {{user.f_name}} {{user.l_name}} </option>
                                         </select>
@@ -302,9 +302,10 @@
                                     <label for="inputPassword" class="col-sm-6 col-form-label text-primary"></label>
                                     <div class="col-sm-6">
                                         <button type="submit" class="btn btn-primary">Update </button>
-                                        <a href="dashboard_t">
-                                            <button type="button" class="btn btn-warning">Cancel</button>
-                                        </a>
+                                        <!-- <a href="dashboard_t"> -->
+                                        <!-- <a href="window.location.back()"> -->
+                                            <button type="button" class="btn btn-warning" id="backBtn">Back</button>
+                                        <!-- </a> -->
                                     </div>
                                 </div>
 

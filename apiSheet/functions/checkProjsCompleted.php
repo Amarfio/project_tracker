@@ -6,3 +6,9 @@
         $result = mysqli_query($conn, $query);
         
     } 
+
+    
+    function updateTaskToCompleted($conn){
+        $query = "UPDATE tasks SET status = 61 WHERE completion = 100";
+        $result = mysqli_query($conn, $query);
+    }

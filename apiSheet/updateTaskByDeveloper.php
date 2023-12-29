@@ -25,6 +25,8 @@ if (
     $taskStatus = mysqli_real_escape_string($conn, $data->taskStatus);
     $ready_for_test = mysqli_real_escape_string($conn, $data->ready_for_test);
     $percentage_completion = mysqli_real_escape_string($conn, $data->percentage_completion);
+    $dateOfCompletion = mysqli_real_escape_string($conn, $data->completionDate);
+    $projectId = mysqli_real_escape_string($conn, $data->project_id);
     
     // $ip_address = 'DF45-123E-34E-24';
     // $location = 'Accra Ghana';
@@ -37,6 +39,11 @@ if (
 
 
     $result = mysqli_query($conn, $query);
+
+    //check and update the project to completed
+    $queryP = "UPDATE projects SET status = 88, completed_date='$dateOfCompletion' WHERE projects.project_id = '$projectId' AND (SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id ='$projectId' )";
+        // echo($queryP); die();
+        $resultP = mysqli_query($conn, $query);
 
     if ($result == 1) { 
         // $task_id = mysqli_insert_id($conn); 

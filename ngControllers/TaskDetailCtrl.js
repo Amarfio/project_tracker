@@ -20,6 +20,8 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
     check_auth.verify_auth($localStorage.user_info)
     console.log($localStorage.user_info.data);
     $scope.user_info = $localStorage.user_info.data
+    console.log("we are here for is department head?");
+    console.log($scope.user_info);
 
     // PROFILE PHOTO
     $scope.profile_pic_true = $localStorage.profile_pic
@@ -176,6 +178,32 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
     }
     $scope.get_one_task()
 
+    //code to get updates on tasks
+    $scope.get_task_logs = function(){
+        $http({
+            method: 'GET',
+            url: myConfig.url + '/getAllTaskUpdates.php?task_id=' + $scope.task_id
+
+        }).then(function successCallback(response) {
+
+
+            var taskUpdates = response.data['data'];
+            console.log("first try ")
+            console.log(taskUpdates);
+            $scope.taskUpdates = taskUpdates;
+            console.log($scope.taskUpdates);
+
+
+        }, function errorCallback(response) {
+
+            // alert("Error. Try Again!"); 
+
+        });
+        
+    }
+
+    $scope.get_task_logs();
+
 
     $scope.get_task_comments = function () {
         $http({
@@ -280,12 +308,19 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
     }
 
 
+    // $("#prgIcon").hide()
 
     $scope.sendComment = function (task_id, comment_message, user_id) {
         // console.log(task_id);
         // console.log(comment_message);
         // console.log(attach);
         // console.log(user_id);
+        $("#sendBtn").hide();
+        
+        var dept_id = $scope.user_info.department_id;
+        var is_dept_head_ = $scope.user_info.is_dept_head;
+        console.log(" this is the current department ");
+        console.log(dept_id);
 
         // var data = {
         //     comment: comment_message,
@@ -300,7 +335,10 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
                 comment: comment_message,
                 task_id: task_id,
                 attach: null,
-                posted_by: user_id
+                posted_by: user_id,
+                department_id: dept_id,
+                is_dept_head: is_dept_head_,
+                taskOwnerId: $scope.oneTask.assigned_to_id
             }
             $scope.createComment(comment_message, data)
 
@@ -310,7 +348,10 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
                 comment: comment_message,
                 task_id: task_id,
                 attach: $scope.attachment_file,
-                posted_by: user_id
+                posted_by: user_id,
+                department_id: dept_id,
+                is_dept_head: is_dept_head_,
+                taskOwnerId: $scope.oneTask.assigned_to_id
             }
             $scope.createComment(comment_message, data)
 
@@ -318,18 +359,18 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
 
     }
 
-
-
-
-
-
-
-
     $scope.open_modal_comment = function (comment) {
         console.log(comment);
         $scope.comment_for_reply = comment
         $scope.comment_id_for_reply = comment.comment_id
         $('#display_reply_comment').text(comment.comment);
+    }
+
+    $scope.open_delete_modal_comment = function (comment) {
+        console.log(comment);
+        $scope.comment_for_delete = comment
+        $scope.comment_id_for_delete = comment.comment_id
+        $('#display_delete_comment').text(comment.comment);
     }
 
     $scope.replyComment = function (comment_id_for_reply, reply_message, user_id) {
@@ -375,6 +416,44 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
         }
     }
 
+    $scope.deleteComment = function (comment_id_for_delete){
+
+        console.log("This is it: ");
+        console.log(comment_id_for_delete);
+        // console.log("stop the program...");
+        // return false;
+
+        var data = {
+            comment_id: comment_id_for_delete
+        }
+
+        $http({
+
+            method: 'POST',
+            url: myConfig.url + '/deleteComment.php',
+            data: data
+
+        }).then(function successCallback(response) {
+            $res = response.data
+            console.log($res);
+            if ($res.status == 'success') {
+                //   $('#task_comment_input').val('');
+                $scope.get_task_comments()
+                $('#reply_input_form')[0].reset()
+                $('#modal-delete-comment').hide();
+                $('.modal-backdrop').hide();
+            } else {
+
+            }
+
+
+
+        }, function errorCallback(response) {
+
+        });
+        window.location.reload();
+
+    }
 
     $scope.get_code_desc = function (init) {
         $http({
@@ -393,7 +472,6 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
         });
     }
     $scope.get_code_desc('sta')
-
 
 
     $scope.saveTaskUpdate = function (taskStatus, ready_for_test, percentage_completion) {
@@ -421,15 +499,31 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
                 text: 'Change task status from "Not Started"',
             })
         } else {
+
+            let completionDate = null;
+            let project_id = $scope.project.project_id;
+            console.log(project_id);
+            
             if(taskStatus == '61') {
                 percentage_completion = 100;
+                completionDate = new Date();
+                console.log(completionDate);
+                console.log(project_id);
+            }
+
+            if(percentage_completion == 100){
+                taskStatus = '61';
+                console.log(completionDate);
+                console.log(project_id);
             }
             var data = {
                 user_id: $scope.user_info.user_id,
                 task_id: $scope.task_id,
                 taskStatus: taskStatus,
                 ready_for_test: ready_for_test,
-                percentage_completion: percentage_completion
+                percentage_completion: percentage_completion,
+                completionDate: completionDate,
+                project_id: project_id
             }
             console.log(data);
             // return false;
@@ -476,9 +570,9 @@ sheetApp.controller('TaskDetailCtrl', function ($scope, $http, $routeParams, che
                     text: $res.message
                 })
 
-                setTimeout(function () {
-                    location.reload()
-                }, 700);
+                // setTimeout(function () {
+                //     location.reload()
+                // }, 700);
 
                 var comment_message = "<span class='text-success'> New Updates: <br> [Task Status - >  <br> Go For Test - > " + data.ready_for_test + " <br> Task Completion - > " + data.percentage_completion + "] </span>"
 

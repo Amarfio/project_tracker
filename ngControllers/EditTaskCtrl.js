@@ -145,6 +145,8 @@ sheetApp.controller('EditTaskCtrl', function ($scope, $http, check_auth, myConfi
     }
     $scope.get_all_users($scope.url_department_id)
 
+    
+
     $scope.get_one_task = function () {
         $http({
             method: 'GET',
@@ -156,7 +158,11 @@ sheetApp.controller('EditTaskCtrl', function ($scope, $http, check_auth, myConfi
             $scope.oneTask = response.data['data'][0]
             $scope.task_start_date = new Date($scope.oneTask.task_start_date).toISOString().substring(0, 10)
             $scope.task_end_date = new Date($scope.oneTask.task_end_date).toISOString().substring(0, 10)
-            console.log($scope.oneTask)
+            console.log("one task details is here ");
+            console.log($scope.oneTask);
+
+            // $("#developer_id").val($scope.oneTask.assigned_to_id);
+            // $("#developer_id").text($scope.oneTask.assigned_to);
             // console.log($scope.oneTask.task_start_date)
             // console.log($scope.oneTask.task_start_date)
         })
@@ -180,6 +186,24 @@ sheetApp.controller('EditTaskCtrl', function ($scope, $http, check_auth, myConfi
         var t_start_date = $('#start_date_').val()
         var t_end_date = $('#end_date_').val()
 
+        //get the selected value for priority
+        if (priority_=='' || priority_==undefined){
+            var priority_ = $scope.oneTask.priority_id;
+            console.log(priority_);
+            // return false;
+        }
+
+        //get the selected vlaue for client
+        if (client_id_ =='' || client_id_==undefined){
+            var client_id_ = $scope.oneTask.client_id;
+            console.log(client_id_);
+        }
+        
+        //get the selected value for assigned to
+        if (developer_ =='' || developer_ ==undefined){
+            var developer_ = $scope.oneTask.assigned_to_id;
+            console.log(developer_);
+        }
 
         var data = {
             user_id: $scope.user_info.user_id,
@@ -196,6 +220,7 @@ sheetApp.controller('EditTaskCtrl', function ($scope, $http, check_auth, myConfi
             p_end_date: $scope.p_end_date
         }
         console.log(data);
+        // return false;
 
         var sendRequest = function () {
 
@@ -285,6 +310,10 @@ sheetApp.controller('EditTaskCtrl', function ($scope, $http, check_auth, myConfi
         }
 
     }
+
+    $('#backBtn').click(function(){
+        history.back();
+    });
 
 
 });

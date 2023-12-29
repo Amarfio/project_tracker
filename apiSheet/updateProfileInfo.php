@@ -17,7 +17,7 @@ if(
     isset($data) && isset($data->user_id) && isset($data->username) && isset($data->first_name) && isset($data->last_name) &&
     isset($data->address) && isset($data->city) && isset($data->country) && isset($data->bio) 
 ){
-    // echo json_encode($data); 
+    // echo json_encode($data);die(); 
 
     $user_id = mysqli_real_escape_string($conn, $data->user_id);
     $username = mysqli_real_escape_string($conn, $data->username);
@@ -27,15 +27,17 @@ if(
     $city = mysqli_real_escape_string($conn, $data->city);
     $country = mysqli_real_escape_string($conn, $data->country);
     $bio = mysqli_real_escape_string($conn, $data->bio);
+    $emailNotice= mysqli_real_escape_string($conn, $data->email_notice);
+    $isWorking = mysqli_real_escape_string($conn, $data->isWorking);
 
-    $query = "UPDATE `users` SET `username` = '$username', `f_name` = '$first_name', `l_name` = '$last_name', `postal_addr` = '$address', `city` = '$city', `country` = '$country', `bio` = '$bio'  WHERE `users`.`id` = '$user_id'";
+    $query = "UPDATE `users` SET `username` = '$username', `f_name` = '$first_name', `l_name` = '$last_name', `postal_addr` = '$address', `city` = '$city', `country` = '$country', `bio` = '$bio', `receive_emails` = '$emailNotice', `is_active` = '$isWorking' WHERE `users`.`id` = '$user_id'";
 
-    
+    // echo($query); die();
     $result = mysqli_query($conn, $query);
 
     if ($result == 1) { 
         
-        $query = "SELECT u.id as user_id, u.f_name, u.profile_pic, u.bio, u.l_name, u.gender, u.username, u.is_dpt_head, u.can_approve, u.email, u.phone, u.country, u.city, u.postal_addr AS address, u.reset as token, c.id AS department_id, c.desc department, d.id AS role_id, d.desc as role from users u LEFT JOIN code_desc c ON u.dept = c.id left JOIN code_desc d ON u.role = d.id WHERE u.id = '$user_id'";
+        $query = "SELECT u.id as user_id, u.f_name, u.profile_pic, u.bio, u.l_name, u.gender, u.username, u.is_dpt_head, u.can_approve, u.receive_emails, u.email, u.phone, u.country, u.city, u.postal_addr AS address, u.reset as token, c.id AS department_id, c.desc department, d.id AS role_id, d.desc as role, e_desc.desc AS alt_desc from users u LEFT JOIN code_desc c ON u.dept = c.id LEFT JOIN code_desc e_desc ON u.receive_emails = e_desc.id left JOIN code_desc d ON u.role = d.id WHERE u.id = '$user_id'";
         $result = mysqli_query($conn, $query);
         $num = mysqli_num_rows($result);
 
@@ -62,7 +64,9 @@ if(
                         'address' => $row['address'],
                         'country' => $row['country'],
                         'bio' => $row['bio'],
-                        'city' => $row['city']
+                        'city' => $row['city'],
+                        'emailNotice' =>$row['receive_emails'],
+                        'desc_alt' =>$row['alt_desc']
                     ],
                     'token' => $row['token'],
                     'auth' => true,

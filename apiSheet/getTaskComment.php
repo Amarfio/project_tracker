@@ -27,6 +27,7 @@ if (isset($_GET['task_id'])) {
     {
         global $conn;
         $queri = "SELECT username FROM users WHERE id= '$user_id' LIMIT 1";
+        json_encode($queri); die();
         $result = mysqli_query($conn, $queri);
         // return the username
         $row = mysqli_fetch_assoc($result);

@@ -11,12 +11,15 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 require_once 'connect.php';
 
 
-function get_total_task_count( $conn, $department_id, $is_dept_head, $user_id){
+function get_total_project_count( $conn, $department_id, $user_id){
+
+
         
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
-    $query = "SELECT COUNT(t.status) total_task_count FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE  t.assigned_to = '$user_id' AND u.is_dpt_head = '$is_dept_head'";
-    $result = mysqli_query($conn, $query);
+    // $query = "SELECT COUNT(p.project_id) total_project_count FROM projects p WHERE  p.dept_id = '$department_id' AND p.owner = '$user_id' ";
+    $query = "SELECT COUNT(p.project_id) total_project_count FROM projects p WHERE p.owner = '$user_id' AND p.is_archive = 0 ";
+    $result = mysqli_query($conn, $query); 
     // $num = mysqli_num_rows($result);
     $count_total_status = array();
 
@@ -24,19 +27,45 @@ function get_total_task_count( $conn, $department_id, $is_dept_head, $user_id){
             // $count_total_status[] = $row;
               
         return array(
-            'description' => 'total tasks',
-            'total_tasks' => $row['total_task_count']
+            'description' => 'total',
+            'total_projects' => $row['total_project_count']
         );
 
 
 }
 
 
-function get_status_count($status_id, $conn, $department_id, $is_dept_head, $user_id){
+function get_status_count($status_id, $department_id, $user_id, $conn){
         
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
-    $query = "SELECT COUNT(t.status) total_task_status FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE p.is_approved = 1 AND t.status = '$status_id' AND t.assigned_to = '$user_id' AND u.is_dpt_head = '$is_dept_head'";
+    
+    // $query = "";
+    // $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  p.status  = '$status_id' AND (p.dept_id = '$department_id' AND p.owner = '$user_id' )";
+    $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  p.status  = '$status_id' AND ( p.owner = '$user_id' ) AND p.is_archive = 0";
+
+    if($status_id == 116 ){
+        // $query = "SELECT COUNT(project_id) total_overdue FROM projects WHERE NOW()>end_date AND dept_id = '$department_id'";
+        // $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (CURRENT_DATE > end_date AND p.is_approved=1) AND (SELECT AVG(t.completion)<100 from tasks t WHERE t.project_id = p.project_id) AND (p.dept_id = '$department_id' AND p.owner = '$user_id')";
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (CURRENT_DATE > end_date AND p.is_approved=1) AND (SELECT AVG(t.completion)<100 from tasks t WHERE t.project_id = p.project_id) AND (p.owner = '$user_id') AND p.is_archive = 0";
+    }
+    elseif($status_id == 85 ){
+        // $query = "SELECT COUNT(project_id) total_overdue FROM projects WHERE NOW()>end_date AND dept_id = '$department_id'";
+        // $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE ( p.is_approved=1) AND (p.dept_id = '$department_id' AND p.owner = '$user_id')";
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE ( p.is_approved=1) AND ( p.owner = '$user_id') AND p.is_archive = 0";
+    }
+    elseif($status_id == 126 ){
+        // $query = "SELECT COUNT(project_id) total_overdue FROM projects WHERE NOW()>end_date AND dept_id = '$department_id'";
+        // $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE ( p.is_approved=1) AND (p.dept_id = '$department_id' AND p.owner = '$user_id')";
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE ( p.priority=73) AND ( p.owner = '$user_id') AND p.is_archive = 0";
+    }
+    // elseif($status_id == 88){
+    //     $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (p.is_approved=1) AND (SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id = p.project_id) AND p.dept_id = '$department_id'";
+      
+    // }
+    // else{
+    //     $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  p.status  = '$status_id' AND p.dept_id = '$department_id'";
+    // }
     $result = mysqli_query($conn, $query);
     // $num = mysqli_num_rows($result);
     $count_total_status = array();
@@ -44,64 +73,19 @@ function get_status_count($status_id, $conn, $department_id, $is_dept_head, $use
         $row = mysqli_fetch_assoc($result);
             // $count_total_status[] = $row;
         
-        return $row['total_task_status'];
-
-}
-
-
-function get_approved_count($conn, $department_id, $is_dept_head, $user_id){
-        
-    // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
-    // $query = "SELECT COUNT(t.task_id) approved_project FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id WHERE p.is_approved = 1";
-    $query = "SELECT COUNT(t.task_id) approved_project FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to WHERE p.is_approved = 1 AND t.assigned_to = '$user_id' AND u.is_dpt_head = '$is_dept_head'";
-
-    $result = mysqli_query($conn, $query);
-    // $num = mysqli_num_rows($result);
-    $count_total_status = array();
-
-        $row = mysqli_fetch_assoc($result);
-        $count_total_status = $row['approved_project'];
-        
-
-        return array(
-            'description' => 'Approved',
-            'approved_count' => $row['approved_project']
-        );
-        
-
-}
-
-function get_unapproved_count($conn, $department_id, $is_dept_head, $user_id){
-        
-    // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
-    // $query = "SELECT COUNT(t.task_id) unapproved_project FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id WHERE p.is_approved = 0 ";
-    $query = "SELECT COUNT(t.task_id) unapproved_project FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to WHERE p.is_approved = 0 AND t.assigned_to = '$user_id' AND u.is_dpt_head = '$is_dept_head' ";
-
-    $result = mysqli_query($conn, $query);
-    // $num = mysqli_num_rows($result);
-    $count_total_status = array();
-
-        $row = mysqli_fetch_assoc($result);
-        $count_total_status[] = $row['unapproved_project'];
-        
-        return array(
-            'description' => 'unapproved',
-            'unapproved_count' => $row['unapproved_project']
-        );
-        // return $row['unapproved_project'];
+        return $row['total_project_count'];
 
 }
 
 
 
 
-if (isset($_GET['init']) && isset($_GET['department_id']) && isset($_GET['is_dept_head']) && isset($_GET['user_id']) ) {
+if (isset($_GET['init'])  ) {
     $init = mysqli_escape_string($conn, $_GET['init']);
     $department_id = mysqli_escape_string($conn, $_GET['department_id']);
-    $is_dept_head = mysqli_escape_string($conn, $_GET['is_dept_head']);
     $user_id = mysqli_escape_string($conn, $_GET['user_id']);
 
-    $query = "SELECT * FROM code_desc LEFT JOIN code ON code.init = code_desc.init WHERE code_desc.init = '$init'";
+    $query = "SELECT * FROM code_desc co_psta WHERE co_psta.init = '$init' ";
 
 
     $result = mysqli_query($conn, $query); 
@@ -118,11 +102,8 @@ if (isset($_GET['init']) && isset($_GET['department_id']) && isset($_GET['is_dep
                 // If this is the first row for this contact, create an entry in the results
                 $codes[$row['init']] = array(
                     "init" => $row['init'],
-                    "name" => $row['name'],
                     "code_desc" => array(),
-                    "total_tasks" => get_total_task_count( $conn, $department_id, $is_dept_head, $user_id),
-                    "approved_project" => get_approved_count($conn, $department_id, $is_dept_head, $user_id),
-                    "unapproved_project" => get_unapproved_count($conn, $department_id, $is_dept_head, $user_id)
+                    "total_projects" => get_total_project_count( $conn, $department_id, $user_id)
                 );
             }
             // Add this phone number to the `PhoneNumbers` array
@@ -131,7 +112,8 @@ if (isset($_GET['init']) && isset($_GET['department_id']) && isset($_GET['is_dep
                 'status_init' => $row['init'],
                 "status_init_desc" => $row['init_desc'],
                 "status" => $row['desc'],
-                "status_count" =>get_status_count($row['id'], $conn, $department_id, $is_dept_head, $user_id)
+                "code_color" => $row['color'],
+                "status_count" =>get_status_count($row['id'],$department_id, $user_id, $conn)
             );
         }
         $codes = array_values($codes);

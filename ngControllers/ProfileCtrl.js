@@ -6,8 +6,12 @@ sheetApp.controller('ProfileCtrl', function ($scope, $http, $timeout, check_auth
 
     // PROFILE PHOTO
     $scope.profile_pic_true = $localStorage.profile_pic
+    $scope.signature_pic_true = $localStorage.signature_pic
     $scope.profile_pic = myConfig.file_url + $scope.profile_pic_true
+    $scope.signature_pic = myConfig.file_url + $scope.signature_pic_true
     console.log($scope.profile_pic)
+
+    console.log($scope.signature_pic) 
 
 
 
@@ -33,8 +37,30 @@ sheetApp.controller('ProfileCtrl', function ($scope, $http, $timeout, check_auth
     }
     $scope.get_all_countries()
 
+    $scope.get_code_desc = function (init) {
+        $http({
+            method: 'GET',
+            url: myConfig.url + '/getCodeDescription.php?init=' + init
 
-    $scope.updateUserInfo = function () {
+        }).then(function successCallback(response) {
+            
+            $scope.code_desc = response.data['0'].code_desc, Number
+            console.log($scope.code_desc)
+
+        }, function errorCallback(response) {
+
+            Swal.fire({
+                type: 'warning',
+                title: 'Network Connection Erro',
+                text: 'Priority Could not loaded'
+            })
+
+        });
+    }
+    $scope.get_code_desc('ALT')
+
+
+    $scope.updateUserInfo = function (emailNotice) {
         var username = $('#username').val()
         var first_name = $('#first_name').val()
         var last_name = $('#last_name').val()
@@ -42,6 +68,14 @@ sheetApp.controller('ProfileCtrl', function ($scope, $http, $timeout, check_auth
         var city = $('#city').val()
         var country = $('#country').val()
         var bio = $('#bio').val()
+        var email_notice = emailNotice
+
+        //get the selected value for priority
+        if (email_notice=='' || email_notice==undefined){
+            var email_notice = $scope.user_info.emailNotice;
+            console.log(email_notice);
+            // return false;
+        }
 
         console.log(username)
         console.log(first_name)
@@ -50,6 +84,8 @@ sheetApp.controller('ProfileCtrl', function ($scope, $http, $timeout, check_auth
         console.log(city)
         console.log(country)
         console.log(bio)
+        console.log(email_notice)
+        // return false;
 
         var data = {
             user_id: $scope.user_info.user_id,
@@ -60,6 +96,8 @@ sheetApp.controller('ProfileCtrl', function ($scope, $http, $timeout, check_auth
             city: city,
             country: country,
             bio: bio,
+            email_notice : email_notice,
+            isWorking: 1
         }
 
         $http({
@@ -120,6 +158,33 @@ sheetApp.controller('ProfileCtrl', function ($scope, $http, $timeout, check_auth
             if (res.status == 'success') {
                 var profile_pic = res_data.profile_pic
                 check_auth.profile_pic(profile_pic);
+                window.location = "profile"
+            }
+
+        });
+    }
+
+    $scope.uploadSignature = function () {
+        var file = $scope.uploadfile;
+        var fd = new FormData();
+        var files = document.getElementById('signaturefile').files[0];
+        fd.append('file', files);
+
+        $http({
+            method: 'POST',
+            url: myConfig.url + '/uploadSignature.php?user_id=' + $scope.user_info.user_id,
+            data: fd,
+            headers: {
+                'Content-Type': undefined
+            },
+        }).then(function successCallback(response) {
+            // Store response data
+            var res = response.data;
+            var res_data = response.data['data'];
+            console.log(res_data);
+            if (res.status == 'success') {
+                var signature = res_data.signature
+                check_auth.signature_pic(signature);
                 window.location = "profile"
             }
 

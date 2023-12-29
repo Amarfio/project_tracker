@@ -2,6 +2,14 @@
   <br />
   <ng-include src="'side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
 </nav>
+
+
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap4.min.css" defer />
+<script script src="https://code.jquery.com/jquery-3.5.1.js" defer></script>
+<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script> -->
+
+
 <div class="main-content">
   <!-- Navbar -->
   <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
@@ -10,28 +18,40 @@
 
       <span>
         <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="#">
-          Project Dashboard
+          {{ dashboard_description }} Dashboard
         </a>
       </span>
 
       <span ng-if="admin_or_assigner_can_see">
         <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block badge badge-info" href="#"
-          ng-click="get_statics_developer_for_assigner_and_admin('sta')">
+          ng-click="get_default()">
           Admin Dashboard
         </a>
         &nbsp;&nbsp;&nbsp;&nbsp;
       </span>
 
-      <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
-        <div class="form-group mb-0">
-          <!-- <div class="input-group input-group-alternative">
-            <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fas fa-search"></i></span>
-            </div>
-            <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: auto;" />
-          </div> -->
-        </div>
-      </form>
+      <!-- <span ng-if="user_info.role != 'admin'">
+
+        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block badge badge-info" href="#"
+          ng-click="get_statics_developer_for_developer('psta', user_info.department_id, user_info.is_dept_head, user_info.user_id, user_info.user_role)">
+          My Projects
+        </a>
+
+      </span> -->
+
+      <!-- <span ng-if="admin_or_assigner_can_see">
+        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block badge badge-info" href="#"
+          ng-click="get_statics_developer_for_assigner_and_admin('psta')">
+          Admin Dashboard
+        </a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+      </span> -->
+
+      <!-- ng-model="get_statics_developer_for_developer('psta', user_info.department_id, user_info.is_dept_head, user.user_id, user.user_role)" -->
+
+      
+
+      
 
       <!-- User -->
       <ul class="navbar-nav align-items-center d-none d-md-flex">
@@ -96,7 +116,7 @@
         <!-- Card stats -->
         <div class="row">
           <div class="col-xl-3 col-lg-6 dash_card" ng-click="get_total_projects(user_info.user_id, total_projects.description, _user_info_role,
-            user_info.department_id)">
+            user_info.department_id, dev_changed)">
             <div class="card card-stats mb-4 mb-xl-0">
               <div class="card-body">
                 <div class="row">
@@ -120,12 +140,12 @@
 
 
           <div class="col-xl-3 col-lg-6 dash_card" ng-repeat="status in status_of_project" ng-click="get_tasks_by_status_id(user_info.user_id, status.status_id, status.status, _user_info_role,
-            user_info.department_id)">
+            user_info.department_id, dev_changed)">
             <div class="card card-stats mb-4 mb-xl-0">
               <div class="card-body">
                 <div class="row">
                   <div class="col-auto">
-                    <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
+                    <div class="icon icon-shape bg-{{ status.code_color }} text-white rounded-circle shadow">
                       <i class="ni ni-settings"></i>
                     </div>
                   </div>
@@ -152,37 +172,64 @@
     <!-- Table -->
     <div class="row">
       <div class="col-md-4">
-        <a class=" h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="#">
-          ( {{ projects.length }} ) - {{ statistics_description_name }}
-          projects
+        <a class=" h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" title="click to download" id="btnExport">
+          ( {{ projects.length }} ) - {{ statistics_description_name }} 
+          projects &nbsp; &nbsp;<span class="ni ni-cloud-download-95"></span>
         </a>
       </div>
       <div class="col-md-8">
         <div class="row">
+          <!-- <div class="col-xl-2" ng-show="user_info.role == 'admin'">
+            <input class="form-control" placeholder="Start Date" type="date" title="start date" ng-model="tableSearch" style="height: auto;">
+          </div>
+          <div class="col-xl-2" ng-show="user_info.role == 'admin'">
+            <input class="form-control" placeholder="End Date" type="date" title="end date" ng-model="tableSearch" style="height: auto;">
+          </div> -->
+          
           <div class="col-xl-3">
             <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: auto;">
           </div>
-          <div class="col-xl-4">
-            <select class="form-control " required ng-model="tableSearch_by_department_id">
-              <option value="">--Filter by Department--</option>
+          
+          <div class="col-xl-3" ng-show="user_info.is_dept_head == 1 || user_info.role='admin'">
+            <!-- <select class="form-control" ng-click="get_statics_developer_for_developer('psta', 104, 0, 115)"> -->
+              <select id="developer_s" class="form-control">
+              <option value="">-- Filter by Developer --</option>
+              <option value="0">-- All Developers --</option>
+              <option ng-repeat="dev in all_developers" ng-model="user_id_" ng-value="dev.user_id" ng-hide="dev.user_id == '1'" >
+                {{dev.f_name}} {{dev.l_name}} </option>
+            </select>
+          </div>
+          <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
+            <!-- <select id="department_s" class="form-control " required ng-model="tableSearch_by_department_id"> -->
+              <select id="department_s" class="form-control">
+              <option value="0">--Filter by Department--</option>
               <option ng-value="department.code_desc_id" ng-repeat="department in departments">{{department.code_desc}}
               </option>
             </select>
           </div>
-          <div class="col-xl-3">
+
+          <div class="col-xl-2">
+            <a data-toggle="modal" data-target="#modal-search">
+                <button type="submit" class="btn btn-info" data-toggle="modal" data-toggle="#modal-search">
+                    Advanced Search
+                </button>
+            </a>
+          </div>
+          <!-- <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
             <select class="form-control " required ng-model="tableSearch_by_status_id">
               <option value="">-- project Status--</option>
               <option ng-value="status.status_id" ng-repeat="status in status_of_project">{{ status.status}}</option>
             </select>
-          </div>
+          </div> -->
           <!-- <div class="col-xl-2">
               <button class="btn btn-info text-uppercase" ng-click="apply_filter(filter_department, filter_status)">apply</button>
             </div> -->
-          <div class="col-xl-2">
+          <!-- <div class="col-xl-2" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
             <button class="btn btn-info text-uppercase" ng-click="clear_filter()">clear</button>
-          </div>
+          </div> -->
         </div>
       </div>
+      <!-- <div></div> -->
     </div>
 
     <div class="col">
@@ -194,29 +241,32 @@
         </h5>
 
         <div class="table-responsive" ng-if="projects">
-          <form ng-submit="downloadExcelSheet()" ng-show="user_info.is_dept_head == '1' ">
+          <!-- <form ng-submit="downloadExcelSheet()" ng-show="user_info.is_dept_head == '1' ">
             <div class="col-4 text-left" >
               
               <input type="number" hidden class="form-control" id="dept_id" ng-value="" ng-model="dept_id">
-              <button type="submit" class="btn btn-sm btn-primary">last Update</button>
+              <button ng-click = downloadExcel() class="btn btn-sm btn-primary">last Update</button> -->
               <!-- <a href="#!">Save Changes</a> -->
-            </div>
-          </form>
+            <!-- </div>
+          </form> -->
           <legend></legend>
 
-          <table class="table align-items-center table-flush" id="data_table">
+          <table class="table align-items-center table-flush" id="statusTable">
             <thead class="thead-light">
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Version</th>
+                <th scope="col">Project ID</th>
                 <th scope="col">Description</th>
+                <th scope="col">No of tasks</th>
+                <th scope="col">File</th>
+                <th scope="col">Days to End</th>
+                <th scope="col">Owner</th>
                 <th scope="col">Status</th>
                 <th scope="col">Start</th>
                 <th scope="col">End</th>
                 <th scope="col">Age(days)</th>
                 <th scope="col">Completion</th>
                 <th scope="col">Department</th>
-                
+                <th scope="col">Days overdue</th>
               </tr>
             </thead>
             <tbody>
@@ -229,10 +279,6 @@
                     <!-- PROJ-0000{{project.project_id}} -->
                   </div>
                 </th>
-                <td>
-                  {{ project.version }} &nbsp;
-                  <a class="badge badge-success">{{ project.tasks.length }}</a>
-                </td>
                 <td style="max-width: 300px;">
                   <div class="col-12 text-truncate" data-toggle="tooltip" data-placement="top"
                     title="{{ project.name }}">
@@ -240,31 +286,63 @@
                     <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
                   </div>
                 </td>
-
                 <td>
-                  <span class="badge badge-default"
-                    ng-if="project.status_desc == 'drafts'">{{ project.status_desc }}</span>
-                  <span class="badge badge-warning"
-                    ng-if="project.status_desc == 'unapproved'">{{ project.status_desc }}</span>
-                  <span class="badge badge-success"
-                    ng-if="project.status_desc == 'approved'">{{ project.status_desc }}</span>
-                  <span class="badge badge-secondary"
-                    ng-if="project.status == 'scheduled'">{{ project.status_desc }}</span>
-                  <span class="badge badge-info"
-                    ng-if="project.status_desc == 'in progress'">{{ project.status_desc }}</span>
-                  <span class="badge badge-primary"
-                    ng-if="project.status_desc == 'completed'">{{ project.status_desc }}</span>
-                </td>
-
-                <td>
-                  {{ project.start_date | date: mediumDate}}
+                  {{ project.no_of_tasks }} &nbsp;
+                  <a class="badge badge-success">{{ project.tasks.length }}</a>
                 </td>
                 <td>
-                  {{ project.end_date | date: mediumDate}}
+                  <strong ng-if="project.attach != ''">
+                    &nbsp; &nbsp; <i title="download" class="ni ni-cloud-download-95 text-blue" id=""></i>
+                    <a ng-href="{{myConfig_file_url}}{{project.attach}}" target="_blank" download>
+                      {{ project.attach }}
+                    </a>
+                  </strong>  
+
+                  <strong ng-if="project.attach ==''">
+                    no file attached.
+                  </strong>
                 </td>
+                <td >
+                  <strong ng-if="project.days_to_end == 'overdue'">
+                    <div class="text-danger">
+                      {{project.overdue_days}} {{' days overdue'}}
+                    </div>
+                  </strong>
+                  <div ng-if="project.days_to_end != 'overdue'">
+                    {{project.days_to_end}} {{' more'}}
+                </div>
+                  
+                </td>
+                <td>
+                  {{project.owner}}
+                </td>
+                <td>
+                  <strong class="text-default" ng-if="project.status_desc == 'drafts'">
+                    {{ project.status_desc }}
+                  </strong>
+                  <strong class="text-warning"
+                    ng-if="project.status_desc == 'unapproved'">{{ project.status_desc }}</strong>
+                  <strong class="text-primary"
+                    ng-if="project.status_desc == 'approved'">{{ project.status_desc }}</strong>
+                  <strong class="text-secondary"
+                    ng-if="project.status == 'scheduled'">{{ project.status_desc }}</strong>
+                  <strong class="text-info"
+                    ng-if="project.status_desc == 'in progress'">{{ project.status_desc }}</strong>
+                  <strong class="text-success"
+                    ng-if="project.status_desc == 'completed'">{{ project.status_desc }}</strong>
+                    <strong class="text-danger"
+                    ng-if="project.status_desc == 'overdue'">{{ project.status_desc }}</strong>
+                  
+                  </td>
 
                 <td>
-                  {{ project.age | number }} days
+                  {{ project.start_date}}
+                </td>
+                <td>
+                  {{ project.end_date}}
+                </td>
+                <td>
+                  {{ project.age }}
                 </td>
                 <td>
                   <div class="d-flex align-items-center" ng-if="project.completion == null">
@@ -274,10 +352,12 @@
                     <span class="mr-2">{{ project.completion | number }} %</span>
                   </div>
                 </td>
-
                 <td>
                   <span class="text-camelcase"></span>
                   {{ project.department }}
+                </td>
+                <td>
+                  {{ project.days_overdue}}
                 </td>
               </tr>
             </tbody>
@@ -286,21 +366,122 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="modal-search" tabindex="-1" role="dialog" aria-labelledby="modal-add-codex" aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+
+        <div class="modal-body p-0">
+            <div class="card bg-secondary shadow border-0">
+
+            <div class="card-body px-lg-5 py-lg-4">
+                <div class=" text-muted ">
+                <legend></legend>
+
+                <span class="text-primary"> Filter by date</span>
+
+                <hr>
+
+                </div>
+
+                <div class="col-md-12 form-group mb-3">
+                  <label for="inputPassword" class="col-form-label text-primary">Start Date</label>
+                        <input class="form-control" type="date" placeholder="dd-mm-yyyy" ng-model="start_date_" id="start_date" />
+                  <label for="inputPassword" class="col-form-label text-primary">End Date</label>
+                        <input class="form-control" type="date" placeholder="dd-mm-yyyy" ng-model="end_date_" id="end_date" />
+                
+                  <label for="inputPassword" class="col-form-label text-primary">End Date</label>        
+                      <select id="s_developer" class="form-control">
+                        <option value="">-- Filter by Developer --</option>
+                        <option value="0">-- All Developers --</option>
+                        <option ng-repeat="dev in all_developers" ng-model="user_id_" ng-value="dev.user_id" ng-hide="dev.user_id == '1'" >
+                          {{dev.f_name}} {{dev.l_name}} </option>
+                      </select>
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                  <label for="inputPassword" class="col-form-label text-primary">Status</label>
+                  <!-- <input class="form-control" type="text" /> -->
+                  <select class="form-control text-uppercase" id="statusS">
+                    <option value="0">--Select project status--</option>
+                    <!-- <option value="0">--Filter by Department--</option> -->
+                    <option ng-value="status.code_desc_id" class="text-uppercase" ng-repeat="status in pstatus">{{status.code_desc}}</option>
+                    <!-- <option>DRAFTS</option>
+                    <option>UNAPPROVED</option>
+                    <option>APPROVED</option>
+                    <option>SCHEDULED</option>
+                    <option>IN PROGRESS</option>
+                    <option>COMPLETED</option>
+                    <option>OVERDUE</option> -->
+                  </select>
+                </div>
+                
+                <div class="modal-footer">
+
+                <button type="submit" ng-click="get_by_date_range_and_status()" class="btn btn-danger btn-sm float-right mr-4">Search
+                </button>
+                &nbsp;&nbsp;<button type="button" class="btn btn-secondary btn-sm float-right "
+                    data-dismiss="modal">Close </button>
+
+                </div>
+            </div>
+
+
+            </div>
+        </div>
+
+
+        </div>
+    </div>
+  </div>
 </div>
 
+<!-- <script script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script> -->
+<!-- 
 <script>
-  $(document).ready(function () {
-    var table = $('#data_table').DataTable({
-      lengthChange: false,
-      buttons: ['copy', 'excel', 'pdf', 'colvis']
+    $.noConflict();
+    jQuery(document).ready(function($) {
+        $('#statusTable').DataTable({
+            pageLength: 5
+        });
     });
+</script> -->
+<script>
+      $(document).ready(function () {
 
-    table.buttons().container()
-      .appendTo('#example_wrapper .col-md-6:eq(0)');
-  });
+            $("#btnExport").click(function (e) {
 
-  $(document).ready(function () {
-    $("#data_table").DataTable();
-  });
+              var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
+              var textRange; var j=0;
+              tab = document.getElementById('statusTable'); // id of table
+
+              for(j = 0 ; j < tab.rows.length ; j++)
+              {
+                  tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
+                  //tab_text=tab_text+"</tr>";
+              }
+
+              tab_text=tab_text+"</table>";
+              tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+              tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+              tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+              var ua = window.navigator.userAgent;
+              var msie = ua.indexOf("MSIE");
+
+              if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+              {
+                  txtArea1.document.open("txt/html","replace");
+                  txtArea1.document.write(tab_text);
+                  txtArea1.document.close();
+                  txtArea1.focus();
+                  sa=txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
+              }
+              else                 //other browser not tested on IE 11
+                  sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+            });
+
+    });
 </script>
 </div>

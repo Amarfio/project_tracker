@@ -8,7 +8,7 @@
         <div class="container-fluid">
             <!-- Brand -->
             <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" ng-href="project/{{url_project_id}}">
-                <i class="fa fa-arrow-left 2x"></i>&nbsp;&nbsp; &nbsp;&nbsp;Return to Tasks</a>
+                <i class="fa fa-arrow-left 2x"></i>&nbsp;&nbsp; &nbsp;&nbsp;Return</a>
 
             <!-- User -->
             <ul class="navbar-nav align-items-center d-none d-md-flex">
@@ -88,7 +88,7 @@
                     <div class="card card-stats mb-4 mb-lg-0">
                         <div class="card-body">
                             <br>
-                            <form id="add_task_form" ng-submit="createTask(url_project_id, priority_, task_, developer_,
+                            <form id="add_task_form" ng-submit="createTask(url_project_id, task_, priority_, developer_,
                                     client_id_, start_date_, end_date_)">
                                 <div class="form-group row">
                                     <label for="inputPassword"
@@ -245,7 +245,8 @@
                                     <label for="inputPassword" class="col-sm-6 col-form-label text-primary"></label>
                                     <div class="col-sm-6">
                                         <button type="submit" class="btn btn-primary">Add </button>
-                                        <a href="dashboard_t">
+                                        <!-- href="dashboard_t" -->
+                                        <a onclick="window.history.back()">
                                             <button type="button" class="btn btn-warning">Cancel</button>
                                         </a>
                                     </div>

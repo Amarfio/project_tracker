@@ -1,4 +1,3 @@
-
 <?php
 
 header('Access-Control-Allow-Origin: *');
@@ -88,7 +87,7 @@ function get_department_head_email($department_id, $conn){
                 Project Details includes the following: 
                 <br/><br/>
                 Project ID: PRO-0000 $project_id <br/>
-                Description:  $description <br/>
+                Project Name:  $name <br/>
                 Version: $version_name <br/>
                 Department: $department <br/>
                 Start Date: $start_date <br/>
@@ -115,7 +114,7 @@ function get_department_head_email($department_id, $conn){
                 $mail = new PHPMailer();
 
 
-                //STMP Settings
+                // STMP Settings
                 $mail->isSMTP();
                 $mail->Host = "server.unionsg.com";
                 $mail->SMTPAuth=true;
@@ -123,16 +122,26 @@ function get_department_head_email($department_id, $conn){
                 $mail->Password="(qLwOdQ3F3cm";
                 $mail->Port = 587;
                 $mail->SMTPSecure = "tls";
+
+                // //SMTP Settings
+                // $mail->isSMTP();
+                // $mail->Host = "smtp.gmail.com";
+                // $mail->SMTPAuth= true;
+                // $mail->Username="joshuaamarfio1@gmail.com";
+                // $mail->Password = "atmoqrmb8N";
+                // $mail->Port = 587; //587
+                // $mail->SMTPSecure ="tls";//tls
            
-                //Email Settings
+                // Email Settings
                 $mail->isHTML(true);
-                $mail->setFrom("hr@unionsg.com", $mailName);
+                $mail->setFrom($deptHeadEmail, $mailName);
                 $mail->addAddress($deptHeadEmail);
                 $mail->Subject="Approval Request";
                 $mail->Body = $txt;
                 $done = $mail->send();
 
-            
+            //revisit and send emails to department heads for approval alert
+                // return true;
 
             // mail($to,$subject,$txt,$headers
            if( $done){
@@ -148,7 +157,8 @@ function get_department_head_email($department_id, $conn){
                 );
                 exit($message);
 
-                }
+            }
+
             }
             
                 else {
@@ -172,32 +182,32 @@ function get_department_head_email($department_id, $conn){
 
     }
 
-function approve ($conn, $project_id){
-    
-    $query = "UPDATE `projects` SET `status` = 84 WHERE `projects`.`project_id` = '$project_id';";
+    function approve ($conn, $project_id){
+        
+        $query = "UPDATE `projects` SET `status` = 84 WHERE `projects`.`project_id` = '$project_id';";
 
-    $result = mysqli_query($conn, $query);
+        $result = mysqli_query($conn, $query);
 
-    if ($result == 1) {
-        $message = json_encode(
-            array(
-                'message' => 'Project has been submitted for Approval',
-                'status' => 'success',
-                'project_id' => $project_id
-            )
-        );
-        exit($message);
-    } else{
-        $message = json_encode(
-            array(
-                'message' => 'failed to approve',
-                'status' => 'failed',
-            )
-        );
+        if ($result == 1) {
+            $message = json_encode(
+                array(
+                    'message' => 'Project has been submitted for Approval',
+                    'status' => 'success',
+                    'project_id' => $project_id
+                )
+            );
+            exit($message);
+        } else{
+            $message = json_encode(
+                array(
+                    'message' => 'failed to approve',
+                    'status' => 'failed',
+                )
+            );
 
-        exit($message);
+            exit($message);
+        }
     }
-}
 
 
 

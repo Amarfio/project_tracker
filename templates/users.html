@@ -110,7 +110,7 @@
                   <th scope="col"> Full Name</th>
                   <th scope="col">Dapartment</th>
                   <th scope="col">Email</th>
-                  <th scope="col">Phone</th>
+                  <!-- <th scope="col">Phone</th> -->
                   <th scope="col">Status</th>
                   <th scope="col">Actions</th>
                 </tr>
@@ -130,19 +130,27 @@
                   <td>
                     {{user.email}}
                   </td>
+                
                   <td>
-                    {{user.phone}}
-                  </td>
-                  <td>
-                    <span class="badge badge-dot mr-4">
-                      <i class="bg-success"></i> Active
-                    </span>
+                      <!-- <span class="badge badge-dot mr-4">
+                        <i class="bg-success"></i> Active
+                      </span> -->
+                      <span class="badge badge-dot mr-4" ng-if="user.is_active==1">
+                        <i class="bg-success"></i> Active
+                      </span>
+  
+                      <span class="badge badge-dot mr-4" ng-if="user.is_active==0">
+                        <i class="bg-danger"></i> Inactive
+                      </span>
                   </td>
 
                   <td>
+                    <a href="edit_user/{{user.user_id}}">
                     <span class="fas fa-pencil-alt text-blue"></span>
+                    </a>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span class="fas fa-trash text-red"></span>
+                    
                   </td>
 
 

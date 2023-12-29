@@ -1,0 +1,469 @@
+<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main"><br>
+    <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+</nav>
+<div class="main-content">
+    <!-- Navbar -->
+    <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <span class="h4 mb-0 text-white text-uppercase code_title">Limits
+                Definitions</span>
+            <!-- <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block ">Codes Definitions</a> -->
+            <a class="h4 mb-0 text-white text-uppercase return_to_code add" style="cursor: pointer"> <i
+                    class="fa fa-arrow-left 2x"></i>&nbsp;&nbsp; &nbsp;&nbsp;Return to Code</a>
+
+            <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
+                <div class="form-group mb-0">
+                    <div class="input-group input-group-alternative">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        </div>
+                        <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch"
+                            style="height: auto;">
+                    </div>
+                </div>
+            </form>
+
+            <!-- User -->
+            <ul class="navbar-nav align-items-center d-none d-md-flex">
+                <li class="nav-item dropdown">
+                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <div class="media align-items-center">
+
+                            <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true == null">
+                                <span ng-if="user_info.gender == 'Male'">
+                                    <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle">
+                                </span>
+                                <span ng-if="user_info.gender == 'Female'">
+                                    <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle">
+                                </span>
+                                <!-- <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg"> -->
+                            </span>
+
+                            <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true != null">
+                                <img alt="Image placeholder" ng-src="{{ profile_pic }}">
+                            </span>
+
+
+                            <div class="media-body ml-2 d-none d-lg-block">
+                                <span
+                                    class="mb-0 text-sm  font-weight-bold text-uppercase">{{user_info.username}}</span>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                        <div class=" dropdown-header noti-title">
+                            <h6 class="text-overflow m-0">Welcome {{user_info.username}}</h6>
+                        </div>
+                        <a href="profile" class="dropdown-item">
+                            <i class="ni ni-single-02"></i>
+                            <span>My profile</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-settings-gear-65"></i>
+                            <span>Settings</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-calendar-grid-58"></i>
+                            <span>Activity</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-support-16"></i>
+                            <span>Support</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" ng-click="logout()">
+                            <i class="ni ni-user-run"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-5 pt-5 pt-md-8">
+        <div class="container-fluid">
+            <div class="header-body">
+
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mt--7">
+        <!-- Table -->
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6" id="code_table">
+
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <strong class="text-primary">( {{limits.length}} ) - Limit</strong>
+                        <button class="btn btn-sm btn-primary float-right" data-toggle="modal"
+                            data-target="#modal-add-codex">Add Limit <span class="ni ni-fat-add"></span>
+                        </button>
+
+                    </div>
+                    <div class="table-responsive">
+
+                        <table class="table align-items-center table-flush ">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Number</th>
+                                    <th scope="col" colspan="1">Actions</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr ng-repeat="limit in limits | filter: tableSearch">
+                                    <th scope="row">
+                                        {{$index +1}}
+                                    </th>
+                                    <td>
+                                        <a href="#" ng-click="get_limit_details(limit.id)">{{limit.name}}</a>
+                                    </td>
+                                    <td>
+                                        <a href="#">{{limit.description}}</a>
+                                    </td>
+                                    <td class="text-uppercase">
+                                        {{limit.number}}
+                                    </td>
+                                    <td>
+                                        <span class="fas fa-pencil-alt text-blue" data-target="#modal-edit-limit" data-toggle="modal">
+
+                                        </span>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span class="fas fa-trash text-red"></span>
+                                    </td>
+
+
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-6" id="code_description_table">
+                <div class="card shadow">
+
+                    <div class="card-header border-0">
+                        <span ng-show="code_desc.init">
+                            <span class="text-uppercase text-primary small">( {{code_desc.code_desc.length}} ) -
+                                {{code_desc.name}}</span>
+                            <!-- <button class="btn btn-sm btn-primary float-right" data-toggle="modal"
+                                    data-target="#modal-add-codex-description"
+                                    ng-click="show_code_model(code_desc.init)" ng-hide="code_desc.init == 'rol'">Add
+                                    {{code_desc.name}} <span class="ni ni-fat-add"></span>
+                                </button> -->
+                            <button class="btn btn-sm btn-primary float-right" data-toggle="modal"
+                                data-target="#modal-add-codex-description"
+                                ng-click="show_code_model(code_desc.init)">Add
+                                {{code_desc.name}} <span class="ni ni-fat-add"></span>
+                            </button>
+                        </span>
+
+                        <span class="text-uppercase text-primary small" ng-show="!code_desc">Code Description</span>
+
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Code</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col" colspan="1">Actions</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr ng-show="code_desc.code_desc == null || code_desc == null">
+
+                                    <td colspan="4" class="text-center">
+                                        <span class="text-danger">No Data Available</span>
+                                    </td>
+
+
+                                </tr>
+
+                                <tr ng-repeat="init_desc in code_desc.code_desc | filter: tableSearch">
+                                    <th scope="row">
+                                        {{$index+1}}
+                                    </th>
+                                    <td class="text-uppercase">
+                                        {{init_desc.init_desc}}
+                                    </td>
+                                    <td>
+                                        {{init_desc.code_desc}}
+                                    </td>
+
+                                    <td>
+                                        <span class="fas fa-pencil-alt text-blue"></span>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span class="fas fa-trash text-red"></span>
+                                    </td>
+
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-3"></div>
+        </div>
+
+        <!-- codex modal -->
+        <div class="modal fade" id="modal-add-codex" tabindex="-1" role="dialog" aria-labelledby="modal-add-codex"
+            aria-hidden="true">
+            <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="card bg-secondary shadow border-0">
+
+                            <div class="card-body px-lg-5 py-lg-4">
+                                <div class="text-center text-muted ">
+                                    <legend></legend>
+                                    <h4>Add Limit</h4>
+                                    <br>
+
+                                    <!-- Error and succes message -->
+                                    <div class="alert alert-danger" role="alert" id="code_message_error">
+                                        <strong>Failed to add {{codex_init_}}: {{codex_name_}}
+                                    </div>
+                                    <div class="alert alert-success" role="alert" id="code_message_success">
+                                        <strong>{{codex_init_}}: {{codex_name_}} added successfully </strong>
+                                    </div>
+                                    <!-- Error and succes message -->
+
+                                </div>
+                                <form role="form" ng-submit="addLimit(nameOfLimit, descriptionOfLimit, noOfLimit)">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-building"></i></span>
+                                            </div>
+
+                                            <input class="form-control" placeholder="Name of limit"
+                                                type="text" id="nameOfLimit" ng-model="nameOfLimit"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i
+                                                        class="ni ni-lock-circle-open"></i></span>
+                                            </div>
+                                            <input class="form-control" id="descriptionOfLimit" placeholder="Description of limit"
+                                                type="text" ng-model="descriptionOfLimit" 
+                                                required>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i
+                                                        class="ni ni-lock-circle-open"></i></span>
+                                            </div>
+                                            <input class="form-control" id="noOfLimit" placeholder="Number of limits"
+                                                type="text" ng-model="noOfLimit" 
+                                                required>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                        <button type="button" class="btn btn-link " data-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- End modal -->
+
+        <!-- edit limit modal -->
+        <div class="modal fade" id="modal-edit-limit" tabindex="-1" role="dialog" aria-labelledby="modal-edit-limit"
+            aria-hidden="true">
+            <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="card bg-secondary shadow border-0">
+
+                            <div class="card-body px-lg-5 py-lg-4">
+                                <div class="text-center text-muted ">
+                                    <legend></legend>
+                                    <h4>Edit Limit</h4>
+                                    <br>
+
+                                    <!-- Error and succes message -->
+                                    <div class="alert alert-danger" role="alert" id="code_message_error">
+                                        <strong>Failed to add {{codex_init_}}: {{codex_name_}}
+                                    </div>
+                                    <div class="alert alert-success" role="alert" id="code_message_success">
+                                        <strong>{{codex_init_}}: {{codex_name_}} added successfully </strong>
+                                    </div>
+                                    <!-- Error and succes message -->
+
+                                </div>
+                                <form role="form" ng-submit="addLimit(nameOfLimit, descriptionOfLimit, noOfLimit)">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-building"></i></span>
+                                            </div>
+
+                                            <input class="form-control" placeholder="Name of limit"
+                                                type="text" id="nameOfLimit" ng-model="nameOfLimit"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i
+                                                        class="ni ni-lock-circle-open"></i></span>
+                                            </div>
+                                            <input class="form-control" id="descriptionOfLimit" placeholder="Description of limit"
+                                                type="text" ng-model="descriptionOfLimit" 
+                                                required>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i
+                                                        class="ni ni-lock-circle-open"></i></span>
+                                            </div>
+                                            <input class="form-control" id="noOfLimit" placeholder="Number of limits"
+                                                type="text" ng-model="noOfLimit" 
+                                                required>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                        <button type="button" class="btn btn-link " data-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- End modal -->
+
+
+        <!-- codex description modal -->
+        <div class="modal fade" id="modal-add-codex-description" tabindex="-1" role="dialog"
+            aria-labelledby="modal-add-codex-description" aria-hidden="true">
+            <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="card bg-secondary shadow border-0">
+
+                            <div class="card-body px-lg-5 py-lg-4">
+                                <div class="text-center text-muted ">
+                                    <legend></legend>
+                                    <h4 class="text-uppercase">Add <span id="code_heading"></span>{{code_desc.name}}
+                                    </h4>
+                                    <hr>
+                                    <!-- Error and succes message -->
+                                    <div class="alert alert-danger" role="alert" id="code_description_message_error">
+                                    </div>
+                                    <div class="alert alert-success" role="alert" id="code_description_message_success">
+                                    </div>
+                                    <!-- Error and succes message -->
+                                </div>
+                                <form role="form"
+                                    ng-submit="addCodeDescription(code_init, codex_init_description_, code_description_)">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-building"></i></span>
+                                            </div>
+
+                                            <input class="form-control text-uppercase" placeholder="Codex Initial"
+                                                type="text" id="codex_init_description_"
+                                                ng-model="codex_init_description_" maxlength="4" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <input class="form-control text-uppercase" ng-value="code_init" type="hidden"
+                                            id="code_init_">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-building"></i></span>
+                                            </div>
+
+
+                                            <input class="form-control" value="" placeholder="Add {{code.name}} ..."
+                                                id="code_description_" type="text" ng-model="code_description_"
+                                                required>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                        <button type="button" class="btn btn-link " data-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- End modal -->
+
+
+
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        //    $('.code_title').hide();
+        $('#code_description_table').hide();
+        $('a.return_to_code').hide();
+
+        $('a.return_to_code').click(function (e) {
+            e.preventDefault();
+            $('a.return_to_code').hide();
+            $('#code_description_table').hide();
+            $('#code_table').show();
+            $('.code_title').show();
+
+        });
+
+        $('.data_table').DataTable();
+        $('#code_message_error').hide();
+        $('#code_message_success').hide();
+        $('#code_description_message_error').hide();
+        $('#code_description_message_success').hide();
+    });
+</script>

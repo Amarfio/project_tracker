@@ -30,6 +30,12 @@ function query_status_projects($status_id, $conn){
 
     if ($num > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
+
+            $startDate = strtotime($row['start_date']);
+            $newStartDate = date("d-M-Y", $startDate);
+
+            $endDate = strtotime($row['end_date']);
+            $newEndDate = date("d-M-Y", $startDate);
            
             $projects_tasks[] =  array(
                 'project_id' => $row['project_id'],
@@ -39,8 +45,8 @@ function query_status_projects($status_id, $conn){
                 "department"   => $row['department'],
                 "completion"   => project_avg_percentage($row['project_id'], $conn),
                 "name" => $row['name'],
-                "start_date" => $row['start_date'],
-                "end_date" => $row['end_date']
+                "start_date" => $newStartDate,
+                "end_date" => $newEndDate
             );
         }
 

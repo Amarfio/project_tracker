@@ -90,7 +90,7 @@
                         <div class="card-body">
                             <br>
                             <form id="add_project_form"
-                                ng-submit="createProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_description_, project_owner_)">
+                                ng-submit="createProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_description_, project_owner_, project_owner_2, priority_)">
 
                                 <div class="form-group row">
                                     <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Name</label>
@@ -119,6 +119,21 @@
                                                 {{version.code_desc}}</option>
                                         </select>
                                     </div>
+                                </div>
+                                <div class="form-group row">
+
+                                    <label for="inputPassword"
+                                        class="col-sm-3 col-form-label text-primary">Priority</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" required ng-model="priority_">
+                                            <option value="">-- Select Priority --</option>
+                                            <option ng-repeat="code in code_desc" ng-value="code.code_desc_id">
+                                                {{code.code_desc}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+
                                 </div>
 
                                 <div class="form-group row">
@@ -178,6 +193,18 @@
                                     <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Owner</label>
                                     <div class="col-sm-9">
                                         <select class="form-control"  ng-model="project_owner_" required>
+                                            <option value="">-- Select developer from department --</option>
+                                            <option ng-repeat="user in all_users" ng-value="user.user_id"
+                                                ng-hide="user.user_id == '1'">
+                                                {{user.f_name}} {{user.l_name}} </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Secondary Owner</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control"  ng-model="project_owner_2">
                                             <option value="">-- Select developer from department --</option>
                                             <option ng-repeat="user in all_users" ng-value="user.user_id"
                                                 ng-hide="user.user_id == '1'">

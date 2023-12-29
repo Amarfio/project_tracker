@@ -156,15 +156,20 @@
 
               <div class="col-md-12">
                 <div class="progress">
-                  <div class="progress-bar bg-{{progress_bar_percentage_color}}" role="percentage_completion"
+                  <div class="progress-bar bg-{{progress_bar_percentage_color}} text-blue" role="percentage_completion"
                     aria-valuenow="{{percentage_completion}}" aria-valuemin="0"
-                    aria-valuemax="{{percentage_completion}}" style="width: {{percentage_completion}}%">
+                    aria-valuemax="{{percentage_completion}}" style="width: {{percentage_completion}} %">
                   </div>
 
                 </div>
                 <h5 class="text-{{progress_bar_percentage_color}} text-center">Number of days to complete task:
                   {{ number_of_days_till_end }} </h5>
                 <br>
+
+                <!-- <div class="icon icon-shape bg-{{percentage_color}} text-white rounded-circle shadow "
+                      id="card-percentage__tasks">
+                      {{ oneTask.completion}}%
+              </div> -->
                 <!-- <h5 class="card-title">
 
                   <div class="float-left text-success"><i class="ni ni-bold-up"></i></div>
@@ -196,7 +201,7 @@
 
 
               <div class="col-md-12" id="card-percentage__tasks">
-                <div class="icon icon-shape bg-{{progress_bar_percentage_color}} text-white rounded-circle shadow ">
+                <div class="icon icon-shape bg-{{progress_bar_percentage_color}} text-primary rounded-circle shadow ">
                   {{percentage_completion}}%
                 </div>
 
@@ -208,10 +213,7 @@
                 &nbsp;&nbsp;<span class="">{{oneTask.priority}}</span>
               </div>
               <!-- <div class="col-md-4"> -->
-              <!-- <div class="icon icon-shape bg-{{percentage_color}} text-white rounded-circle shadow "
-                      id="card-percentage__tasks">
-                      {{project_avg | number: 0}}%
-                    </div> -->
+              
               <!-- </div> -->
 
               <div class="col-md-12">
@@ -244,16 +246,99 @@
                 <span class="text-primary">End Date: </span>
                 &nbsp;&nbsp;{{ oneTask.task_end_date | date: mediumDate}}
               </div>
-              <div class="col-md-12" ng-if="user_info.role == 'assigner'">
-                <div class="">
-                  <a
-                    ng-href="edit_task?project_id={{ oneTask.project_id }}&task_id={{ oneTask.task_id }}&project_name={{ oneTask.task_description }}&department_id={{ oneTask.department_id}}&start_date={{ oneTask.project_start_date}}&end_date={{ oneTask.project_end_date}}">
-                    <button class="btn btn-sm btn-primary">Edit REF-0000{{ oneTask.task_id }}</button>
-                  </a>
+              
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4"></div>
+                  <div class="col-md-2" ng-if="user_info.role == 'assigner' || user_info.is_dept_head == 1">
+                    <div class="">
+                      <a
+                        ng-href="edit_task?project_id={{ oneTask.project_id }}&task_id={{ oneTask.task_id }}&project_name={{ oneTask.task_description }}&department_id={{ oneTask.department_id}}&start_date={{ oneTask.project_start_date}}&end_date={{ oneTask.project_end_date}}">
+                        <button class="btn btn-sm btn-primary">Edit REF-0000{{ oneTask.task_id }}</button>
+                      </a>
+                    </div>
+                  </div>
+                  <!-- <div class="col-md-1"></div> -->
+                  &nbsp;&nbsp;
+                  <div class="col-md-2">
+                    <button class="btn btn-sm btn-primary" data-toggle="modal"
+                            data-target="#modal-view-update-logs">view update logs
+                    </button>
+                  </div>
+                  <div class="col-md-4"></div>
                 </div>
               </div>
+              
+              <!-- codex modal -->
+              <div class="modal fade" id="modal-view-update-logs" tabindex="-1" role="dialog" aria-labelledby="modal-add-codex"
+                  aria-hidden="true">
+                  <div class="modal-dialog modal- modal-dialog-centered modal-lg" role="document">
+                      <div class="modal-content">
+                          <div class="modal-body p-0">
+                              <div class="card bg-secondary shadow border-0">
 
+                                  <div class="card-body px-lg-5 py-lg-4">
+                                      <div class="text-center text-muted ">
+                                          <legend></legend>
+                                          <h4>Task Update Logs</h4>
+                                          <br>
+                                        
+                                        <hr>
+                                        <div class="col-md-12" >
+                                          <div class="card">
+                                            <h5 class="card-title display-4 text-primary text-center float-center" ng-if="!taskUpdates">
+                                              <br/>
+                                              No Update Available
+                                            </h5>
+                                          </div>
+                                          <div class="table-responsive" ng-if="taskUpdates">
+                                            <table class="table align-items-center table-flush" id="data_table">
+                                              <thead class="thead-light">
+                                                <tr>
+                                                  <th scope="col">id</th>
+                                                  <th scope="col">Completion</th>
+                                                  <th scope="col">Owner</th>
+                                                  <th scope="col">Former Owner</th>
+                                                  <th scope="col">Updated at</th>
+                                                  
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr ng-repeat="update in taskUpdates">
+                                                  <td>{{ update.task_id }}</td>
+                                                  <td>{{ update.completion | number }} %</td>
+                                                  <td>
+                                                    {{ update.dev_owner }} &nbsp;
+                                                    <a class="badge badge-success">{{ project.tasks.length }}</a>
+                                                  </td>
+                                                  <td style="max-width: 300px;">
+                                                    <div class="col-12 text-truncate" data-toggle="tooltip" data-placement="top"
+                                                      title="{{ project.name }}">
+                                                      {{ update.dev_former }}
+                                                    </div>
+                                                  </td>
+                                                  <td>
+                                                    {{ update.updated_at }}
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
 
+                                      </div>
+                                      <div class="modal-footer">
+                                        <!-- <button type="submit" class="btn btn-primary">Add</button> -->
+                                        <button type="button" class="btn btn-link " data-dismiss="modal">Close</button>
+                                    </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              
+              
             </div>
 
 
@@ -413,6 +498,9 @@
                     <br>
                     <a href="#" class="badge badge-info" data-toggle="modal" data-target="#modal-reply-comment"
                       ng-click="open_modal_comment(comment)" ng-if="developer_can_see">Reply</a>
+
+                    <a href="" class="badge badge-danger" data-toggle="modal" data-target="#modal-delete-comment"
+                      ng-click="open_delete_modal_comment(comment)" ng-if="developer_can_see">Delete</a>
                   </div>
 
                   <div class="alert alert-default " id="message-bubble-user__task_detail" role="alert"
@@ -464,7 +552,8 @@
                                     </textarea>
                 <div class="input-group-prepend" ng-click="sendComment(task_id, comment_message, user_info.user_id)">
                   <span class="input-group-text" id="validationTooltipUsernamePrepend">
-                    <i class="ni ni-send text-primary"></i>
+                    <i id="sendBtn" class="ni ni-send text-primary"></i>
+                    <CircularProgress color="success" id="prgIcon"/>
                   </span>
                 </div>
               </div>
@@ -520,7 +609,40 @@
 
       <!-- End modal -->
 
+      <!-- Delete Comment modal -->
+      <div class="modal fade" id="modal-delete-comment" tabindex="-1" role="dialog" aria-labelledby="modal-delete-comment"
+      aria-hidden="true">
+      <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-body p-0">
+            <div class="card bg-secondary shadow border-0">
 
+              <div class="card-body px-lg-5 py-lg-4">
+                <div class="text-left text-muted ">
+                  <div class="alert alert-default" role="alert">
+                    <span id="display_delete_comment"></span>
+                  </div>
+                </div>
+                <form role="form" id="reply_input_form"
+                  ng-submit="deleteComment(comment_for_delete.comment_id)">
+                  <input type="hidden" ng-value="comment_for_delete.comment_id" id="comment_id_input"
+                    ng-model="delete_comment_id">
+                    <span class="text-primary">Are you sure you want to delete it?</span><br>
+
+
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <!-- End modal -->
 
 
     </div>

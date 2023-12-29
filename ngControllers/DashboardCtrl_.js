@@ -204,7 +204,7 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
         console.log(user_id)
 
 
-        var _url = myConfig.url + '/getCodeStatusCount_ForDeveloper.php?init=' + init + '&department_id=' + department_id + '&is_dept_head=' + is_dept_head + '&user_id=' + user_id
+        var _url = myConfig.url + '/getCodeStatusCountTasks_ForDeveloper.php?init=' + init + '&department_id=' + department_id + '&is_dept_head=' + is_dept_head + '&user_id=' + user_id
 
         $http({
             method: 'GET',

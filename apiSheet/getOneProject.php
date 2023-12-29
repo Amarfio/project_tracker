@@ -39,8 +39,10 @@ require_once 'connect.php';
         $task_arr = array();
         
     
-        $query = "SELECT t.task_id, t.description, t.project_id, t.start_date, t.end_date, cl.client_id client_id, cl.name client, CONCAT(u_to.f_name, ' ', u_to.l_name) assigned_to, u_to.id assigned_to_id, CONCAT(u_by.f_name, ' ', u_by.l_name) assigned_by, CONCAT(u_ap.f_name, ' ', u_ap.l_name) approved_by, t.completion, cod_pri.id priority_id, cod_pri.desc priority, cod_sta.id status_id, cod_sta.desc status FROM tasks t LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN users u_by ON u_by.id = t.assigned_by LEFT JOIN users u_ap ON u_ap.id = t.approved_by LEFT JOIN code_desc cod_pri ON cod_pri.id = t.priority LEFT JOIN code_desc cod_sta ON cod_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id WHERE t.project_id = '$project_id' ORDER BY t.task_id DESC";
-    
+        // $query = "SELECT t.task_id, t.description, t.project_id, t.start_date, t.end_date, cl.client_id client_id, cl.name client, CONCAT(u_to.f_name, ' ', u_to.l_name) assigned_to, u_to.id assigned_to_id, CONCAT(u_by.f_name, ' ', u_by.l_name) assigned_by, CONCAT(u_ap.f_name, ' ', u_ap.l_name) approved_by, t.completion, cod_pri.id priority_id, cod_pri.desc priority, cod_sta.id status_id, cod_sta.desc status FROM tasks t LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN users u_by ON u_by.id = t.assigned_by LEFT JOIN users u_ap ON u_ap.id = t.approved_by LEFT JOIN code_desc cod_pri ON cod_pri.id = t.priority LEFT JOIN code_desc cod_sta ON cod_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id WHERE t.project_id = '$project_id' ORDER BY t.task_id DESC";
+        
+        $query = "select * from vw_tasks_under_project_by_id where project_id = '$project_id' ORDER BY task_id DESC";
+
         $result = mysqli_query($conn, $query);
     
         $num = mysqli_num_rows($result);
@@ -48,7 +50,7 @@ require_once 'connect.php';
         while ($row = mysqli_fetch_assoc($result)) {
            
            $task_id_base64Encode = array(
-                'task_id_base64Encode' => base64_encode($row['task_id']) ,
+                'task_id_base64Encode' => base64_encode($row['task_id']) 
             );
             $task_arr[] = $row;
 
@@ -56,6 +58,16 @@ require_once 'connect.php';
         }
         return $task_arr;
     }
+
+function getNoOfTasks($project_id, $conn)
+{
+    $query = "select * from vw_tasks_under_project_by_id where project_id = '$project_id' ORDER BY task_id DESC";
+
+        $result = mysqli_query($conn, $query);
+    
+        $num = mysqli_num_rows($result);
+    return $num;
+}
     
 
 if (isset($_GET['project_id'])) {
@@ -84,6 +96,21 @@ if (isset($_GET['project_id'])) {
     
     if ($num > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
+
+            $createdDate = strtotime($row['created_at']);
+            $newCreatedDate = date("d-M-Y",$createdDate);
+            // echo json_encode($newCreatedDate);
+            // die();
+
+            $startDate = strtotime($row['start_date']);
+            $newStartDate = date("d-M-Y", $startDate);
+
+            $endDate = strtotime($row['end_date']);
+            $newEndDate = date("d-M-Y", $endDate);
+
+            $noOfTasks = getNoOfTasks($row['project_id'], $conn);
+            // echo json_encode($noOfTasks);
+            // die();
             $projects_tasks[] =  array(
                 'project_id' => $row['project_id'],
                 "version_no"   => $row['version_no'],
@@ -94,7 +121,7 @@ if (isset($_GET['project_id'])) {
                 "is_approved" => $row['is_approved'],
                 "approved_by_id" => $row['approved_by'],
                 "approved_by_name" => $row['approved_by_name'],
-                "created_at" => $row['created_at'],
+                "created_at" => $newCreatedDate,
                 "project_status_id" => $row['status_id'],
                 "project_status" => $row['status_name'],
                 "owner_id" => $row['owner_id'],
@@ -105,9 +132,10 @@ if (isset($_GET['project_id'])) {
                 "comment_by_id" => $row['comment_by_id'], 
                 "comment_by_name" => $row['comment_by_name'], 
                 "posted_by_name" => $row['posted_by_name'],
-                "start_date" => $row['start_date'],
-                "end_date" => $row['end_date'],
-                "tasks" => get_all_tasks($row['project_id'], $conn)
+                "start_date" => $newStartDate,
+                "end_date" => $newEndDate,
+                "tasks" => get_all_tasks($row['project_id'], $conn),
+                "noOfTasks" => getNoOfTasks($row['project_id'], $conn)
             );
         }
     

@@ -13,6 +13,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 require_once 'connect.php';
 require_once 'functions/get_IP_Location.php';
 require_once 'functions/activity_logs.php';
+require_once 'functions/response.php';
 
 
 function getUsernameById($user_id)
@@ -28,6 +29,23 @@ function getUsernameById($user_id)
 
  
 }
+
+//code to check for earlier date
+function checkForEarlierDate($newStartDate, $oldStartDate){
+    $newDateTime = strtotime($newStartDate);
+    $oldDateTime = strtotime($oldStartDate);
+
+    return $newDateTime < $oldDateTime;
+}
+
+//code to check for later date
+function checkForLaterDate($newDate, $oldDate){
+    $newDateTime = strtotime($newDate);
+    $oldDateTime = strtotime($oldDate);
+    
+    return $newDateTime > $oldDateTime;
+}
+
 
 
 
@@ -62,67 +80,90 @@ if(
     $location = 'Accra Ghana'; 
  
 
-    // $query = "INSERT INTO `tasks` (`task_id`, `description`, `start_date`, `end_date`, `client_id`, `assigned_by`, `assigned_to`, `priority`, `project_id`, `ip_address`, `location`) VALUES (NULL, '$task_name', '$start_date', '$end_date', '$client_id', '$assigned_by', '$assigned_to', '$priority', '$project_id', '$ip_address', '$location')";
-    $query = "UPDATE `tasks` SET `description` = '$task_name', `start_date` = '$start_date', `end_date` = '$end_date', `client_id` = '$client_id', `assigned_by` = '$assigned_by', `assigned_to` = '$assigned_to', `priority` = '$priority'   WHERE `tasks`.`task_id` = '$task_id'";
+    
+    //validating the dates entered
+    //check if task start date is earlier than project start date
+    if(checkForEarlierDate($t_start_date, $p_start_date)){
+        $message = response('Task start date cannot be earlier than project start date', 'failed', null);
+    }
+    //check if task end date is later than project end date
+    else if(checkForLaterDate($t_end_date, $p_end_date)){
+        $message = response('Task end date cannot be later than project end date', 'failed', null);
+    }
+    //check if task end date is earlier than task start date
+    // else if(checkForEarlierDate($t_end_date, $t_start_date)){
+    else if(checkForEarlierDate($t_end_date, $t_start_date)){
+        $message = response('Task end date cannot be earlier than task start date', 'failed', null);
+    }
+    //check if task start date is later than task end date
+    else if(checkForLaterDate($t_start_date, $t_end_date)){
+        $message = response('Task start date cannot be later than task end date', 'failed', null);
+    }else{
 
-    $result = mysqli_query($conn, $query);
+                // $query = "INSERT INTO `tasks` (`task_id`, `description`, `start_date`, `end_date`, `client_id`, `assigned_by`, `assigned_to`, `priority`, `project_id`, `ip_address`, `location`) VALUES (NULL, '$task_name', '$start_date', '$end_date', '$client_id', '$assigned_by', '$assigned_to', '$priority', '$project_id', '$ip_address', '$location')";
+                $query = "UPDATE `tasks` SET `description` = '$task_name', `start_date` = '$start_date', `end_date` = '$end_date', `client_id` = '$client_id', `assigned_by` = '$assigned_by', `assigned_to` = '$assigned_to', `priority` = '$priority', `updated_at` = NOW()   WHERE `tasks`.`task_id` = '$task_id'";
 
-    if ($result == 1) {
+                $result = mysqli_query($conn, $query);
+
+                if ($result == 1) {
+
+                            
+                    $message = json_encode(
+                        array(
+                            'message' => 'task updated successfully',
+                            'status' => 'success',
+                            'data' => [
+                                'task_name' => $task_name,
+                                'start_date' => $start_date,
+                                'end_date' => $end_date,
+                                'assigned_by' => $assigned_by,
+                                'assigned_to' => $assigned_to,
+                                'priority' => $priority,
+                                'percentage_completion' => '0%',
+                            
+                                'implementation' => 'NO',
+                                'is_approved' => 'NO'
+                            ],
+                            'task_id' => $task_id
+                        )
+                    );
+
+                                    
+                        // LOG ACTIVITY
+                                
+                        $user =  $user_id;
+                        $activity =  ' tried to modify a task REF-0000' . $task_id.  ' | Details: ' . $message;
+                        $status = 'success';
+                        log_activity($conn, $user, $activity, $status, getSecurity());
+
+                        // END LOG ACTIVITY
+                        
+                    exit($message);
 
                 
-        $message = json_encode(
-            array(
-                'message' => 'task created successfully',
-                'status' => 'success',
-                'data' => [
-                    'task_name' => $task_name,
-                    'start_date' => $start_date,
-                    'end_date' => $end_date,
-                    'assigned_by' => $assigned_by,
-                    'assigned_to' => $assigned_to,
-                    'priority' => $priority,
-                    'percentage_completion' => '0%',
-                   
-                    'implementation' => 'NO',
-                    'is_approved' => 'NO'
-                ],
-                'task_id' => $task_id
-            )
-        );
+                } else {
+                                            
+                        // LOG ACTIVITY
+                                
+                        $user =  $user_id;
+                        $activity =  ' tried to modify a task REF-0000' . $task_id;
+                        $status = 'failed';
+                        log_activity($conn, $user, $activity, $status, getSecurity());
 
-                          
-            // LOG ACTIVITY
+                        // END LOG ACTIVITY
                     
-            $user =  $user_id;
-            $activity =  ' tried to modify a task REF-0000' . $task_id.  ' | Details: ' . $message;
-            $status = 'success';
-            log_activity($conn, $user, $activity, $status, getSecurity());
-
-            // END LOG ACTIVITY
-            
-        exit($message);
-
-       
-    } else {
-                                   
-            // LOG ACTIVITY
+                    $message = json_encode(
+                        array(
+                            'message' => 'Failed to create task',
+                            'status' => 'failed'
+                        )
+                    );
+                    exit($message);
                     
-            $user =  $user_id;
-            $activity =  ' tried to modify a task REF-0000' . $task_id;
-            $status = 'failed';
-            log_activity($conn, $user, $activity, $status, getSecurity());
-
-            // END LOG ACTIVITY
-           
-        $message = json_encode(
-             array(
-                'message' => 'Failed to create task',
-                'status' => 'failed'
-            )
-        );
-        exit($message);
-        
+                }
     }
+    
+    
 
 }else{
     $message = json_encode(
@@ -134,4 +175,6 @@ if(
     exit($message);
     
 }
+
+exit($message);
 

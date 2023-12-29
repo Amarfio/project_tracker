@@ -110,7 +110,7 @@
 
                 <div class="row">
                   <div class="col-md-9">
-                    <h2 class="card-title text-primary text-uppercase">PRO-0000{{ project.project_id }} -
+                    <h2 class="card-title text-primary text-uppercase">PROJ-0000{{ project.project_id }} -
                       {{ project.name }}
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -140,27 +140,32 @@
 
                         <a class="dropdown-item text-uppercase" data-toggle="modal"
                         data-target="#modal-approve" ng-if="project.project_status == 'drafts' && (user_info.role == 'assigner' || (user_info.is_dept_head == '1' && user_info.department_id ==
-                        project.department_id) )" ng-hide="!project.tasks.length" >
+                        project.department_id) || user_info.role == 'developer' )" ng-hide="!project.tasks.length" >
                           Submit for approval
                         </a>
 
                         <a class="dropdown-item text-uppercase" data-toggle="modal"
-                      data-target="#modal-approve" ng-if="(project.project_status == 'unapproved' && user_info.can_approve == '1' &&
-                      project.department_id == user_info.department_id) || (user_info.role == 'admin' &&
-                      project.project_status == 'unapproved' && user_info.can_approve == '1' &&
-                      project.department_id == user_info.department_id)">
-                          Approve
-                      </a>
+                        data-target="#modal-approve" ng-if="(project.project_status == 'unapproved' && user_info.can_approve == '1' &&
+                        project.department_id == user_info.department_id) || (user_info.role == 'admin' &&
+                        project.project_status == 'unapproved' && user_info.can_approve == '1' &&
+                        project.department_id == user_info.department_id)">
+                            Approve
+                        </a>
 
                         <a class="dropdown-item text-uppercase"  ng-href="add_task?project_id={{project.project_id}}&project_name={{project.name}}&department_id={{project.department_id}}&start_date={{project.start_date}}&end_date={{project.end_date}}"
-                      ng-if="user_info.role == 'assigner' || ( user_info.is_dept_head == '1' && user_info.department_id ==
-                      project.department_id)">
+                      ng-if="user_info.role == 'assigner' || ( user_info.is_dept_head == '1' && user_info.department_id == project.department_id) || user_info.role == 'developer'">
                           Add Task
                       </a>
 
-                        <a class="dropdown-item text-uppercase" ng-href="edit_project/{{project.project_id}}" ng-if="user_info.role == 'assigner' || ( user_info.is_dept_head == '1' && user_info.department_id ==
-                        project.department_id)">
+                        <a class="dropdown-item text-uppercase" ng-href="edit_project/{{project.project_id}}" ng-if="user_info.role == 'assigner' || (user_info.is_dept_head == '1' && project.is_approved == 0)">
                           Edit Project
+                      </a>
+
+                      <!-- || ( user_info.is_dept_head == '1' && user_info.department_id == project.department_id) -->
+
+                      <!-- ng-if="user_info.role == 'assigner' || ( user_info.is_dept_head == '1' && user_info.department_id == project.department_id)" -->
+                        <a class="dropdown-item text-uppercase" data-toggle="modal" ng-if="project.project_status == 'drafts' || project.project_status == 'unapproved' || project.project_status='approved'"  data-target="#modal-approve" ng-if="project.owner_id == user_info.user_id">
+                          Suspend Project
                       </a>
 
                         <a class="dropdown-item text-uppercase" data-toggle="modal"
@@ -246,24 +251,24 @@
                     <span class="text-primary">Department:</span>
                     &nbsp;&nbsp;<span class="">{{ project.department }}</span>
                   </div>
-                  <div class="col-md-4">
+                  <!-- <div class="col-md-4"> -->
                     <!-- <div class="icon icon-shape bg-{{percentage_color}} text-white rounded-circle shadow "
                       id="card-percentage__tasks">
                       {{project_avg | number: 0}}%
                     </div> -->
-                  </div>
+                  <!-- </div> -->
 
                   <div class="col-md-4">
                     <span class="text-primary">Start Date:</span>
-                    &nbsp;&nbsp;{{ project.start_date | date: mediumDate }}
+                    &nbsp;&nbsp;{{ project.start_date }}
                   </div>
                   <div class="col-md-4">
                     <span class="text-primary">End Date:</span>
-                    &nbsp;&nbsp;{{ project.end_date | date: mediumDate }}
+                    &nbsp;&nbsp;{{ project.end_date }}
                   </div>
                   <div class="col-md-4">
                     <span class="text-primary">Created On:</span>
-                    &nbsp;&nbsp;{{ project.created_at | date: mediumDate }}
+                    &nbsp;&nbsp;{{ project.created_at }}
                   </div>
                   <div class="col-md-4">
                     <span class="text-primary">Project Status:</span> &nbsp;&nbsp;
@@ -278,6 +283,12 @@
                     {{ project.approved_by_name}}
                     <!-- <span class=" badge badge-info">{{ project.comment_by_name}}</span> -->
                   </div>
+                  
+                  <div class="col-md-4">
+                    <span class="text-primary">Owner:</span> &nbsp;&nbsp; 
+                    {{ project.project_owner }}
+                  </div>
+
                   <div class="col-md-4">
                     <span class="text-primary">Document:</span>
                     <span class=""><a ng-href="{{myConfig_file_url}}{{project.attach}}" target="_blank" download>
@@ -288,10 +299,6 @@
                     
                       </a>
                     </span>
-                  </div>
-                  <div class="col-md-4">
-                    <span class="text-primary">Owner:</span> &nbsp;&nbsp; 
-                    {{ project.project_owner }}
                   </div>
                   
                   <div class="col-md-4"></div>
@@ -469,94 +476,123 @@
     {{project.tasks.length}}
     <!-- Table -->
     <div class="row" ng-if="project.tasks.length > 0">
-      <div class="col">
-        <span class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block">( {{ project.tasks.length}} ) -
-          Tasks for PRO-0000{{ project.project_id }}</span>
-
-        <div class="card shadow">
-          <div class="table-responsive">
-            <legend></legend>
-            <table class="table align-items-center table-flush">
-              <thead class="thead-light">
-                <tr>
-                  <th scope="col">Task ID</th>
-                  <th scope="col">Task</th>
-                  <th scope="col">Priority</th>
-                  <th scope="col">Clients</th>
-
-                  <th scope="col">Status</th>
-
-                  <th scope="col">Start</th>
-                  <th scope="col">End</th>
-                  <th scope="col">Developer</th>
-                  <th scope="col">( % )</th>
-                  <th scope="col">Last Update</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr ng-repeat="task in project.tasks | filter: tableSearch">
-                  <th scope="row">
-                    <div class="media align-items-center">
-                      <!-- <a href="task_detail/{{task.task_id}}" >REF-0000{{task.task_id}}</a> -->
-                      <!-- <a href="task_detail/{{task[0].task_id_base64Encode}}">REF0000{{task.task_id}}</a> -->
-                      <a href="task_detail/{{task.task_id}}">REF0000{{task.task_id}}</a>
-                      <!-- REF-0000{{task.task_id}}  -->
-                    </div>
-                  </th>
-                  <td style="max-width: 300px;">
-                    <div class="col-12 text-truncate" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-                      <!-- <a href="task_detail/{{task.task_id}}" >{{task.description}}</a> -->
-                      {{task.description}}
-                    </div>
-
-                  </td>
-                  <td>
-                    <span class="badge badge-dot mr-4">
-                      <i class="bg-warning"></i> {{task.priority}}
-                    </span>
-                  </td>
-                  <td>
-                    {{task.client}}
-                  </td>
-
-
-                  <td>
-                    <!-- <span class="badge badge-default" ng-if="task.status == 'unapproved'">{{ task.status }}</span> -->
-                    <span class="badge badge-warning" ng-if="task.status == 'suspended'">{{ task.status }}</span>
-                    <!-- <span class="badge badge-success" ng-if="task.status == 'approved'">{{ task.status }}</span> -->
-                    <span class="badge badge-default" ng-if="task.status == 'not started'">{{ task.status }}</span>
-                    <span class="badge badge-success" ng-if="task.status == 'in progress'">{{ task.status }}</span>
-                    <span class="badge badge-primary" ng-if="task.status == 'completed'">{{ task.status }}</span>
-
-
-                  </td>
-                  <td>
-                    {{task.start_date | date: mediumDate}}
-                  </td>
-                  <td>
-                    {{task.end_date | date: mediumDate}}
-                  </td>
-
-                  <td>
-                    {{task.assigned_to}}
-                  </td>
-
-                  <td class="text-center">
-                    <div class="d-flex align-items-center">
-                      <span class="">{{task.completion}}</span>
-                    </div>
-                  </td>
-
-
-                </tr>
-
-
-              </tbody>
-            </table>
+      <div class="col-md-4">
+        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" id="exportBtnTasks">
+          ( {{ project.tasks.length}} ) - Tasks for PROJ-0000{{ project.project_id }}
+          &nbsp; &nbsp;<span class="ni ni-cloud-download-95"></span>
+        </a>  
+      </div>
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-7"></div>
+          <div class="col-md-4">
+            <!-- <div class="col-xl-3"> -->
+              <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: auto;">
+            <!-- </div> -->
           </div>
-
         </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card shadow">
+        <div class="table-responsive">
+          <legend></legend>
+          <table class="table align-items-center table-flush" id="tasksTable">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Task ID</th>
+                <th scope="col">Task</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Clients</th>
+
+                <th scope="col">Status</th>
+
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Developer</th>
+                <th scope="col">( % )</th>
+                <th scope="col">Last Update Date</th>
+                <th scope="col">Last Update</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              
+              <tr ng-repeat="task in project.tasks | filter: tableSearch">
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <!-- <a href="task_detail/{{task.task_id}}" >REF-0000{{task.task_id}}</a> -->
+                    <!-- <a href="task_detail/{{task[0].task_id_base64Encode}}">REF0000{{task.task_id}}</a> -->
+                    <a href="task_detail/{{task.task_id}}">REF0000{{task.task_id}}</a>
+                    <!-- REF-0000{{task.task_id}}  -->
+                  </div>
+                </th>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <!-- <a href="task_detail/{{task.task_id}}" >{{task.description}}</a> -->
+                    {{task.description}}
+                  </div>
+
+                </td>
+                <td>
+                  <span class="badge badge-dot mr-4">
+                    <i class="bg-warning"></i> {{task.priority}}
+                  </span>
+                </td>
+                <td>
+                  {{task.client}}
+                </td>
+
+
+                <td>
+                  <!-- <span class="badge badge-default" ng-if="task.status == 'unapproved'">{{ task.status }}</span> -->
+                  <span class="badge badge-warning" ng-if="task.status == 'suspended'">{{ task.status }}</span>
+                  <!-- <span class="badge badge-success" ng-if="task.status == 'approved'">{{ task.status }}</span> -->
+                  <span class="badge badge-default" ng-if="task.status == 'not started'">{{ task.status }}</span>
+                  <span class="badge badge-success" ng-if="task.status == 'in progress'">{{ task.status }}</span>
+                  <span class="badge badge-primary" ng-if="task.status == 'completed'">{{ task.status }}</span>
+
+
+                </td>
+                <td>
+                  {{task.start_date | date: mediumDate}}
+                </td>
+                <td>
+                  {{task.end_date | date: mediumDate}}
+                </td>
+
+                <td>
+                  {{task.assigned_to}}
+                </td>
+
+                <td class="text-center">
+                  <div class="d-flex align-items-center">
+                    <span class="">{{task.completion}}</span>
+                  </div>
+                </td>
+                
+                <td class="text-center">
+                  <div class="d-flex align-items-center">
+                    <span class="">{{task.last_update_date}}</span>
+                  </div>
+                </td>
+
+
+                <td class="text-center">
+                  <div class="d-flex align-items-center">
+                    <span class="">{{task.last_update}}</span>
+                  </div>
+                </td>
+
+
+              </tr>
+
+
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </div>
 
@@ -606,8 +642,6 @@
               </div>
             </div>
 
-
-
             <div class="card-body px-lg-5 py-lg-4" ng-if="project.project_status == 'unapproved' ">
               <div class=" text-muted ">
                 <legend></legend>
@@ -645,6 +679,48 @@
                 <button type="submit" ng-click="approve_project()"
                   class="btn btn-success btn-sm float-right mr-4">Approve </button>
                 <button type="submit" ng-click="reject_project()" class="btn btn-danger btn-sm float-right mr-4">Reject
+                </button>
+                &nbsp;&nbsp;<button type="button" class="btn btn-secondary btn-sm float-right "
+                  data-dismiss="modal">Close </button>
+
+              </div>
+            </div>
+
+            <div class="card-body px-lg-5 py-lg-4" ng-if="project.owner_id == user_info.user_id ">
+              <div class=" text-muted ">
+                <legend></legend>
+
+                <span class="text-primary"> Update project status </span>
+
+                <hr>
+
+              </div>
+
+              <div class="col-md-12 form-group mb-3">
+                <div class="input-group input-group-alternative">
+
+                  <input class="form-control text-uppercase" placeholder="PRO-0000{{ project.project_id }}" type="text"
+                    disabled>
+                </div>
+              </div>
+              <div class="col-md-12 form-group mb-3">
+                <div class="input-group input-group-alternative">
+
+                  <input class="form-control text-uppercase" placeholder="{{ project.project_status}}" type="text"
+                    disabled>
+                </div>
+              </div>
+              <div class="col-md-12 form-group mb-3">
+                <label for="">Comment</label><br>
+                <div class="input-group input-group-alternative">
+
+
+                  <textarea class="form-control" rows="5" id="comment_approve_or_reject"></textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
+
+                <button type="submit" ng-click="suspend_project()" class="btn btn-danger btn-sm float-right mr-4">Suspend
                 </button>
                 &nbsp;&nbsp;<button type="button" class="btn btn-secondary btn-sm float-right "
                   data-dismiss="modal">Close </button>
@@ -730,6 +806,37 @@
 <script>
   $(document).ready(function () {
 
-    // $('#data_table').DataTable();
-  });
+$("#exportBtnTasks").click(function (e) {
+
+  var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
+  var textRange; var j=0;
+  tab = document.getElementById('tasksTable'); // id of table
+
+  for(j = 0 ; j < tab.rows.length ; j++)
+  {
+      tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
+      //tab_text=tab_text+"</tr>";
+  }
+
+  tab_text=tab_text+"</table>";
+  tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+  tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+  tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+  var ua = window.navigator.userAgent;
+  var msie = ua.indexOf("MSIE");
+
+  if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+  {
+      txtArea1.document.open("txt/html","replace");
+      txtArea1.document.write(tab_text);
+      txtArea1.document.close();
+      txtArea1.focus();
+      sa=txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
+  }
+  else                 //other browser not tested on IE 11
+      sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+});
+
+});
 </script>

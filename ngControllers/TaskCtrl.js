@@ -37,6 +37,7 @@ sheetApp.controller('TaskCtrl', function ($scope, $http, $routeParams, check_aut
     $scope.get_project_status('psta')
 
 
+    
 
 
     console.log($scope.project_id = $routeParams.project_id)
@@ -59,6 +60,7 @@ sheetApp.controller('TaskCtrl', function ($scope, $http, $routeParams, check_aut
             console.log($scope.project.department_id)
             console.log($scope.project)
             console.log($scope.getStatus)
+            $scope.tasks = $scope.project.tasks;
 
             if ($scope.project_avg >= 80) {
                 $scope.percentage_color = 'success'
@@ -80,6 +82,7 @@ sheetApp.controller('TaskCtrl', function ($scope, $http, $routeParams, check_aut
         }, function errorCallback(response) {
 
             // alert("Error. Try Again!");
+            
 
         });
 
@@ -87,6 +90,11 @@ sheetApp.controller('TaskCtrl', function ($scope, $http, $routeParams, check_aut
 
     }
     $scope.get_one_project()
+
+    //code to hide the edit project from user
+    if ($scope.user_info.role == 'developer' && $scope.user_info.is_dept_head) {
+        $scope.manager_can_see = false
+    }
 
     $scope.get_departments = function () {
         $http({
@@ -394,6 +402,77 @@ sheetApp.controller('TaskCtrl', function ($scope, $http, $routeParams, check_aut
             $http({
                 method: 'GET',
                 url: myConfig.url + '/reject_project.php?project_id=' + $scope.project_id + '&approvedBy=' + $scope.user_info.user_id + '&department_id=' + $scope.project.department_id + '&comment=' + comment
+
+            }).then(function successCallback(response) {
+                var $res = response.data
+                console.log(response.data)
+                if ($res.status == 'success') {
+                    Swal.fire({
+                        type: 'success',
+                        title: $res.message
+
+                    })
+
+                    $scope.get_one_project()
+                }
+                if ($res.status == 'failed') {
+                    Swal.fire({
+                        type: 'error',
+                        title: $res.message
+
+                    })
+
+                    $scope.get_one_project()
+                }
+
+            }, function errorCallback(response) {
+
+                // alert("Error. Try Again!");
+
+            });
+
+        }
+
+    }
+
+    //method to suspend project
+    $scope.suspend_project = function () {
+
+        var comment = $('#comment_approve_or_reject').val();
+
+        if (comment == undefined || comment == '') {
+            // Swal.fire({
+            //     type: 'error',
+            //     title: 'hey',
+            //     text: 'Emptyp',
+            //     toast: true
+            // })
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            })
+
+            Toast.fire({
+                type: 'error',
+                title: 'Comment can be empty'
+            })
+
+        } else {
+            $('.modal').modal('hide');
+            Swal.queue([{
+                title: 'Send Comment ...  ',
+                // showLoaderOnConfirm: true,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+                showLoaderOnConfirm: true,
+            }])
+
+            $http({
+                method: 'GET',
+                url: myConfig.url + '/suspend_project.php?project_id=' + $scope.project_id + '&approvedBy=' + $scope.user_info.user_id + '&department_id=' + $scope.project.department_id + '&comment=' + comment
 
             }).then(function successCallback(response) {
                 var $res = response.data

@@ -27,6 +27,14 @@ sheetApp.config(
           templateUrl: "./templates/dashboard_p.html",
           controller: "DashboardCtrl",
         })
+        .when("/dashboard_test", {
+          templateUrl: "./templates/dashboard_tests.html",
+          controller: "DashboardCtrl",
+        })
+        .when("/project_updates", {
+          templateUrl: "./templates/project_updates.html",
+          controller: "ProjectUpdatesDashboardCtrl",
+        })
         .when("/dashboard_t", {
           templateUrl: "./templates/dashboard_t.html",
           controller: "DashboardCtrl_",
@@ -43,6 +51,10 @@ sheetApp.config(
           templateUrl: "./templates/add_project.html",
           controller: "AddProjectCtrl",
         })
+        .when("/add_change", {
+          templateUrl: "./templates/add_change.html",
+          controller: "AddChangeCtrl",
+        })
         .when("/edit_project/:project_id", {
           templateUrl: "./templates/edit_project.html",
           controller: "EditProjectCtrl",
@@ -51,13 +63,29 @@ sheetApp.config(
           templateUrl: "./templates/all_projects.html",
           controller: "ProjectCtrl",
         })
+        .when("/my_issues", {
+          templateUrl: "./templates/my_issues.html",
+          controller: "IssuesCtrl",
+        })
         .when("/add_task", {
           templateUrl: "./templates/add_task.html",
           controller: "AddTaskCtrl",
         })
+        .when("/add_test", {
+          templateUrl: "./templates/add_test.html",
+          controller: "AddTestCtrl",
+        })
         .when("/edit_task", {
           templateUrl: "./templates/edit_task.html",
           controller: "EditTaskCtrl",
+        })
+        .when("/edit_user/:user_id", {
+          templateUrl: "./templates/edit_user.html",
+          controller: "EditUserCtrl",
+        })
+        .when("/handover", {
+          templateUrl: "./templates/handover.html",
+          controller: "HandOverCtrl",
         })
         .when("/all_tasks", {
           templateUrl: "./templates/all_tasks.html",
@@ -90,6 +118,10 @@ sheetApp.config(
         .when("/codex", {
           templateUrl: "./templates/codex.html",
           controller: "CodexCtrl",
+        })
+        .when("/limits", {
+          templateUrl: "./templates/limits.html",
+          controller: "LimitsCtrl",
         })
         .when("/set_password/:hash", {
           templateUrl: "./templates/set_password.html",
@@ -139,7 +171,10 @@ sheetApp.service(
       var profile_pic = $localStorage.profile_pic = profile_pic;
       return profile_pic;
     };
-
+    this.signature_pic = function (signature_pic) {
+      var signature_pic = $localStorage.signature_pic = signature_pic;
+      return signature_pic;
+    };
     this.verify_auth = function (auth) {
       if (auth == undefined) {
         return $location.path("/login");
@@ -196,7 +231,7 @@ sheetApp.service("get_services", function (myConfig, $http) {
         return code_description;
 
         // var departments = response.data[0].code_desc;
-        // console.log(departments)
+        // console.log(departments) 
         // return departments
       }, function errorCallback(response) {
       });

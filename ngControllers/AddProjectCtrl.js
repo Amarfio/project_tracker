@@ -46,6 +46,27 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
     }
     $scope.get_versions('ver')
 
+    $scope.get_code_desc = function (init) {
+        $http({
+            method: 'GET',
+            url: myConfig.url + '/getCodeDescription.php?init=' + init
+
+        }).then(function successCallback(response) {
+
+            $scope.code_desc = response.data['0'].code_desc;
+            console.log($scope.code_desc)
+
+        }, function errorCallback(response) {
+
+            Swal.fire({
+                type: 'warning',
+                title: 'Network Connection Erro',
+                text: 'Priority Could not loaded'
+            })
+
+        });
+    }
+    $scope.get_code_desc('pri')
 
     $scope.get_departments = function (dpt) {
         $http({
@@ -131,7 +152,7 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
         });
     }
 
-    $scope.createProject = function (project_name_, version_no_, department_id_, start_date_, end_date_, project_description_,project_owner_ ) {
+    $scope.createProject = function (project_name_, version_no_, department_id_, start_date_, end_date_, project_description_,project_owner_, project_owner_2, priority_ ) {
         console.log(project_name_)
         console.log(version_no_)
         console.log(department_id_)
@@ -141,11 +162,24 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
         console.log($scope.attachment_file)
         console.log($scope.user_id)
         console.log($scope.project_owner_)
+        console.log($scope.project_owner_2)
+
 
         // return false;
 
 
         var data = null;
+
+        //check if the main owner is the same as the minor owner
+        if($scope.project_owner_ == $scope.project_owner_2){
+            Swal.fire({
+                type: 'error',
+                title: 'Invalid Owner',
+                text: 'Project Owner cannot be the same as the secondary owner, if there is no secondary owner kindly leave it blank.',
+            })
+
+            return false;
+        }
 
         //check if the user selected a file
         if($scope.attachment_file=='None'){
@@ -159,7 +193,9 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
                 start_date: start_date_,
                 fileName: null,
                 end_date: end_date_,
-                owner: project_owner_
+                owner: project_owner_,
+                owner_2: project_owner_2,
+                priority: priority_
             }
         }else{
             data = {
@@ -172,9 +208,13 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
                 start_date: start_date_,
                 fileName: $scope.attachment_file,
                 end_date: end_date_,
-                owner: project_owner_
+                owner: project_owner_,
+                owner_2 : project_owner_2,
+                priority: priority_
             }
         }
+
+        // console.log(data); return false;
         
 
 
@@ -218,7 +258,7 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
 
                         // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
 
-                        , 1000);
+                        , 5000);
 
                     // $timeout(
                     //     window.location = 'add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_ + '&start_date=' + $res.start_date + '&end_date=' + $res.end_date

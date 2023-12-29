@@ -6,7 +6,30 @@
 // header("Access-Control-Allow-Headers: X-Requested-With");
 // header("Access-Control-Max-Age: 3600");
 // header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"); 
-require_once 'connect.php';
+// require_once 'connect.php';
+# FileName="Connection_php_mysql.htm"
+# Type="MYSQL"
+# HTTP="true"   
+$hostname_ticket = "localhost";
+$database_ticket = "project_tracker_db";
+$username_ticket = "root";
+//  unionsgc_ticket
+$password_ticket = "firefox";
+//  pass1234pass123
+// $DEFAULT_PASS="PASS1234";
+// $ADMIN_EMAIL="SUPPORT24X7@UNIONSG.COM";
+
+try {
+   $conn = new PDO("mysql:host=$hostname_ticket;dbname=$database_ticket", $username_ticket, $password_ticket);
+   // set the PDO error mode to exception
+   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  // echo "Connected successfully"; 
+   }
+catch(PDOException $e)
+   {
+   echo "Connection failed: " . $e->getMessage(); die;
+   }
+
 
 // include_once 'dbConfig.php';
 
@@ -52,7 +75,7 @@ if ($query->num_rows > 0) {
       $row['department'],
       $row['percent_complete'],
       $row['status'],
-      $row['last_update'],
+      $row['last_update'],      
       $row['last_update_date']
     );
     array_walk($lineData, 'filterData');

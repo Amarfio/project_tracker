@@ -33,7 +33,7 @@ function reject_project($conn, $project_id, $approvedBy, $comment ){
     if ($result == 1) {
         $message = json_encode( 
             array(
-                'message' => 'Project has been moved to draft',
+                'message' => 'Project has been reject and moved to draft',
                 'status' => 'success',
                 'project_id' => $project_id
             )

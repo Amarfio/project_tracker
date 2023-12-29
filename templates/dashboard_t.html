@@ -229,7 +229,7 @@
             <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: 100%;">
           </div>
 
-          <div class="col-xl-4">
+          <div class="col-xl-4" ng-show="user_info.role == 'admin' || user_info.role=='assigner'">
             <select class="form-control" required ng-model="tableSearch_by_developer_id">
               <option value="">-- Filter by Developer --</option>
               <option ng-repeat="user in all_users" ng-value="user.user_id" ng-hide="user.user_id == '1'">
@@ -237,14 +237,14 @@
             </select>
           </div>
 
-          <div class="col-xl-3">
+          <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role=='assigner'">
             <select class="form-control " required ng-model="tableSearch_by_status_id">
               <option value="">-- project Status--</option>
               <option ng-value="status.status_id" ng-repeat="status in status_stats">{{ status .status}}</option>
             </select>
           </div>
           <div class="col-xl-2">
-            <button class="btn btn-info text-uppercase" ng-click="clear_filter()">clear</button>
+            <button class="btn btn-info text-uppercase" ng-show="user_info.role == 'admin' || user_info.role=='assigner'" ng-click="clear_filter()">clear</button>
           </div>
         </div>
       </div>

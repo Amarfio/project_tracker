@@ -29,6 +29,7 @@ if(
     $start_date = mysqli_real_escape_string($conn, $data->start_date);
     $end_date = mysqli_real_escape_string($conn, $data->end_date);
     $project_owner = mysqli_real_escape_string($conn, $data->project_owner);
+    $project_owner2 = mysqli_real_escape_string($conn, $data->project_owner2);
     // $location = mysqli_real_escape_string($conn, $data->location); 
     $start_date = date("Y-m-d", strtotime($start_date));
     $end_date = date("Y-m-d", strtotime($end_date));
@@ -68,7 +69,7 @@ if(
     // }
 
 
-    $query = "UPDATE `projects` SET `name` = '$name', `version_no`= '$version_no',`description` = '$description', `dept_id` = '$dept_id', `start_date` = '$start_date', `end_date` = '$end_date', `owner` = '$project_owner'   WHERE `projects`.`project_id` = '$project_id'";
+    $query = "UPDATE `projects` SET `name` = '$name', `version_no`= '$version_no',`description` = '$description', `dept_id` = '$dept_id', `start_date` = '$start_date', `end_date` = '$end_date', `owner` = '$project_owner', `s_owner` = '$project_owner2'   WHERE `projects`.`project_id` = '$project_id'";
 
     
     $result = mysqli_query($conn, $query);
@@ -78,7 +79,7 @@ if(
 
         $message = json_encode(
             array(
-                'message' =>'project created successfully',
+                'message' =>'project updated successfully',
                 'status' => 'success',
                 'data' => [
                     'project_id' => $project_id,

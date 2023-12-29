@@ -2,7 +2,9 @@
 
 require_once 'connect.php';
 
+$_GET['dept_id']= 106;
 
+$output = "";
 
 $output = "";
 

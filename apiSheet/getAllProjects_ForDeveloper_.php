@@ -77,7 +77,9 @@ function noOfTasks($project_id, $conn){
 
 function query_total_project($conn, $user_id){ 
     // $query_total_project = "SELECT pro.*, co.id version_id, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id  LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status WHERE  pro.dept_id = '$user_id' ORDER BY pro.project_id DESC";
-    $query_total_project = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department,DATEDIFF(NOW(), pro.start_date) AS no_of_days, DATEDIFF(pro.end_date, NOW()) AS daysToEnd, DATEDIFF(NOW(), pro.end_date) AS daysOverdue FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE  pro.owner = '$user_id' AND pro.is_archive = 0 ORDER BY pro.project_id DESC";
+    // $query_total_project = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department,DATEDIFF(NOW(), pro.start_date) AS no_of_days, DATEDIFF(pro.end_date, NOW()) AS daysToEnd, DATEDIFF(NOW(), pro.end_date) AS daysOverdue FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE  pro.owner = '$user_id' AND pro.is_archive = 0 ORDER BY pro.project_id DESC";
+    $query_total_project = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department, cli_p.name client_name, DATEDIFF(NOW(), pro.start_date) AS no_of_days, DATEDIFF(pro.end_date, NOW()) AS daysToEnd, DATEDIFF(NOW(), pro.end_date) AS daysOverdue FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN clients cli_p ON cli_p.client_id = pro.client LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE  pro.owner = '$user_id' AND pro.is_archive = 0 ORDER BY pro.project_id DESC";
+    // echo($query_total_project); die();
 
     $result = mysqli_query($conn, $query_total_project);
     $num = mysqli_num_rows($result);
@@ -151,6 +153,7 @@ function query_total_project($conn, $user_id){
 
             $projects_tasks[] =  array(
                 'project_id' => $row['project_id'],
+                'client'=> $row['client_name'],
                 "version_id"   => $row['version_id'],
                 "version"   => $row['version'],
                 "status_id"   => $row['status_id'],

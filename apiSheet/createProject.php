@@ -34,6 +34,7 @@ if(
     $end_date = mysqli_real_escape_string($conn, $data->end_date);
     $owner = mysqli_real_escape_string($conn, $data->owner);
     $owner_2 = mysqli_real_escape_string($conn, $data->owner_2);
+    $client_id = mysqli_real_escape_string($conn, $data->client_id);
     // $ip_address = mysqli_real_escape_string($conn, $data->ip_address);
     // $location = mysqli_real_escape_string($conn, $data->location); 
     $start_date = date("Y-m-d", strtotime($start_date));
@@ -96,7 +97,7 @@ if(
     }
     //check if description already exists in the records...
     else if(isDescriptionAvailable($conn, "projects", $description) === false){
-        $query = "INSERT INTO `projects` (`project_id`, `version_no`, `name`, `description`, `attach`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`, `created_at`, `owner`, `s_owner`,`priority`) VALUES (NULL, '$version_no', '$name', '$description', '$file_name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date', NOW(),'$owner', '$owner_2', '$priority' )";
+        $query = "INSERT INTO `projects` (`project_id`, `version_no`, `name`, `description`, `client`, `attach`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`, `created_at`, `owner`, `s_owner`,`priority`) VALUES (NULL, '$version_no', '$name', '$description', '$client_id', '$file_name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date', NOW(),'$owner', '$owner_2', '$priority' )";
         // echo ($query);
         // die();
         $result = mysqli_query($conn, $query);

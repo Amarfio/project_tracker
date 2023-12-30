@@ -87,6 +87,31 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
     $scope.get_departments('dpt')
 
 
+    //get clients for project
+    $scope.get_all_clients = function () {
+        $http({
+            method: 'GET',
+            url: myConfig.url + '/getAllClients.php'
+
+        }).then(function successCallback(response) {
+
+            $scope.all_clients = response.data;
+            console.log($scope.all_clients)
+
+        }, function errorCallback(response) {
+
+            // alert("Error. Try Again!");
+            Swal.fire({
+                type: 'warning',
+                title: 'Network Connection Erro for loading clients',
+                text: 'Clients Could not loaded'
+            })
+
+        });
+    }
+    $scope.get_all_clients()
+
+
     // ATTACHMENT ICON FUNCTION
 
     $scope.attachment_file = 'None';
@@ -152,10 +177,11 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
         });
     }
 
-    $scope.createProject = function (project_name_, version_no_, department_id_, start_date_, end_date_, project_description_,project_owner_, project_owner_2, priority_ ) {
+    $scope.createProject = function (project_name_, version_no_, client_id, department_id_, start_date_, end_date_, project_description_,project_owner_, project_owner_2, priority_ ) {
         console.log(project_name_)
         console.log(version_no_)
         console.log(department_id_)
+        console.log(client_id)
         console.log(start_date_)
         console.log(end_date_)
         console.log(project_description_)
@@ -187,6 +213,7 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
                 user_id: $scope.user_info.user_id,
                 project_name: project_name_.trim(),
                 version_no: version_no_.trim(),
+                client_id: client_id,
                 project_description: project_description_.trim(),
                 dept_id: department_id_.trim(),
                 user_id: $scope.user_id.trim(),
@@ -202,6 +229,7 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
                 user_id: $scope.user_info.user_id,
                 project_name: project_name_.trim(),
                 version_no: version_no_.trim(),
+                client_id: client_id,
                 project_description: project_description_.trim(),
                 dept_id: department_id_.trim(),
                 user_id: $scope.user_id.trim(),

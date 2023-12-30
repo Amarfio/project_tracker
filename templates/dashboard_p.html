@@ -257,6 +257,7 @@
                 <th scope="col">Project ID</th>
                 <th scope="col">Description</th>
                 <th scope="col">No of tasks</th>
+                <th scope="col">Client</th>
                 <th scope="col">File</th>
                 <th scope="col">Days to End</th>
                 <th scope="col">Owner</th>
@@ -289,6 +290,9 @@
                 <td>
                   {{ project.no_of_tasks }} &nbsp;
                   <a class="badge badge-success">{{ project.tasks.length }}</a>
+                </td>
+                <td>
+                  {{ project.client}}
                 </td>
                 <td>
                   <strong ng-if="project.attach != ''">

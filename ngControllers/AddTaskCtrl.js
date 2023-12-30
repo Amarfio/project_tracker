@@ -60,7 +60,7 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
     $scope.get_all_clients = function () {
         $http({
             method: 'GET',
-            url: myConfig.url + '/getAllClientse.php'
+            url: myConfig.url + '/getAllClients.php'
 
         }).then(function successCallback(response) {
 

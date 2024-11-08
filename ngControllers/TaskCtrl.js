@@ -114,6 +114,32 @@ sheetApp.controller('TaskCtrl', function ($scope, $http, $routeParams, check_aut
     }
     $scope.get_departments()
 
+    $scope.getDetailsWithId = function(task_id, assigned_to){
+        console.log("test task id ", task_id);
+        console.log("test assigned to id", assigned_to);
+
+
+        $http({
+            method: 'GET',
+            url: myConfig.url + '/getAllConflictsTasksById.php?task_id=' + task_id + '&assigned_to=' + assigned_to
+
+        }).then(function successCallback(response) {
+
+            var taskClashes = response.data['data'];
+            // console.log("first try ")
+            console.log(taskClashes);
+            $scope.taskClashes = taskClashes;
+            console.log($scope.taskClashes);
+
+
+        }, function errorCallback(response) {
+
+            // alert("Error. Try Again!"); 
+
+        });
+    }
+    // $scope.getDetailsWithId(task_id, assigned_to);
+
 
     $scope.get_statics_developer_for_assigner_and_admin = function (init) {
 

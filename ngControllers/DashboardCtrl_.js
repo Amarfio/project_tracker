@@ -9,6 +9,10 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
     // PROFILE PHOTO
     $scope.profile_pic_true = $localStorage.profile_pic
     $scope.profile_pic = myConfig.file_url + $scope.profile_pic_true
+
+    $scope.client_id = $scope.user_info.client_id;
+
+    $scope.myConfig_file_url = myConfig.file_url
     console.log($scope.profile_pic)
 
 
@@ -129,6 +133,8 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
 
             var _url = myConfig.url + '/getAllTasks_ForDeveloper.php?user_id=' + user_id
 
+        } else if(_user_info_role == 'guest'){
+            var _url = myConfig.url + '/getAllTasks_For_Clients.php?client_id=' + $scope.client_id
         } else if (_user_info_role == 'assigner_and_admin') {
             var _url = myConfig.url + '/getAllTasks_ForAssigner_&_Admin.php'
         } else if (_user_info_role == 'department_head') {
@@ -299,11 +305,41 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
 
     }
 
+    $scope.get_statics_developer_for_client = function (init) {
+
+        var _url = myConfig.url + '/getCodeStatusCount_For_Clients.php?init=' + init + '&client_id=' +$scope.client_id
+
+        $http({
+            method: 'GET',
+            url: _url
+        }).then(function successCallback(response) {
+
+            $scope.total_tasks = response.data[0].total_tasks;
+            $scope.approved_project = response.data[0].approved_project;
+            $scope.unapproved_project = response.data[0].unapproved_project;
+            $scope.status_stats = response.data[0].code_desc;
+            // console.log($scope.status_stats)
+            // console.log($scope.approved_project)
+            // console.log($scope.unapproved_project)
+            /**
+             * ! to determine where the card id developer or admin or assigner
+             */
+            $scope._user_info_role = 'guest'
+
+        }, function errorCallback(response) {
+
+            // alert("Error. Try Again!");
+
+        });
+
+
+    }
+
     // $scope.get_statics_developer_for_assigner_and_admin('sta')
 
     // if (($scope.user_info.role == 'assigner' || $scope.user_info.role == 'admin ') && ($scope.user_info.is_dept_head == 1 || $scope.user_info.is_dept_head == 0)) {
 
-    if (($scope.user_info.role == 'admin' || $scope.user_info.role == 'assigner' || $scope.user_info.role == 'guest') && ($scope.user_info.is_dept_head == 1 || $scope.user_info.is_dept_head == 0)) {
+    if (($scope.user_info.role == 'admin' || $scope.user_info.role == 'assigner') && ($scope.user_info.is_dept_head == 1 || $scope.user_info.is_dept_head == 0)) {
         $scope.get_statics_developer_for_assigner_and_admin('sta')
         $scope.get_total_tasks($scope.user_info.user_id, 'total tasks', 'assigner_and_admin', $scope.user_info.department_id)
 
@@ -319,6 +355,11 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
     if ($scope.user_info.role == 'developer' && $scope.user_info.is_dept_head == 0) {
         $scope.get_statics_developer_for_developer('sta', $scope.user_info.department_id, 0, $scope.user_info.user_id)
         $scope.get_total_tasks($scope.user_info.user_id, 'total tasks', 'developer', $scope.user_info.department_id)
+    }
+
+    if($scope.user_info.role == 'guest'){
+        $scope.get_statics_developer_for_client('sta')
+        $scope.get_total_tasks($scope.user_info.user_id, 'total tasks', 'guest', $scope.user_info.department_id)
     }
 
 

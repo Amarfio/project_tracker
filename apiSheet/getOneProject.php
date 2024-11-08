@@ -9,14 +9,16 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 require_once 'connect.php';
+require_once 'functions/noOfConflictingTasks.php';
 
 
     function project_avg_percentage($project_id, $conn){
 
-        $query = "SELECT AVG(ALL t.completion) project_average_completion FROM tasks t WHERE t.project_id = '$project_id'";
+        $query = "SELECT (COUNT(*) * 100.0 / (SELECT COUNT(*) FROM tasks WHERE project_id = '$project_id')) AS total_percentage FROM tasks WHERE 
+        project_id = '$project_id' AND completion = 100";
         $result = mysqli_query($conn, $query);
        $row = mysqli_fetch_array($result);
-       return $row['project_average_completion'];
+       return $row['total_percentage'];
     
   
     }
@@ -39,9 +41,9 @@ require_once 'connect.php';
         $task_arr = array();
         
     
-        // $query = "SELECT t.task_id, t.description, t.project_id, t.start_date, t.end_date, cl.client_id client_id, cl.name client, CONCAT(u_to.f_name, ' ', u_to.l_name) assigned_to, u_to.id assigned_to_id, CONCAT(u_by.f_name, ' ', u_by.l_name) assigned_by, CONCAT(u_ap.f_name, ' ', u_ap.l_name) approved_by, t.completion, cod_pri.id priority_id, cod_pri.desc priority, cod_sta.id status_id, cod_sta.desc status FROM tasks t LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN users u_by ON u_by.id = t.assigned_by LEFT JOIN users u_ap ON u_ap.id = t.approved_by LEFT JOIN code_desc cod_pri ON cod_pri.id = t.priority LEFT JOIN code_desc cod_sta ON cod_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id WHERE t.project_id = '$project_id' ORDER BY t.task_id DESC";
+        $query = "SELECT t.task_id, t.description, t.project_id, t.hash_tag, t.start_date, t.end_date, cl.client_id client_id, cl.name client, CONCAT(u_to.f_name, ' ', u_to.l_name) assigned_to, u_to.id assigned_to_id, CONCAT(u_by.f_name, ' ', u_by.l_name) assigned_by, CONCAT(u_ap.f_name, ' ', u_ap.l_name) approved_by, t.completion, cod_pri.id priority_id, cod_pri.desc priority, cod_sta.id status_id, cod_sta.desc status FROM tasks t LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN users u_by ON u_by.id = t.assigned_by LEFT JOIN users u_ap ON u_ap.id = t.approved_by LEFT JOIN code_desc cod_pri ON cod_pri.id = t.priority LEFT JOIN code_desc cod_sta ON cod_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id WHERE t.project_id = '$project_id' ORDER BY t.task_id DESC";
         
-        $query = "select * from vw_tasks_under_project_by_id where project_id = '$project_id' ORDER BY task_id DESC";
+        // $query = "select * from vw_tasks_under_project_by_id where project_id = '$project_id' ORDER BY task_id DESC";
 
         $result = mysqli_query($conn, $query);
     
@@ -49,19 +51,29 @@ require_once 'connect.php';
     
         while ($row = mysqli_fetch_assoc($result)) {
            
-           $task_id_base64Encode = array(
-                'task_id_base64Encode' => base64_encode($row['task_id']) 
-            );
+        //    $task_id_base64Encode = array(
+        //         'task_id_base64Encode' => base64_encode($row['task_id']) 
+        //     );
+            
             $task_arr[] = $row;
-
-            array_push($task_arr[0], $task_id_base64Encode);
+            
+            // array_push($task_arr[0], $task_id_base64Encode);
         }
+
+        for($i= 0; $i<count($task_arr); $i++){
+            $taskConflictsNo = getNoOfConflictingTasks($task_arr[$i]['task_id'], $conn);
+            // echo($taskConflictsNo); 
+            $task_arr[$i]['noOfConflictsTask'] = $taskConflictsNo;
+        }
+        
         return $task_arr;
     }
 
 function getNoOfTasks($project_id, $conn)
 {
-    $query = "select * from vw_tasks_under_project_by_id where project_id = '$project_id' ORDER BY task_id DESC";
+    $query = "SELECT t.task_id, t.description, t.project_id, t.start_date, t.end_date, cl.client_id client_id, cl.name client, CONCAT(u_to.f_name, ' ', u_to.l_name) assigned_to, u_to.id assigned_to_id, CONCAT(u_by.f_name, ' ', u_by.l_name) assigned_by, CONCAT(u_ap.f_name, ' ', u_ap.l_name) approved_by, t.completion, cod_pri.id priority_id, cod_pri.desc priority, cod_sta.id status_id, cod_sta.desc status FROM tasks t LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN users u_by ON u_by.id = t.assigned_by LEFT JOIN users u_ap ON u_ap.id = t.approved_by LEFT JOIN code_desc cod_pri ON cod_pri.id = t.priority LEFT JOIN code_desc cod_sta ON cod_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id WHERE t.project_id = '$project_id' ORDER BY t.task_id DESC";
+
+    // $query = "select * from vw_tasks_under_project_by_id where project_id = '$project_id' ORDER BY task_id DESC";
 
         $result = mysqli_query($conn, $query);
     
@@ -117,6 +129,7 @@ if (isset($_GET['project_id'])) {
                 "version_name"   => $row['version_name'],
                 "name" => $row['name'],
                 "description" => $row['description'],
+                // "hash_tag"=> $row['hash_tag'],
                 "attach" => $row['attach'],
                 "is_approved" => $row['is_approved'],
                 "approved_by_id" => $row['approved_by'],
@@ -142,7 +155,7 @@ if (isset($_GET['project_id'])) {
         
         $message = json_encode(
             array(
-                'message' => 'Great here are your data',
+                'message' => 'data availabile',
                 'status' => 'success',
                 'data' => $projects_tasks,
                 'project_avg_percentage' => project_avg_percentage($project_id, $conn)

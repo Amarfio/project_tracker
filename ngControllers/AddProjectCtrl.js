@@ -177,7 +177,7 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
         });
     }
 
-    $scope.createProject = function (project_name_, version_no_, client_id, department_id_, start_date_, end_date_, project_description_,project_owner_, project_owner_2, priority_ ) {
+    $scope.createProject = function (project_name_, version_no_, client_id, department_id_, start_date_, end_date_, project_description_, hash_tag_, project_sponsor, project_owner_, project_owner_2, priority_, interested_person_ ) {
         console.log(project_name_)
         console.log(version_no_)
         console.log(department_id_)
@@ -189,6 +189,9 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
         console.log($scope.user_id)
         console.log($scope.project_owner_)
         console.log($scope.project_owner_2)
+        console.log(hash_tag_)
+        console.log(project_sponsor)
+        console.log(interested_person_)
 
 
         // return false;
@@ -222,7 +225,9 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
                 end_date: end_date_,
                 owner: project_owner_,
                 owner_2: project_owner_2,
-                priority: priority_
+                priority: priority_,
+                hashTag: hash_tag_,
+                project_sponsor,
             }
         }else{
             data = {
@@ -238,7 +243,9 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
                 end_date: end_date_,
                 owner: project_owner_,
                 owner_2 : project_owner_2,
-                priority: priority_
+                priority: priority_,
+                hashTag: hash_tag_,
+                project_sponsor,
             }
         }
 

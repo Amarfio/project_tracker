@@ -80,6 +80,25 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
     }
     $scope.get_all_clients()
 
+    // ATTACHMENT ICON FUNCTION
+
+    $scope.attachment_file = 'None';
+    $scope.get_file_input = function () {
+        // $("#upload_file").click(function () {
+        //     $("#id_file_field").trigger('click');
+        // });
+        var fileName= "";
+        $('#attached-file').change(function () {
+            var value = this.value;
+             fileName = typeof value == 'string' ? value.match(/[^\/\\]+$/)[0] : value[0]
+            console.log(fileName);
+            $scope.attachment_file = fileName;
+            // $('#attached-text').text(fileName);
+        })
+
+
+    }
+
 
     $scope.get_code_desc = function (init) {
         $http({
@@ -144,8 +163,33 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
     $scope.get_all_users($scope.url_department_id)
 
 
+    //code to upload a file
+    //code to get uploaded file value
+    $scope.upload = function () {
+        var file = $scope.uploadfile;
+        var fd = new FormData();
+        var files = document.getElementById('attached-file').files[0];
+        fd.append('file', files);
 
-    $scope.createTask = function (project_id_, task_, priority_, developer_, client_id_, start_date_, end_date_) {
+        $http({
+            method: 'post',
+            url: myConfig.url + '/uploadFile.php',
+            data: fd,
+            headers: {
+                'Content-Type': undefined   
+            },
+        }).then(function successCallback(response) {
+            // Store response data
+            $scope.response = response.data;
+            console.log($scope.response)
+            // $('#show_attach_name').text('None');
+            // $scope.attachment_file = 'None'
+        });
+    }
+
+
+
+    $scope.createTask = function (project_id_, task_, priority_, developer_, client_id_, start_date_, end_date_, hash_tag, application, affected_artifact, risk_) {
         // console.log(project_id_)
         // console.log(priority_)
         // console.log(task_)
@@ -304,9 +348,39 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
                 t_start_date: start_date_,
                 t_end_date: end_date_,
                 p_start_date: p_start_date,
-                p_end_date: p_end_date
+                p_end_date: p_end_date, 
+                fileName: "",
+                hash_tag: hash_tag,
+                application: application,
+                affected_artifact: affected_artifact,
+                artifact_name: artifact_name,
+                risk: risk_
+            }
+
+            if($scope.attachment_file != 'None'){
+                data = {
+                    user_id: $scope.user_info.user_id,
+                    project_id: project_id_.trim(),
+                    priority: priority_,
+                    task_name: task_.trim(),
+                    client_id: client_id_.trim(),
+                    assigned_to: developer_.trim(),
+                    assigned_by: $scope.user_id.trim(),
+                    t_start_date: start_date_,
+                    t_end_date: end_date_,
+                    p_start_date: p_start_date,
+                    p_end_date: p_end_date,
+                    hash_tag: hash_tag,
+                    application: application,
+                    affected_artifact: affected_artifact,
+                    artifact_name: artifact_name,
+                    risk : risk_,
+                    fileName: $scope.attachment_file
+                }
             }
             console.log(data); 
+            // return false;
+            $scope.upload()
             sendRequest()
         // }
 

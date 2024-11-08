@@ -11,7 +11,7 @@ require_once 'connect.php';
 if (isset($_GET['init'])) {
     $init = mysqli_escape_string($conn, $_GET['init']);
 
-    $query = "SELECT * FROM code_desc LEFT JOIN code ON code.init = code_desc.init WHERE code_desc.init = '$init'";
+    $query = "SELECT * FROM code_desc LEFT JOIN code ON code.init = code_desc.init WHERE code_desc.init = '$init' AND code_desc.is_active = 1 ";
 
 
     $result = mysqli_query($conn, $query);

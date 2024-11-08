@@ -79,7 +79,7 @@ if(
     isset($data) && isset($data->user_id) && isset($data->project_id) && isset($data->task_name) && isset($data->assigned_by) &&
     isset($data->assigned_to) && isset($data->t_start_date) && isset($data->t_end_date) && isset($data->p_start_date) && isset($data->p_end_date) &&  isset($data->priority)  
 ){
-    // echo json_encode($data);
+    // echo json_encode($data); die();
 
     $user_id = mysqli_real_escape_string($conn, $data->user_id);
     $project_id = mysqli_real_escape_string($conn, $data->project_id);
@@ -98,6 +98,17 @@ if(
 
     $p_start_date = date("Y-m-d", strtotime($p_start_date));
     $p_end_date = date("Y-m-d", strtotime($p_end_date));
+    $hash_tag = mysqli_real_escape_string($conn, $data->hash_tag);
+    $file_name = mysqli_real_escape_string($conn, $data->fileName);
+    $application = mysqli_real_escape_string($conn, $data->application);
+    $affectedArtifact = mysqli_real_escape_string($conn, $data->affected_artifact);
+    $artifactName = mysqli_real_escape_string($conn, $data->artifact_name);
+    $risk = mysqli_real_escape_string($conn, $data->risk);
+    // echo ($file_name); die();
+    $docAdded = 'NO';
+    if($file_name != ''){
+        $docAdded = 'YES';
+    }
 
     //create an instance of the date check class
     // $dateCheckTasks = new DateCheck($t_start_date, $p_start_date);
@@ -224,7 +235,46 @@ if(
         
 
             // $query = "INSERT INTO `projects` (`id`, `version_no`, `name`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`) VALUES (NULL, '$version_no', '$name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date')";
-            $query = "INSERT INTO `tasks` (`task_id`, `description`, `start_date`, `end_date`, `client_id`, `assigned_by`, `assigned_to`, `priority`, `project_id`, `ip_address`, `location`, `created_at`) VALUES (NULL, '$task_name', '$start_date', '$end_date', '$client_id', '$assigned_by', '$assigned_to', '$priority', '$project_id', '$ip_address', '$location', NOW())";
+            $query = "INSERT INTO `tasks` 
+                        (`task_id`, 
+                        `description`, 
+                        `hash_tag`, 
+                        `start_date`, 
+                        `end_date`, 
+                        `client_id`, 
+                        `assigned_by`, 
+                        `assigned_to`, 
+                        `priority`, 
+                        `project_id`, 
+                        `ip_address`, 
+                        `location`, 
+                        `created_at`, 
+                        `doc`, 
+                        `doc_name`, 
+                        `application`, 
+                        `artifact_affected`, 
+                        `artifact_name`) 
+                      VALUES (
+                        NULL, 
+                        '$task_name', 
+                        '$hash_tag', 
+                        '$start_date', 
+                        '$end_date', 
+                        '$client_id', 
+                        '$assigned_by', 
+                        '$assigned_to', 
+                        '$priority', 
+                        '$project_id', 
+                        '$ip_address', 
+                        '$location', 
+                         NOW(), 
+                        '$docAdded', 
+                        '$file_name',
+                        '$application',
+                        '$artifactAffected',
+                        '$artifactName')";
+
+                // echo($query); die();
             
 
             $result = mysqli_query($conn, $query);

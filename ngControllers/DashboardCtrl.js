@@ -1,4 +1,10 @@
 sheetApp.controller('DashboardCtrl', function ($scope, dataService, check_auth, myConfig, $http, $location, $localStorage, $location) {
+    
+    angular.element(document).ready(function () {
+        // Reload the page once when the document is ready
+        $window.location.reload();
+    });
+    
     check_auth.verify_auth($localStorage.user_info)
     console.log($localStorage.user_info.data);
     $scope.user_info = $localStorage.user_info.data
@@ -7,6 +13,7 @@ sheetApp.controller('DashboardCtrl', function ($scope, dataService, check_auth, 
     // var user_role = $localStorage.user_info.data
     console.log($scope.user_info.user_id)
     console.log($scope.user_info.department_id)
+    $scope.client_id = $scope.user_info.client_id;
 
     //description of the dashboard
     $scope.dashboard_description = 'Project';
@@ -329,6 +336,9 @@ sheetApp.controller('DashboardCtrl', function ($scope, dataService, check_auth, 
             if (_user_info_role == 'developer') {
                  _url = myConfig.url + '/getAllProjects_ForDeveloper_.php?user_id=' + user_id + '&status_id=' + status_id
             } 
+            else if (_user_info_role == 'guest') {
+                _url = myConfig.url + '/getAllProjects_ForClient.php?status_id=' + status_id + '&client_id='+ $scope.client_id
+            }
             else if (_user_info_role == 'assigner_and_admin') {
 
                 if(user_id == 0){
@@ -445,11 +455,14 @@ sheetApp.controller('DashboardCtrl', function ($scope, dataService, check_auth, 
 
             if (_user_info_role == 'developer') {
                 _url = 'getAllProjects_ForDeveloper_.php?user_id=' + user_id
+            } else if (_user_info_role == 'guest'){
+                _url = 'getAllProjects_ForClient.php?client_id='+$scope.client_id
             } else if (_user_info_role == 'assigner_and_admin') {
+                console.log("I came here bro");
                 _url = 'getAllProjects_ForAssigner_&_Admin.php'
             } else if (_user_info_role == 'department_head') {
                 _url = 'getAllProjects_ForDepartmentHead.php?department_id=' + department_id
-            }
+            } 
 
         }else{
             //this code checks for user id to determine to pick from department or user project details
@@ -633,8 +646,6 @@ sheetApp.controller('DashboardCtrl', function ($scope, dataService, check_auth, 
     }
     // $scope.get_statics_developer_for_department_head('sta', $scope.user_info.department_id)
 
-
-
     $scope.get_statics_developer_for_assigner_and_admin = function (init) {
 
         var _url = myConfig.url + '/getCodeStatusCount_Project_For_Assigner_&_Admin_1.php?init=' + init
@@ -666,6 +677,37 @@ sheetApp.controller('DashboardCtrl', function ($scope, dataService, check_auth, 
 
     }
 
+    $scope.get_statics_developer_for_client = function (init) {
+
+        var _url = myConfig.url + '/getCodeStatusCount_Project_For_Client.php?init=' + init +'&client_id=' + $scope.client_id
+
+        $http({
+            method: 'GET',
+            url: _url
+        }).then(function successCallback(response) {
+
+            $scope.total_projects = response.data[0].total_projects;
+            $scope.status_of_project = response.data[0].code_desc;
+            // $scope.status_stats = response.data[0].code_desc;
+            console.log(response.data)
+            // console.log($scope.status_stats)
+            // console.log($scope.approved_project)
+            // console.log($scope.unapproved_project)
+            /**
+             * ! to determine where the card id developer or admin or assigner
+             */
+            $scope._user_info_role = 'guest'
+
+        }, function errorCallback(response) {
+
+            // alert("Error. Try Again!");
+
+        });
+
+        $scope.get_total_projects($scope.user_info.user_id, 'total', 'guest', $scope.user_info.department_id, $scope.dev_changed);
+
+    }
+
     // $scope.get_statics_developer_for_assigner_and_admin('sta')
 
     // if (($scope.user_info.role == 'assigner' || $scope.user_info.role == 'admin ') && ($scope.user_info.is_dept_head == 1 || $scope.user_info.is_dept_head == 0)) {
@@ -682,7 +724,7 @@ sheetApp.controller('DashboardCtrl', function ($scope, dataService, check_auth, 
     // }
 
 
-    if (($scope.user_info.role == 'admin' || $scope.user_info.role == 'assigner' || $scope.user_info.role == 'guest') && ($scope.user_info.is_dept_head == 1 || $scope.user_info.is_dept_head == 0)) {
+    if (($scope.user_info.role == 'admin' || $scope.user_info.role == 'assigner') && ($scope.user_info.is_dept_head == 1 || $scope.user_info.is_dept_head == 0)) {
         $scope.get_all_developers()
         $scope.get_statics_developer_for_assigner_and_admin('psta')
         // $scope.get_statics_developer_for_developer('psta', $scope.user_info.department_id, 0, $scope.user_info.user_id)
@@ -699,6 +741,15 @@ sheetApp.controller('DashboardCtrl', function ($scope, dataService, check_auth, 
         // $scope.get_all_developers($scope.user_info.department_id)
         $scope.get_statics_developer_for_developer('psta', $scope.user_info.department_id, 0, $scope.user_info.user_id)
         $scope.get_total_projects($scope.user_info.user_id, 'total', 'developer', $scope.user_info.department_id, $scope.dev_changed)
+    }
+    //uncomment and continue this
+    //get client id
+    //use it to query for data both stats and projects....
+    
+    if ($scope.user_info.role == 'guest'){
+        $scope.get_statics_developer_for_client('psta')
+        // $scope.get_statics_developer_for_developer('psta', $scope.user_info.department_id, 0, $scope.user_info.user_id)
+        $scope.get_total_projects($scope.user_info.user_id, 'total', 'guest', $scope.user_info.department_id, $scope.dev_changed)
     }
 
 

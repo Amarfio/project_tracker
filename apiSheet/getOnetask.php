@@ -21,9 +21,14 @@ if (isset($_GET['task_id'])) {
     $num = mysqli_num_rows($result);
     $tast_arr = array();
     if ($num > 0) {
+
         while ($row = mysqli_fetch_assoc($result)) {
             $tast_arr[] = $row;
         } 
+
+        //code to get the number of clashing tasks per task id
+        $noOfClashingTasks = getNoOfTasks($tast_arr[0]['task_id'], $conn);
+        $tast_arr[0]['noOfClashing'] = $noOfClashingTasks;
             
         $message = json_encode(
             array(
@@ -45,4 +50,12 @@ if (isset($_GET['task_id'])) {
         );
         exit($message); 
     }
+}
+
+function getNoOfTasks($task_id, $conn)
+{
+    $query = "select * from vw_clashing_tasks where task_id = '$task_id'";
+        $result = mysqli_query($conn, $query);
+        $num = mysqli_num_rows($result);
+    return $num;
 }

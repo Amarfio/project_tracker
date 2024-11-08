@@ -13,7 +13,8 @@
         //whether ip is from remote address
         else
         {
-            $ip_address = $_SERVER['REMOTE_ADDR'];
+            // $ip_address = $_SERVER['REMOTE_ADDR'];
+            $ip_address = "10.203.14.195";
         }
         return $ip_address;
 

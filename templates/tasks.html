@@ -257,6 +257,10 @@
                       {{project_avg | number: 0}}%
                     </div> -->
                   <!-- </div> -->
+                  <div class="col-md-4">
+                    <span class="text-primary">Owner:</span> &nbsp;&nbsp; 
+                    {{ project.project_owner }}
+                  </div>
 
                   <div class="col-md-4">
                     <span class="text-primary">Start Date:</span>
@@ -284,10 +288,7 @@
                     <!-- <span class=" badge badge-info">{{ project.comment_by_name}}</span> -->
                   </div>
                   
-                  <div class="col-md-4">
-                    <span class="text-primary">Owner:</span> &nbsp;&nbsp; 
-                    {{ project.project_owner }}
-                  </div>
+                  
 
                   <div class="col-md-4">
                     <span class="text-primary">Document:</span>
@@ -503,6 +504,8 @@
               <tr>
                 <th scope="col">Task ID</th>
                 <th scope="col">Task</th>
+                <th scope="col">Hash tag</th>
+                <th scoep="col">Number of clashing tasks</th>
                 <th scope="col">Priority</th>
                 <th scope="col">Clients</th>
 
@@ -534,6 +537,19 @@
                     {{task.description}}
                   </div>
 
+                </td>
+                <td>
+                  {{task.hash_tag}}
+                </td>
+                <td>
+                 <button class="btn btn-sm btn-primary col-md-6" data-toggle="modal"
+                      data-target="#modal-view-clashing-tasks" type="button" ng-if="task.noOfConflictsTask > 1" ng-click="getDetailsWithId(task.task_id, task.assigned_to_id)">
+                      {{task.noOfConflictsTask}} tasks
+                  </button>
+                  <button class="btn btn-sm btn-primary col-md-6" data-toggle="modal"
+                      data-target="#modal-view-clashing-tasks" type="button" ng-if="task.noOfConflictsTask < 2" ng-click="getDetailsWithId(task.task_id, task.assigned_to_id)">
+                      {{task.noOfConflictsTask}} task
+                  </button>
                 </td>
                 <td>
                   <span class="badge badge-dot mr-4">
@@ -797,6 +813,73 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- modal for checking clashing tasks-->
+  <div class="modal fade" id="modal-view-clashing-tasks" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+          <div class="modal-body p-0">
+              <div class="card bg-secondary shadow border-0">
+
+                  <div class="card-body px-lg-5 py-lg-4">
+                      <div class="text-center text-muted ">
+                          <legend></legend>
+                          <h4>Clashing tasks details</h4>
+                          <br>
+                        
+                        <hr>
+                        <div class="col-md-12" >
+                          <div class="card">
+                            <h5 class="card-title display-4 text-primary text-center float-center" ng-if="!taskClashes">
+                              <br/>
+                              No Update Available
+                            </h5>
+                          </div>
+                          <div class="table-responsive" ng-if="taskClashes">
+                            <table class="table align-items-center table-flush" id="data_table">
+                              <thead class="thead-light">
+                                <tr>
+                                  <th scope="col">task id</th>
+                                  <th scope="col">task start date</th>
+                                  <th scope="col">task end date</th>
+                                  <th scope="col">clashing task id</th>
+                                  <th scope="col">clashing task start date</th>
+                                  <th scope="col">clashing task end date</th>                                              
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr ng-repeat="task in taskClashes">
+                                  <td>REF0000{{ task.task_id }}</td>
+                                  <td>{{ task.task_start_date }}</td>
+                                  <td>
+                                    {{ task.task_end_date}}
+                                  </td>
+                                  <td>
+                                    REF0000{{ task.conflicting_task_id}}
+                                  </td>
+                                  <td>
+                                    {{ task.conflicting_task_start_date}}
+                                  </td>
+                                  <td>
+                                    {{ task.conflicting_task_end_date }}
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="modal-footer">
+                        <!-- <button type="submit" class="btn btn-primary">Add</button> -->
+                        <button type="button" class="btn btn-link "  data-dismiss="modal"onclick="location.reload()">Close</button>
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
   </div>
 
 

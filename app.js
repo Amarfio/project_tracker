@@ -27,6 +27,10 @@ sheetApp.config(
           templateUrl: "./templates/dashboard_p.html",
           controller: "DashboardCtrl",
         })
+        .when("/programs_dashboard", {
+          templateUrl: "./templates/programs_dashboard.html",
+          controller: "ProgramsDashboardCtrl",
+        })
         .when("/dashboard_test", {
           templateUrl: "./templates/dashboard_tests.html",
           controller: "DashboardCtrl",

@@ -17,6 +17,7 @@ require_once "PHPMailer/PHPMailer.php";
 require_once "PHPMailer/SMTP.php";
 require_once "PHPMailer/Exception.php";
 require_once 'connect.php';
+require_once "functions/pendingApprovalTemplate.php";
 // require_once 'mailer.php';
 
 //mail
@@ -82,32 +83,34 @@ function get_department_head_email($department_id, $conn){
                 } 
 
                 $to = 'ampahkwabena55@gmail.com';
+                $txt = pendingApproval($project_id, $name, $version_name, $department, $start_date, $end_date);
                 // $subject = "UNION SYSTEMS GLOBAL";
-                $txt = "A new Project has been created and is pending approval.<br/> 
-                Project Details includes the following: 
-                <br/><br/>
-                Project ID: PRO-0000 $project_id <br/>
-                Project Name:  $name <br/>
-                Version: $version_name <br/>
-                Department: $department <br/>
-                Start Date: $start_date <br/>
-                End Date: $end_date <br/> <br/>
-                Kindly <a href='http://192.168.1.195:84/project_tracker/login'>click here</a> to login <br/>
-                <img  src='http://issues.unionsg.com/images/logo.png' class='img-circle'/>
-                ";
+                // $txt = "A new Project has been created and is pending approval.<br/> 
+                // Project Details includes the following: 
+                // <br/><br/>
+                // Project ID: PRO-0000 $project_id <br/>
+                // Project Name:  $name <br/>
+                // Version: $version_name <br/>
+                // Department: $department <br/>
+                // Start Date: $start_date <br/>
+                // End Date: $end_date <br/> <br/>
+                // Kindly <a href='http://192.168.1.195:84/project_tracker/login'>click here</a> to login <br/>
+                // <img  src='http://issues.unionsg.com/images/logo.png' class='img-circle'/>
+                // ";
 
-                // $txt = "New Project has been created and is pending approval: ".  "http://192.168.1.195:84/project_tracker/login". "\r\n" ;
-                // $txt = $txt . 'Project ID: PRO-0000' . $project_id . "\r\n" ;
-                // $txt = $txt . 'Description: ' . $description . "\r\n" ;
-                // $txt = $txt . 'Version : ' . $version_name . "\r\n" ;
-                // $txt = $txt . 'Department: ' . $department . "\r\n" ;
-                // $txt = $txt . 'Start Date: ' . $start_date . "\r\n" ;
-                // $txt = $txt . 'End Date: ' . $end_date . "\r\n" ;
+                // // $txt = "New Project has been created and is pending approval: ".  "http://192.168.1.195:84/project_tracker/login". "\r\n" ;
+                // // $txt = $txt . 'Project ID: PRO-0000' . $project_id . "\r\n" ;
+                // // $txt = $txt . 'Description: ' . $description . "\r\n" ;
+                // // $txt = $txt . 'Version : ' . $version_name . "\r\n" ;
+                // // $txt = $txt . 'Department: ' . $department . "\r\n" ;
+                // // $txt = $txt . 'Start Date: ' . $start_date . "\r\n" ;
+                // // $txt = $txt . 'End Date: ' . $end_date . "\r\n" ;
                 
-                $headers = "From: USG" . "\r\n" . "CC: " .  implode (", ", $email_arr);
+                // $headers = "From: USG" . "\r\n" . "CC: " .  implode (", ", $email_arr);
                 $mailName= "no-reply";
 
                 $deptHeadEmail = get_department_head_email($department_id, $conn);
+                // echo($txt); die();
                 // return $deptHeadEmail; die();
 
                 //mail setup

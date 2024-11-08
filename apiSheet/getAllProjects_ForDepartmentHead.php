@@ -123,7 +123,8 @@ function query_total_project($conn, $department_id){
                 "start_date" => $newStartDate,
                 "end_date" => $newEndDate,
                 "age"=>$daysProper,
-                "no_of_tasks" => noOfTasks($row['project_id'], $conn)
+                "no_of_tasks" => noOfTasks($row['project_id'], $conn),
+                "hash_tag"=>$row['hash_tag'],
             );
         }
 
@@ -200,7 +201,8 @@ function result_from_query ($conn, $query){
                 "name" => $row['name'],
                 "start_date" => $row['start_date'],
                 "end_date" => $row['end_date'],
-                "age"=>$daysProper
+                "age"=>$daysProper,
+                "hash_tag"=>$row['hash_tag'],
             );
         }
             

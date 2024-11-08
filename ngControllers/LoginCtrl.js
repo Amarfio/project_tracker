@@ -77,7 +77,11 @@ sheetApp.controller("LoginCtrl", function (
                             2000
                         );
 
-                    } else {
+                    } 
+                    else if(user_message== "reset-password"){
+                        $scope.send_resetPassword_link(email_or_username)
+                    }
+                    else {
                         Swal.fire({
                             type: "error",
                             title: response.data["message"]
@@ -96,4 +100,64 @@ sheetApp.controller("LoginCtrl", function (
             );
         }
     };
+
+
+    $scope.send_resetPassword_link = function (email) {
+
+        console.log(email);
+
+        if (email == '' || email == undefined) {
+
+        } else {
+            var email = email.trim()
+            Swal.queue([{
+                title: 'Password has expired and a reset link is being sent to your mail',
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+            }])
+            // setTimeout()
+
+            setTimeout($http({
+                method: 'GET',
+                url: myConfig.url + '/sendResetLink.php?email=' + email
+
+            }).then(function successCallback(response) {
+                $("#login-signin-btn").text("Sign in");
+                $res = response.data
+                if ($res.status == 'success') {
+
+                    Swal.fire({
+                        type: 'success',
+                        title: $res.status,
+                        text: $res.message
+                    })
+
+                    $("#forgot_password_form")[0].reset();
+
+                    $scope.reset_password_link = response.data;
+                    console.log($scope.reset_password_link)
+                } else {
+                    Swal.fire({
+                        type: 'error',
+                        title: $res.status,
+                        text: $res.message,
+                    })
+                }
+
+                
+
+            }, function errorCallback(response) {
+                console.log(response);
+                Swal.fire({
+                    type: 'warning',
+                    title: 'Sorry',
+                    text: 'Something went wrong',
+                })
+            }), 5000);
+        }
+
+
+    }
+
 });

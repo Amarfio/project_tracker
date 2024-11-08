@@ -10,7 +10,7 @@
     $db_name = 'project_tracker_db';
 
 
-    $conn = new mysqli($host, $user, $password, $db_name, '3306');
+    $conn = new mysqli($host, $user, $password, $db_name, '3307');
     // try{
         
 

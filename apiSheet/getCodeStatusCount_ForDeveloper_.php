@@ -17,7 +17,7 @@ function get_total_project_count( $conn, $user_id){
         
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
-    $query = "SELECT COUNT(p.project_id) total_project_count FROM projects p WHERE p.owner = '$user_id' ";
+    $query = "SELECT COUNT(p.project_id) total_project_count FROM projects p WHERE p.owner = '$user_id' AND p.is_archive = 0 ";
     $result = mysqli_query($conn, $query); 
     // $num = mysqli_num_rows($result);
     $count_total_status = array();
@@ -40,19 +40,23 @@ function get_status_count($status_id, $user_id, $conn){
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
     
     // $query = "";
-    $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  p.status  = '$status_id' AND (p.owner = '$user_id' )";
+    $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  p.status  = '$status_id' AND (p.owner = '$user_id' ) AND p.archive = 0";
 
     if($status_id == 116 ){
         // $query = "SELECT COUNT(project_id) total_overdue FROM projects WHERE NOW()>end_date AND dept_id = '$department_id'";
-        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (CURRENT_DATE > end_date AND p.is_approved=1) AND (SELECT AVG(t.completion)<100 from tasks t WHERE t.project_id = p.project_id) AND (p.owner = '$user_id')";
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (CURRENT_DATE > end_date AND p.is_approved=1) AND (SELECT AVG(t.completion)<100 from tasks t WHERE t.project_id = p.project_id AND pro.is_archive = 0) AND (p.owner = '$user_id')";
     }
     elseif($status_id == 85 ){
         // $query = "SELECT COUNT(project_id) total_overdue FROM projects WHERE NOW()>end_date AND dept_id = '$department_id'";
-        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE ( p.is_approved=1) AND (p.owner = '$user_id')";
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE ( p.is_approved=1 AND p.is_archive = 0) AND (p.owner = '$user_id')";
     }
     //code to count for priority projects
     elseif ($status_id == 126) {
-        $query = "SELECT COUNT(p.priority) total_project_count FROM projects p WHERE ( p.priority=73) AND (p.owner = '$user_id')";
+        $query = "SELECT COUNT(p.priority) total_project_count FROM projects p WHERE ( p.priority=73) AND (p.owner = '$user_id') AND p.is_archive = 0";
+    }
+    //code to count for archived projects
+    elseif ($status_id == 127) {
+        $query = "SELECT COUNT(p.priority) total_project_count FROM projects p WHERE (p.owner = '$user_id') AND p.is_archive = 1";
     }
     // elseif($status_id == 88){
     //     $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (p.is_approved=1) AND (SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id = p.project_id) AND p.dept_id = '$department_id'";

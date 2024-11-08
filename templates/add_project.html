@@ -90,7 +90,7 @@
                         <div class="card-body">
                             <br>
                             <form id="add_project_form"
-                                ng-submit="createProject(project_name_, version_no_, client_id, department_id_, start_date_, end_date_, project_description_, project_owner_, project_owner_2, priority_)">
+                                ng-submit="createProject(project_name_, version_no_, client_id, department_id_, start_date_, end_date_, project_description_, hash_tag, project_sponsor, project_owner_, project_owner_2, priority_, interested_person_)">
 
                                 <div class="form-group row">
                                     <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Name</label>
@@ -98,6 +98,19 @@
                                         <input type="text" class="form-control" id="inputPassword" maxlength="60"
                                             placeholder="Project Name" ng-model="project_name_" required>
                                     </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Incident id</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" required ng-model="incident_">
+                                            <option value="">-- Select incident --</option>
+                                            <option>IN000034</option>
+                                            <option>IN000035</option>
+                                            <option>IN000036</option>
+                                        </select>
+                                    </div>
+                                    
                                 </div>
 
                                 <!-- <div class="form-group row">
@@ -184,13 +197,45 @@
 
                                 <div class="form-group row">
                                     <label for="inputPassword"
-                                        class="col-sm-3 col-form-label text-primary">Description</label>
+                                        class="col-sm-3 col-form-label text-primary">Details</label>
                                     <div class="col-sm-9">
                                         <textarea class="form-control " id=""
                                             placeholder="Required example textarea" required
                                             ng-model="project_description_">
                                             </textarea>
 
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Hash tag value</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="inputPassword" maxlength="60"
+                                            placeholder="Enter hash tag for the project" ng-model="hash_tag" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Project sponsor</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control"  ng-model="project_sponsor" required>
+                                            <option value="">-- Select developer --</option>
+                                            <option ng-repeat="user in all_users" ng-value="user.user_id"
+                                                ng-hide="user.user_id == '1'">
+                                                {{user.f_name}} {{user.l_name}} </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-3 col-form-label text-primary">Interested person</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control"  ng-model="interested_person_" required>
+                                            <option value="">-- Select user --</option>
+                                            <option ng-repeat="user in all_users" ng-value="user.user_id"
+                                                ng-hide="user.user_id == '1'">
+                                                {{user.f_name}} {{user.l_name}} </option>
+                                        </select>
                                     </div>
                                 </div>
 

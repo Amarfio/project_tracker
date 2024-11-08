@@ -75,6 +75,14 @@ function noOfTasks($project_id, $conn){
     return $row['totalTasks'];
 }
 
+function noOfOverdueTasks($project_id, $conn){
+    $query = "SELECT COUNT(task_id) totalTasks FROM tasks where project_id = '$project_id' AND NOW() > tasks.end_date";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_array($result);
+
+    return $row['totalTasks'];
+}
+
 function query_total_project($conn, $user_id){ 
     // $query_total_project = "SELECT pro.*, co.id version_id, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id  LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status WHERE  pro.dept_id = '$user_id' ORDER BY pro.project_id DESC";
     // $query_total_project = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department,DATEDIFF(NOW(), pro.start_date) AS no_of_days, DATEDIFF(pro.end_date, NOW()) AS daysToEnd, DATEDIFF(NOW(), pro.end_date) AS daysOverdue FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE  pro.owner = '$user_id' AND pro.is_archive = 0 ORDER BY pro.project_id DESC";
@@ -113,6 +121,9 @@ function query_total_project($conn, $user_id){
 
             //code to get the number of tasks for a project
             $noOfTasks = noOfTasks($row['project_id'], $conn);
+
+            //code to get the number of overdue tasks for a project
+            $noOfOverdueTasks = noOfOverdueTasks($row['project_id'], $conn);
 
             //code to get the number of days for a project to end
             $daysToEndProject = $row['daysToEnd'];
@@ -167,6 +178,8 @@ function query_total_project($conn, $user_id){
                 "end_date" => $newEndDate,
                 "age"=>$daysProper,
                 "no_of_tasks"=>$noOfTasks,
+                "no_of_overdue_tasks"=> $noOfOverdueTasks,
+                "hash_tag"=>$row['hash_tag'],
                 "attach" => $row['attach'], 
                 "days_to_end" => $daysToEndProject,
                 "days_overdue" => $daysOverdue,
@@ -194,7 +207,7 @@ function query_total_project($conn, $user_id){
 
     //   $query_project_by_status = "SELECT pro.*, co.id version_id, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status WHERE pro.status = '$status_id' AND pro.dept_id = '$user_id' ORDER BY pro.project_id DESC";
         // $query_project_by_status = "";
-        $query_project_by_status = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department, DATEDIFF(NOW(), pro.start_date) AS no_of_days FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE pro.status = '$status_id' AND pro.owner = '$user_id' AND pro.is_archive = 0 ORDER BY pro.project_id DESC";
+        $query_project_by_status = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department,  DATEDIFF(NOW(), pro.start_date) AS no_of_days FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE pro.status = '$status_id' AND pro.owner = '$user_id' AND pro.is_archive = 0 ORDER BY pro.project_id DESC";
 
 
       // check if the status is overdue the codesc value for overdue is 116
@@ -213,6 +226,9 @@ function query_total_project($conn, $user_id){
         // $query_project_by_status = "SELECT pro.*, co.id version_id, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department, DATEDIFF(NOW(), pro.start_date) AS no_of_days FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status WHERE (CURRENT_DATE > end_date AND pro.is_approved=1) AND (SELECT AVG(t.completion)<100 from tasks t WHERE t.project_id = pro.project_id) AND pro.owner = '$user_id' ORDER BY pro.project_id DESC";
         $query_project_by_status = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department, DATEDIFF(NOW(), pro.start_date) AS no_of_days FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE (pro.priority=73) AND pro.owner = '$user_id' AND pro.is_archive = 0 ORDER BY pro.project_id DESC";
 
+      }
+      else if( $status_id  == 127){
+        $query_project_by_status = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department, DATEDIFF(NOW(), pro.start_date) AS no_of_days FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE pro.owner = '$user_id' AND pro.is_archive = 1 ORDER BY pro.project_id DESC";
       }
     //   elseif($status_id == 88) {
     //     $query_project_by_status = "SELECT pro.*, co.id version_id, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department, DATEDIFF(NOW(), pro.start_date) AS no_of_days FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status WHERE (CURRENT_DATE > end_date AND pro.is_approved=1) AND (SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id = pro.project_id) AND pro.dept_id = '$user_id' ORDER BY pro.project_id DESC";

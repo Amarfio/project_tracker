@@ -37,7 +37,16 @@ sheetApp.controller('SetPasswordCtrl', function ($scope, $timeout, $location, $h
 
             $('#btn-setPassword').text('Set new password');
             console.log('Password do not match');
-        } else {
+        }
+        else if($scope.checkStrongPassword(reset_pass_1)!=true){
+            console.log("here we dey");
+            Swal.fire({
+                type: 'warning',
+                title: 'Checking for strong password',
+                text: 'Password must contain uppercase, lowercase, numbers and symbols to be strong and cannot be less than 8 characters',
+            })
+        }
+         else {
             console.log(reset_email);
             console.log(reset_pass_1);
             console.log(reset_pass_2);
@@ -114,6 +123,35 @@ sheetApp.controller('SetPasswordCtrl', function ($scope, $timeout, $location, $h
             });
 
         }
+    }
+
+    $scope.checkStrongPassword = function (password){
+        const minLength = 8;
+        const hasUppercase = /[A-Z]/;
+        const hasLowercase = /[a-z]/;
+        const hasDigit = /[0-9]/;
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
+
+        if (password.length >= minLength){
+            return 1;
+        }
+        else if(hasUppercase.test(password)){
+            return 2;
+        }
+        else if(hasLowercase.test(password)){
+            return 3;
+        }
+        else if(hasDigit.test(password)){
+            return 4;
+        }
+        else if(hasSpecialChar.test(password)){
+            return 5;
+        }else{
+            return true;
+        }
+            
+            
+            
     }
 
 

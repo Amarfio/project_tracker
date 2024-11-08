@@ -70,10 +70,11 @@ if(
 
 
     $query = "UPDATE `projects` SET `name` = '$name', `version_no`= '$version_no',`description` = '$description', `dept_id` = '$dept_id', `start_date` = '$start_date', `end_date` = '$end_date', `owner` = '$project_owner', `s_owner` = '$project_owner2'   WHERE `projects`.`project_id` = '$project_id'";
-
+    // echo(json_encode($query)); die();
     
     $result = mysqli_query($conn, $query);
 
+    // echo(json_encode($result)); die();
     if ($result == 1) {
 
 

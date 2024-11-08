@@ -50,12 +50,19 @@ if(
     $p_start_date = mysqli_real_escape_string($conn, $data->p_start_date);
     $p_end_date = mysqli_real_escape_string($conn, $data->p_end_date);
     $priority = mysqli_real_escape_string($conn, $data->priority);
+    $risk = mysqli_real_escape_string($conn, $data->risk);
 
     $start_date = date("Y-m-d", strtotime($t_start_date));
     $end_date = date("Y-m-d", strtotime($t_end_date));
 
     $p_start_date = date("Y-m-d", strtotime($p_start_date));
     $p_end_date = date("Y-m-d", strtotime($p_end_date));
+    $file_name = mysqli_real_escape_string($conn, $data->fileName);
+    // echo ($file_name); die();
+    $docAdded = 'NO';
+    if($file_name != ''){
+        $docAdded = 'YES';
+    }
 
     // if ($p_start_date > $t_start_date) {
     //       $message = json_encode(
@@ -88,7 +95,7 @@ if(
  
 
     // $query = "INSERT INTO `projects` (`id`, `version_no`, `name`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`) VALUES (NULL, '$version_no', '$name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date')";
-    $query = "INSERT INTO `tasks` (`task_id`, `description`, `start_date`, `end_date`, `client_id`, `assigned_by`, `assigned_to`, `priority`, `project_id`, `ip_address`, `location`, `created_at`) VALUES (NULL, '$task_name', '$start_date', '$end_date', '$client_id', '$assigned_by', '$assigned_to', '$priority', '$project_id', '$ip_address', '$location', NOW())";
+    $query = "INSERT INTO `tasks` (`task_id`, `description`, `start_date`, `end_date`, `client_id`, `assigned_by`, `assigned_to`, `priority`, `project_id`, `ip_address`, `location`, `created_at`, `doc`, `doc_name`, `risk`) VALUES (NULL, '$task_name', '$start_date', '$end_date', '$client_id', '$assigned_by', '$assigned_to', '$priority', '$project_id', '$ip_address', '$location', NOW(), '$docAdded', '$file_name', '$risk')";
 
     $result = mysqli_query($conn, $query);
 

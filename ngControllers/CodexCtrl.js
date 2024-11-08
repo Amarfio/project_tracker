@@ -196,5 +196,68 @@ sheetApp.controller('CodexCtrl', function ($scope, $http, check_auth, myConfig, 
 
 
 
+    // update code description
+    $scope.updateCodeDescription = function (u_id, u_codesc){
+        console.log(id, codesc);
+        var id = $('#u_id').val();
+        var codesc = $("#u_description").val();
+
+        var data = {
+            code_id : id,
+            description : codesc,
+            user_id: $scope.user_info.user_id,
+        }
+        // $http POST function
+        $http({
+
+            method: 'POST',
+            url: myConfig.url + '/updateCodeDesc.php',
+            data: data
+
+        }).then(function successCallback(response) {
+            $res = response.data
+            if ($res.status == 'success') {
+                $('#u_code_description_message_success').show();
+                $('#u_code_description_message_success').html('<strong>' + $res.message + '</strong>');
+                setTimeout(() => {
+                    $('#code_description_message_success').hide();
+                    $('#code_init_').val('');
+                    $('#code_description_').val('');
+                    $('#codex_init_description_').val('');
+                    // $('#modal-add-codex-description').hide();
+                    // $('.modal-backdrop').hide();
+                    $scope.get_code_desc(data.init)
+                }, 2000);
+            } else {
+                $('#u_code_description_message_error').show();
+                // $('#code_description_message_error').text($res.message);
+                $('#u_code_description_message_error').html('<strong>' + $res.message + '</strong>');
+                setTimeout(() => {
+                    $('#code_description_message_error').hide();
+                }, 4000);
+            }
+
+        }, function errorCallback(response) {
+            $res = response.data
+            if ($res.message == 'failed') {
+                $('#code_description_message_error').show();
+                setTimeout(() => {
+                    $('#code_description_message_error').hide();
+                }, 4000);
+            }
+
+        });
+
+    }
+    //end update code description
+
+    //code to show modal details
+    $scope.showDetails = function(id, code, codesc){
+        $scope.c_code = code
+        console.log(id, code, codesc );
+        $('#u_code').val(code);
+        $('#u_id').val(id);
+        $("#u_description").val(codesc);
+    }
 
 });

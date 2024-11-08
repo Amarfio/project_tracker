@@ -6,8 +6,12 @@ sheetApp.controller('ProfileCtrl', function ($scope, $http, $timeout, check_auth
 
     // PROFILE PHOTO
     $scope.profile_pic_true = $localStorage.profile_pic
+    $scope.signature_pic_true = $localStorage.signature_pic
     $scope.profile_pic = myConfig.file_url + $scope.profile_pic_true
+    $scope.signature_pic = myConfig.file_url + $scope.signature_pic_true
     console.log($scope.profile_pic)
+
+    console.log($scope.signature_pic) 
 
 
 
@@ -120,6 +124,33 @@ sheetApp.controller('ProfileCtrl', function ($scope, $http, $timeout, check_auth
             if (res.status == 'success') {
                 var profile_pic = res_data.profile_pic
                 check_auth.profile_pic(profile_pic);
+                window.location = "profile"
+            }
+
+        });
+    }
+
+    $scope.uploadSignature = function () {
+        var file = $scope.uploadfile;
+        var fd = new FormData();
+        var files = document.getElementById('signaturefile').files[0];
+        fd.append('file', files);
+
+        $http({
+            method: 'POST',
+            url: myConfig.url + '/uploadSignature.php?user_id=' + $scope.user_info.user_id,
+            data: fd,
+            headers: {
+                'Content-Type': undefined
+            },
+        }).then(function successCallback(response) {
+            // Store response data
+            var res = response.data;
+            var res_data = response.data['data'];
+            console.log(res_data);
+            if (res.status == 'success') {
+                var signature = res_data.signature
+                check_auth.signature_pic(signature);
                 window.location = "profile"
             }
 

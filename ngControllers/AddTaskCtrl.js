@@ -60,7 +60,7 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
     $scope.get_all_clients = function () {
         $http({
             method: 'GET',
-            url: myConfig.url + '/getAllClientse.php'
+            url: myConfig.url + '/getAllClients.php'
 
         }).then(function successCallback(response) {
 
@@ -79,6 +79,25 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
         });
     }
     $scope.get_all_clients()
+
+    // ATTACHMENT ICON FUNCTION
+
+    $scope.attachment_file = 'None';
+    $scope.get_file_input = function () {
+        // $("#upload_file").click(function () {
+        //     $("#id_file_field").trigger('click');
+        // });
+        var fileName= "";
+        $('#attached-file').change(function () {
+            var value = this.value;
+             fileName = typeof value == 'string' ? value.match(/[^\/\\]+$/)[0] : value[0]
+            console.log(fileName);
+            $scope.attachment_file = fileName;
+            // $('#attached-text').text(fileName);
+        })
+
+
+    }
 
 
     $scope.get_code_desc = function (init) {
@@ -125,7 +144,8 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
         // console.log('Department_id = ' + department_id) 
         $http({
             method: 'GET',
-            url: myConfig.url + '/getAllUsers.php'
+            // url: myConfig.url + '/getAllUsers.php'
+            url: myConfig.url + '/getAllDevs.php'
 
         }).then(function successCallback(response) {
 
@@ -145,7 +165,33 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
 
 
 
-    $scope.createTask = function (project_id_, priority_, task_, developer_, client_id_, start_date_, end_date_) {
+
+    //code to upload a file
+    //code to get uploaded file value
+    $scope.upload = function () {
+        var file = $scope.uploadfile;
+        var fd = new FormData();
+        var files = document.getElementById('attached-file').files[0];
+        fd.append('file', files);
+
+        $http({
+            method: 'post',
+            url: myConfig.url + '/uploadFile.php',
+            data: fd,
+            headers: {
+                'Content-Type': undefined   
+            },
+        }).then(function successCallback(response) {
+            // Store response data
+            $scope.response = response.data;
+            console.log($scope.response)
+            // $('#show_attach_name').text('None');
+            // $scope.attachment_file = 'None'
+        });
+    }
+
+
+    $scope.createTask = function (project_id_, task_, priority_, developer_, client_id_, start_date_, end_date_, risk_) {
         // console.log(project_id_)
         // console.log(priority_)
         // console.log(task_)
@@ -153,9 +199,17 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
         // console.log(client_id_)
         // console.log(start_date_)
         // console.log(end_date_)
+        console.log("This is start date:");
+        console.log(new Date($scope.p_start_date));
+        console.log("This is end date:");
+        console.log($scope.p_end_date);
+        // return false;
         var p_start_date = Date.parse($scope.p_start_date)
+        console.log(p_start_date);
         var p_end_date = Date.parse($scope.p_end_date)
         var start_date_ = Date.parse($scope.start_date_)
+        console.log(start_date_);
+        // return false;
         var end_date_ = Date.parse($scope.end_date_)
 
         
@@ -218,9 +272,11 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
 
 
         }
+        //check this code
         // console.log(p_start_date);
-        // console.log(start_date_);
-        // if ( p_start_date > end_date_){
+        // console.log(end_date_);
+        
+        // if ( p_start_date > start_date_){
         //     console.log("true");
         // }
         // else {
@@ -229,13 +285,14 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
         // return false;
 
 
-        if (p_start_date > start_date_) {
-            Swal.fire({
-                type: 'error',
-                title: 'Invalid Date',
-                text: 'Task start date can not be earlier than Project start date',
-            })
-        } else if (p_end_date < start_date_) {
+        // if ( p_start_date > start_date_) {
+        //     Swal.fire({
+        //         type: 'error',
+        //         title: 'Invalid Date',
+        //         text: 'Task start date can not be earlier than Project start date',
+        //     })
+        // } else 
+        if (p_end_date < start_date_) {
             Swal.fire({
                 type: 'error',
                 title: 'Invalid Date',
@@ -253,23 +310,25 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
                 title: 'Invalid Date',
                 text: 'Task end date can not be less than task start date',
             })
-        } else if (p_start_date > end_date_) {
+        } 
+        else if (p_start_date > end_date_) {
             Swal.fire({
                 type: 'error',
                 title: 'Invalid Date',
-                text: 'Task start date can not go beyond than Project end date',
+                text: 'Project Start Date Cannot Greater Than Task End Date',
             })
-        } else {
+        }
+         else {
 
             start_date_ = new Date(start_date_).toISOString().substring(0, 10);
             console.log(start_date_);
             end_date_ = new Date(end_date_).toISOString().substring(0,10);
             console.log(end_date_);
-            // return false;
+            // return false;    
             var data = {
                 user_id: $scope.user_info.user_id,
                 project_id: project_id_.trim(),
-                priority: priority_.trim(),
+                priority: priority_,
                 task_name: task_.trim(),
                 client_id: client_id_.trim(),
                 assigned_to: developer_.trim(),
@@ -277,9 +336,29 @@ sheetApp.controller('AddTaskCtrl', function ($scope, $http, check_auth, myConfig
                 t_start_date: start_date_,
                 t_end_date: end_date_,
                 p_start_date: p_start_date,
-                p_end_date: p_end_date
+                p_end_date: p_end_date, 
+                risk: risk_
             }
-            console.log(data);
+            
+            if($scope.attachment_file != 'None'){
+                data = {
+                    user_id: $scope.user_info.user_id,
+                    project_id: project_id_.trim(),
+                    priority: priority_,
+                    task_name: task_.trim(),
+                    client_id: client_id_.trim(),
+                    assigned_to: developer_.trim(),
+                    assigned_by: $scope.user_id.trim(),
+                    t_start_date: start_date_,
+                    t_end_date: end_date_,
+                    p_start_date: p_start_date,
+                    p_end_date: p_end_date,
+                    risk: risk_,
+                    fileName: $scope.attachment_file
+                }
+            }
+            console.log(data); 
+            $scope.upload();
             sendRequest()
         }
 

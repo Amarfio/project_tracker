@@ -1,0 +1,1020 @@
+<table border='2px'><tr bgcolor='#87AFC6'>
+                <th scope="col">Project ID</th>
+                <th scope="col">Version</th>
+                <th scope="col">Description</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Status</th>
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Age(days)</th>
+                <th scope="col">Completion</th>
+                <th scope="col">Department</th>
+                
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/437" class="ng-binding">PROJ-0000437
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R21 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="Employee Number Unique Constraint">
+                    Employee Number Unique Constraint
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Henry Caleb Amoh
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Sep 14, 2022
+                </td>
+                <td class="ng-binding">
+                  Sep 15, 2022
+                </td>
+
+                <td class="ng-binding">
+                  1 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion == null">
+                    <span class="mr-2">0 %</span>
+                  </div><!-- end ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  HR
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/430" class="ng-binding">PROJ-0000430
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R20 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="prc_pre_eod_update">
+                    prc_pre_eod_update
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Prince Manu
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Sep 29, 2022
+                </td>
+                <td class="ng-binding">
+                  Sep 29, 2022
+                </td>
+
+                <td class="ng-binding">
+                  0 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion == null">
+                    <span class="mr-2">0 %</span>
+                  </div><!-- end ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Enterprise Solutions
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/427" class="ng-binding">PROJ-0000427
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  X100 R19 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="Customer Phone number Linkage">
+                    Customer Phone number Linkage
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Richard  Tawiah-Baddoo
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Sep 5, 2022
+                </td>
+                <td class="ng-binding">
+                  Sep 30, 2022
+                </td>
+
+                <td class="ng-binding">
+                  10 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Operation
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/426" class="ng-binding">PROJ-0000426
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R20 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="Atwima Report Issues and Requests">
+                    Atwima Report Issues and Requests
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Kofi Agbexwe Annan
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Aug 30, 2022
+                </td>
+                <td class="ng-binding">
+                  Sep 9, 2022
+                </td>
+
+                <td class="ng-binding">
+                  16 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Credits
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/421" class="ng-binding">PROJ-0000421
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R21 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="Fidelity Bank App">
+                    Fidelity Bank App
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Rapheal Djane Kotei
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Aug 1, 2022
+                </td>
+                <td class="ng-binding">
+                  Aug 5, 2022
+                </td>
+
+                <td class="ng-binding">
+                  45 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Enterprise Solutions
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/420" class="ng-binding">PROJ-0000420
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R21 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="Receipt Generation">
+                    Receipt Generation
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Rapheal Djane Kotei
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Jul 21, 2022
+                </td>
+                <td class="ng-binding">
+                  Jul 22, 2022
+                </td>
+
+                <td class="ng-binding">
+                  56 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Enterprise Solutions
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/417" class="ng-binding">PROJ-0000417
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R21 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="QUALITY ASSURANCE AND TESTING">
+                    QUALITY ASSURANCE AND TESTING
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Samuel Adjetey Anang
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Aug 17, 2022
+                </td>
+                <td class="ng-binding">
+                  Aug 17, 2022
+                </td>
+
+                <td class="ng-binding">
+                  29 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion == null">
+                    <span class="mr-2">0 %</span>
+                  </div><!-- end ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Enterprise Solutions
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/412" class="ng-binding">PROJ-0000412
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R20 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="Amend Existing View Rokel">
+                    Amend Existing View Rokel
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Solomon Asante
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Aug 16, 2022
+                </td>
+                <td class="ng-binding">
+                  Aug 16, 2022
+                </td>
+
+                <td class="ng-binding">
+                  30 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Systems
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/410" class="ng-binding">PROJ-0000410
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R20 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="AUTOMATIC RECONCILIATION">
+                    AUTOMATIC RECONCILIATION
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Jude Kuwornu
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Aug 1, 2022
+                </td>
+                <td class="ng-binding">
+                  Aug 31, 2022
+                </td>
+
+                <td class="ng-binding">
+                  45 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Treasury/Payment
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/406" class="ng-binding">PROJ-0000406
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R20 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="UNIMAK PIN UPLOAD">
+                    UNIMAK PIN UPLOAD
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Joshua Tetteh
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Aug 3, 2022
+                </td>
+                <td class="ng-binding">
+                  Aug 5, 2022
+                </td>
+
+                <td class="ng-binding">
+                  43 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Mobile Solutions
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/390" class="ng-binding">PROJ-0000390
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R21 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="UTB Card Re-issue">
+                    UTB Card Re-issue
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Daniel Hammond Jr.
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Jul 25, 2022
+                </td>
+                <td class="ng-binding">
+                  Aug 5, 2022
+                </td>
+
+                <td class="ng-binding">
+                  52 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion == null">
+                    <span class="mr-2">0 %</span>
+                  </div><!-- end ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Mobile Solutions
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/320" class="ng-binding">PROJ-0000320
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R20 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="Set Up Tables">
+                    Set Up Tables
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Welbeck Nii Ayi
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  May 13, 2022
+                </td>
+                <td class="ng-binding">
+                  Jul 29, 2022
+                </td>
+
+                <td class="ng-binding">
+                  125 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion == null">
+                    <span class="mr-2">0 %</span>
+                  </div><!-- end ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Service Management
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/280" class="ng-binding">PROJ-0000280
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  X100 R18 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="SLCB ATM Investigations">
+                    SLCB ATM Investigations
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Jude Kuwornu
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  May 23, 2022
+                </td>
+                <td class="ng-binding">
+                  Jun 3, 2022
+                </td>
+
+                <td class="ng-binding">
+                  115 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Operation
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/279" class="ng-binding">PROJ-0000279
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  X100 R18 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="SLCB Orange Investigation">
+                    SLCB Orange Investigation
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Jude Kuwornu
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  May 23, 2022
+                </td>
+                <td class="ng-binding">
+                  Jun 3, 2022
+                </td>
+
+                <td class="ng-binding">
+                  115 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Operation
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/278" class="ng-binding">PROJ-0000278
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R21 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="Document Management System">
+                    Document Management System
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Amos Asiamah
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  May 31, 2022
+                </td>
+                <td class="ng-binding">
+                  Jun 30, 2022
+                </td>
+
+                <td class="ng-binding">
+                  107 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion == null">
+                    <span class="mr-2">0 %</span>
+                  </div><!-- end ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Enterprise Solutions
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/277" class="ng-binding">PROJ-0000277
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R21 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="Document Management System">
+                    Document Management System
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Amos Asiamah
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  May 31, 2022
+                </td>
+                <td class="ng-binding">
+                  Jun 30, 2022
+                </td>
+
+                <td class="ng-binding">
+                  107 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion == null">
+                    <span class="mr-2">0 %</span>
+                  </div><!-- end ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Enterprise Solutions
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/261" class="ng-binding">PROJ-0000261
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R21 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="PETTY CASH DISBURSEMENT">
+                    PETTY CASH DISBURSEMENT
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Bridget Vanderpuye
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  Jan 1, 2022
+                </td>
+                <td class="ng-binding">
+                  Dec 31, 2022
+                </td>
+
+                <td class="ng-binding">
+                  257 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  HR
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/259" class="ng-binding">PROJ-0000259
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R20 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="Currency re-denomination on UTB Payroll system">
+                    Currency re-denomination on UTB Payroll system
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Paul George Yidana
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  May 9, 2022
+                </td>
+                <td class="ng-binding">
+                  May 17, 2022
+                </td>
+
+                <td class="ng-binding">
+                  129 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Enterprise Solutions
+                </td>
+              </tr>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <a href="project/235" class="ng-binding">PROJ-0000235
+                    </a>
+                    <!-- PROJ-0000{{project.project_id}} -->
+                  </div>
+                </th>
+                <td class="ng-binding">
+                  R20 &nbsp;
+                  <a class="badge badge-success ng-binding"></a>
+                </td>
+                <td style="max-width: 300px;">
+                  <div class="col-12 text-truncate ng-binding" data-toggle="tooltip" data-placement="top" title="COST CENTER POSTING">
+                    COST CENTER POSTING
+                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                  </div>
+                </td>
+                <td class="ng-binding">
+                  Prince Manu
+                </td>
+
+                <td>
+                  <!-- ngIf: project.status_desc == 'drafts' --><span class="badge badge-default ng-binding ng-scope" ng-if="project.status_desc == 'drafts'">drafts</span><!-- end ngIf: project.status_desc == 'drafts' -->
+                  <!-- ngIf: project.status_desc == 'unapproved' -->
+                  <!-- ngIf: project.status_desc == 'approved' -->
+                  <!-- ngIf: project.status == 'scheduled' -->
+                  <!-- ngIf: project.status_desc == 'in progress' -->
+                  <!-- ngIf: project.status_desc == 'completed' -->
+                    <!-- ngIf: project.status_desc == 'overdue' -->
+                </td>
+
+                <td class="ng-binding">
+                  May 31, 2022
+                </td>
+                <td class="ng-binding">
+                  Jun 27, 2022
+                </td>
+
+                <td class="ng-binding">
+                  107 days
+                </td>
+                <td>
+                  <!-- ngIf: project.completion == null -->
+                  <!-- ngIf: project.completion != null --><div class="d-flex align-items-center ng-scope" ng-if="project.completion != null">
+                    <span class="mr-2 ng-binding">0 %</span>
+                  </div><!-- end ngIf: project.completion != null -->
+                </td>
+
+                <td class="ng-binding">
+                  <span class="text-camelcase"></span>
+                  Enterprise Solutions
+                </td>
+              </tr></table>

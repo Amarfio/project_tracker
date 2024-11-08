@@ -202,7 +202,10 @@
                                     </td>
 
                                     <td>
-                                        <span class="fas fa-pencil-alt text-blue"></span>
+                                        <span class="fas fa-pencil-alt text-blue" ng-click="showDetails(init_desc.code_desc_id, init_desc.init_desc, init_desc.code_desc)"
+                                        data-target = '#modal-update-codex-description'
+                                        data-toggle="modal"
+                                        ></span>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <span class="fas fa-trash text-red"></span>
                                     </td>
@@ -345,6 +348,68 @@
             </div>
         </div>
 
+        <!-- codex update description modal -->
+        <div class="modal fade" id="modal-update-codex-description" tabindex="-1" role="dialog"
+            aria-labelledby="modal-update-codex-description" aria-hidden="true">
+            <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="card bg-secondary shadow border-0">
+
+                            <div class="card-body px-lg-5 py-lg-4">
+                                <div class="text-center text-muted ">
+                                    <legend></legend>
+                                    <h4 class="text-uppercase">Update <span id="code_heading"></span>{{code_desc.name}}
+                                    </h4>
+                                    <hr>
+                                    <!-- Error and succes message -->
+                                    <div class="alert alert-danger" role="alert" id="u_code_description_message_error">
+                                    </div>
+                                    <div class="alert alert-success" role="alert" id="u_code_description_message_success">
+                                    </div>
+                                    <!-- Error and succes message -->
+                                </div>
+                                <form role="form"
+                                    ng-submit="updateCodeDescription(uc_id, u_description)">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-building"></i></span>
+                                            </div>
+
+                                            <input class="form-control text-uppercase" placeholder="Codex Initial"
+                                                type="text" id="u_code"
+                                                ng-model="u_code" maxlength="4" required ng-value="u_code">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <input class="form-control text-uppercase" ng-value="uc_id" type="hidden"
+                                            id="u_id">
+                                        <div class="input-group input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-building"></i></span>
+                                            </div>
+
+
+                                            <input class="form-control" value="" placeholder="Add {{code.name}} ..."
+                                                id="u_description" type="text" ng-model="codesc" ng-value="u_description"
+                                                required>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                        <button type="button" class="btn btn-link " data-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- End modal -->
 
 
@@ -373,5 +438,7 @@
         $('#code_message_success').hide();
         $('#code_description_message_error').hide();
         $('#code_description_message_success').hide();
+        $('#u_code_description_message_error').hide();
+        $('#u_code_description_message_success').hide();
     });
 </script>

@@ -6,3 +6,15 @@
         $result = mysqli_query($conn, $query);
         
     } 
+
+    // $query = "CASE WHEN(
+    //     (
+    //     SELECT
+    //         status
+    //     FROM
+    //         `project_tracker_db`.`projects`
+    //     WHERE
+    //         (
+    //             `project_tracker_db`.`projects` = 119
+    //         )
+    // ) "

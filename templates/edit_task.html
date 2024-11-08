@@ -89,7 +89,7 @@
                         <div class="card-body">
                             <br>
                             <form id="add_task_form" ng-submit="updateTask(url_project_id, priority_, task_, developer_,
-                                    client_id_, start_date_, end_date_)">
+                                    client_id_, start_date_, end_date_, risk_)">
                                 <div class="form-group row">
                                     <label for="inputPassword"
                                         class="col-sm-2 col-form-label text-primary">Project</label>
@@ -153,6 +153,10 @@
                                         <span class="text-primary">Priority: </span>
                                         &nbsp;&nbsp;<span class="text-uppercase">{{ oneTask.priority }}</span>
                                     </div>
+                                    <!-- <div class="col-md-6">
+                                        <span class="text-primary">Risk: </span>
+                                        &nbsp;&nbsp;<span class="text-uppercase">{{ oneTask.risk }}</span>
+                                    </div> -->
                                     <div class="col-md-6">
                                         <span class="text-primary">Client :</span>
                                         &nbsp;&nbsp;<span class="text-uppercase">{{ oneTask.client }}</span>
@@ -175,6 +179,10 @@
                                     <div class="col-md-6">
                                         <span class="text-primary">End Date :</span>
                                         &nbsp;&nbsp;<span class="">{{ oneTask.task_end_date | date: mediumDate }}</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="text-primary">Attached Document :</span>
+                                        &nbsp;&nbsp;<span class="">{{ oneTask.doc_name }}</span>
                                     </div>
 
                                     <div class="col-md-6">
@@ -211,8 +219,19 @@
                                     <label for="inputPassword"
                                         class="col-sm-2 col-form-label text-primary">Priority</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control" required ng-model="priority_">
-                                            <option value="">-- Select Priority --</option>
+                                        <select class="form-control" ng-model="priority_">
+                                            <option value="">{{oneTask.priority}}</option>
+                                            <option ng-repeat="code in code_desc" ng-value="code.code_desc_id">
+                                                {{code.code_desc}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <label for="inputPassword"
+                                        class="col-sm-2 col-form-label text-primary">Risk</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" ng-model="risk_">
+                                            <option value="">{{oneTask.risk}}</option>
                                             <option ng-repeat="code in code_desc" ng-value="code.code_desc_id">
                                                 {{code.code_desc}}
                                             </option>
@@ -233,8 +252,8 @@
 
                                     <label for="" class="col-sm-2 col-form-label text-primary">Client</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control" required ng-model="client_id_">
-                                            <option value="">-- Select Clients --</option>
+                                        <select class="form-control" ng-model="client_id_">
+                                            <option value="">{{ oneTask.client}}</option>
                                             <option ng-repeat="client in all_clients" ng-value="client.client_id">
                                                 {{client.name}}
                                             </option>
@@ -244,8 +263,8 @@
                                     <label for="inputPassword"
                                         class="col-sm-2 col-form-label text-primary">Developer</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control" required ng-model="developer_">
-                                            <option value="">-- Select developer from department --</option>
+                                        <select class="form-control" id="develop_id" ng-model="developer_">
+                                            <option value="">{{ oneTask.assigned_to}}</option>
                                             <option ng-repeat="user in all_users" ng-value="user.user_id">
                                                 {{user.f_name}} {{user.l_name}} </option>
                                         </select>
@@ -297,14 +316,24 @@
 
                                 </div>
 
+                                <div class="form-group row">
+                                    <label for="inputPassword"
+                                        class="col-sm-2 col-form-label text-primary">Update Document</label>
+                                    <div class="col-sm-4">
+                                        <input type="file" class="form-control" id="attached-file"
+                                            placeholder="Upload Document" ng-click="get_file_input()">
+                                    </div>
+                                </div>
+
 
                                 <div class="form-group row">
                                     <label for="inputPassword" class="col-sm-6 col-form-label text-primary"></label>
                                     <div class="col-sm-6">
                                         <button type="submit" class="btn btn-primary">Update </button>
-                                        <a href="dashboard_t">
-                                            <button type="button" class="btn btn-warning">Cancel</button>
-                                        </a>
+                                        <!-- <a href="dashboard_t"> -->
+                                        <!-- <a href="window.location.back()"> -->
+                                            <button type="button" class="btn btn-warning" id="backBtn">Back</button>
+                                        <!-- </a> -->
                                     </div>
                                 </div>
 
@@ -324,11 +353,11 @@
     </div>
 </div>
 
-<script>
+<!-- <script>
     $(document).ready(function () {
 
         $('.datepicker').datepicker({
             format: 'dd/mm/yyyy'
         });
     });
-</script>
+</script> -->

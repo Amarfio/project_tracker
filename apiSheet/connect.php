@@ -1,7 +1,8 @@
 <?php
     $host = 'localhost';
     $user = 'root';
-    $password = 'firefox';
+    // $password = 'firefox';
+    $password = '';
     // $db_name = 'cheat';
     // $db_name = 'union';
     $db_name = 'project_tracker_db';

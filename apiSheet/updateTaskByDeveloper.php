@@ -18,25 +18,40 @@ if (
     isset($data) && isset($data->user_id) && isset($data->task_id) && isset($data->taskStatus) && isset($data->ready_for_test) &&
     isset($data->percentage_completion)
 ) {
-    // echo json_encode($data);
+    // echo json_encode($data); die();
 
     $user_id = mysqli_real_escape_string($conn, $data->user_id);
     $task_id = mysqli_real_escape_string($conn, $data->task_id);
     $taskStatus = mysqli_real_escape_string($conn, $data->taskStatus);
     $ready_for_test = mysqli_real_escape_string($conn, $data->ready_for_test);
     $percentage_completion = mysqli_real_escape_string($conn, $data->percentage_completion);
-    
+    $dateOfCompletion = mysqli_real_escape_string($conn, $data->completionDate);
+    $projectId = mysqli_real_escape_string($conn, $data->project_id);
+
     // $ip_address = 'DF45-123E-34E-24';
     // $location = 'Accra Ghana';
 
+    $query="";
     if ($taskStatus == '') {
-        $query = "UPDATE `tasks` SET `completion` = '$percentage_completion', `ready_4_test` = '$ready_for_test' WHERE `tasks`.`task_id` = '$task_id'";
+        $query = "UPDATE `tasks` SET `completion` = '$percentage_completion', `ready_4_test` = '$ready_for_test', `updated_at` = NOW()  WHERE `tasks`.`task_id` = '$task_id'";
     }else{
-        $query = "UPDATE `tasks` SET `completion` = '$percentage_completion', `status` = '$taskStatus', `ready_4_test` = '$ready_for_test' WHERE `tasks`.`task_id` = '$task_id'";
+        $query = "UPDATE `tasks` SET `completion` = '$percentage_completion', `status` = '$taskStatus', `ready_4_test` = '$ready_for_test', `updated_at` = NOW() WHERE `tasks`.`task_id` = '$task_id'";
     }
 
+    // echo(checkPercentageOfProject($conn, $projectId)); die();
+    if(checkPercentageOfProject($conn, $projectId) == 100){
+
+        //code to update project status to completed if so
+    //check and update the project to completed
+        // $queryP = "UPDATE projects SET status = 88, completed_date='$dateOfCompletion' WHERE projects.project_id = '$projectId' AND (SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id ='$projectId' )";
+        $queryP = "UPDATE `projects` SET `status` = 88, `completed_date`=NOW(), `updated_at`= NOW() WHERE `project_id` = '$projectId'";
+        // echo($queryP); die();
+        $resultP = mysqli_query($conn, $queryP);
+    }
 
     $result = mysqli_query($conn, $query);
+
+    
 
     if ($result == 1) { 
         // $task_id = mysqli_insert_id($conn); 
@@ -91,3 +106,15 @@ if (
     );
     exit($message);
 }
+
+function checkPercentageOfProject( $conn, $projectId){
+    // echo("here adey"); die();
+    // $query = "SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id ='$projectId' ";
+    $query = "SELECT AVG(t.completion) as completion from tasks t WHERE (t.status=59 OR t.status=61) AND t.project_id ='$projectId' ";
+    // echo($query); die();
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_array($result);
+
+    return intval($row['completion']);
+}
+

@@ -24,6 +24,6 @@ if (isset($_GET['hash'])) {
             }
             echo json_encode($reset_email_username);
         } else {
-            echo 'no date exit';
+            echo 'no data exit';
         }
     }

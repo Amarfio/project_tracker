@@ -24,12 +24,17 @@ if(
     $version_no = mysqli_real_escape_string($conn, $data->version_no);
     $name = mysqli_real_escape_string($conn, $data->project_name);
     $description = mysqli_real_escape_string($conn, $data->project_description);
+    $hash_tag = mysqli_real_escape_string($conn, $data->hash_tag);
     $dept_id = mysqli_real_escape_string($conn, $data->dept_id);
     $file_name = mysqli_real_escape_string($conn, $data->fileName);
     $user_id = mysqli_real_escape_string($conn, $data->user_id);
     $start_date = mysqli_real_escape_string($conn, $data->start_date);
     $end_date = mysqli_real_escape_string($conn, $data->end_date);
     $owner = mysqli_real_escape_string($conn, $data->owner);
+    $owner_2 = mysqli_real_escape_string($conn, $data->owner_2);
+    $client_id = mysqli_real_escape_string($conn, $data->client_id);
+    $interested_person = mysqli_real_escape_string($conn, $data->interested_person);
+    $project_sponsor = mysqli_real_escape_string($conn, $data->project_sponsor);
     // $ip_address = mysqli_real_escape_string($conn, $data->ip_address);
     // $location = mysqli_real_escape_string($conn, $data->location); 
     $start_date = date("Y-m-d", strtotime($start_date));
@@ -70,7 +75,7 @@ if(
     // }
 
 
-    $query = "INSERT INTO `projects` (`project_id`, `version_no`, `name`, `description`, `attach`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`, `created_at`, `owner`) VALUES (NULL, '$version_no', '$name', '$description', '$file_name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date', NOW(),'$owner' )";
+    $query = "INSERT INTO `projects` (`project_id`, `version_no`, `name`, `description`, `hash_tag`,`client`, `attach`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`, `created_at`, `owner`, `s_owner`, `sponsor`, `i_person`) VALUES (NULL, '$version_no', '$name', '$description', '$hash_tag', '$client_id', '$file_name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date', NOW(),'$owner', '$owner_2', '$project_sponsor', '$interested_person' )";
     $result = mysqli_query($conn, $query);
 
     if ($result == 1) {

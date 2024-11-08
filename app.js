@@ -27,6 +27,10 @@ sheetApp.config(
           templateUrl: "./templates/dashboard_p.html",
           controller: "DashboardCtrl",
         })
+        .when("/project_updates", {
+          templateUrl: "./templates/project_updates.html",
+          controller: "ProjectUpdatesDashboardCtrl",
+        })
         .when("/dashboard_t", {
           templateUrl: "./templates/dashboard_t.html",
           controller: "DashboardCtrl_",
@@ -43,6 +47,10 @@ sheetApp.config(
           templateUrl: "./templates/add_project.html",
           controller: "AddProjectCtrl",
         })
+        .when("/add_change", {
+          templateUrl: "./templates/add_change.html",
+          controller: "AddChangeCtrl",
+        })
         .when("/edit_project/:project_id", {
           templateUrl: "./templates/edit_project.html",
           controller: "EditProjectCtrl",
@@ -51,6 +59,10 @@ sheetApp.config(
           templateUrl: "./templates/all_projects.html",
           controller: "ProjectCtrl",
         })
+        .when("/issues", {
+          templateUrl: "./templates/issues.html",
+          controller: "IssuesCtrl",
+        })
         .when("/add_task", {
           templateUrl: "./templates/add_task.html",
           controller: "AddTaskCtrl",
@@ -58,6 +70,10 @@ sheetApp.config(
         .when("/edit_task", {
           templateUrl: "./templates/edit_task.html",
           controller: "EditTaskCtrl",
+        })
+        .when("/edit_user/:user_id", {
+          templateUrl: "./templates/edit_user.html",
+          controller: "EditUserCtrl",
         })
         .when("/all_tasks", {
           templateUrl: "./templates/all_tasks.html",
@@ -139,7 +155,10 @@ sheetApp.service(
       var profile_pic = $localStorage.profile_pic = profile_pic;
       return profile_pic;
     };
-
+    this.signature_pic = function (signature_pic) {
+      var signature_pic = $localStorage.signature_pic = signature_pic;
+      return signature_pic;
+    };
     this.verify_auth = function (auth) {
       if (auth == undefined) {
         return $location.path("/login");

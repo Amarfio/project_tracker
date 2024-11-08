@@ -66,6 +66,32 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
     $scope.get_departments('dpt')
 
 
+    //method to get all clients
+    //get clients for project
+    $scope.get_all_clients = function () {
+        $http({
+            method: 'GET',
+            url: myConfig.url + '/getAllClients.php'
+
+        }).then(function successCallback(response) {
+
+            $scope.all_clients = response.data;
+            console.log($scope.all_clients)
+
+        }, function errorCallback(response) {
+
+            // alert("Error. Try Again!");
+            Swal.fire({
+                type: 'warning',
+                title: 'Network Connection Erro for loading clients',
+                text: 'Clients Could not loaded'
+            })
+
+        });
+    }
+    $scope.get_all_clients()
+
+
     // ATTACHMENT ICON FUNCTION
 
     $scope.attachment_file = 'None';
@@ -131,9 +157,10 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
         });
     }
 
-    $scope.createProject = function (project_name_, version_no_, department_id_, start_date_, end_date_, project_description_,project_owner_ ) {
+    $scope.createProject = function (project_name_, version_no_, client_id, department_id_, start_date_, end_date_, project_description_, hashtag_value, interested_person_, project_sponsor, project_owner_, project_owner_2 ) {
         console.log(project_name_)
         console.log(version_no_)
+        console.log(client_id)
         console.log(department_id_)
         console.log(start_date_)
         console.log(end_date_)
@@ -141,11 +168,37 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
         console.log($scope.attachment_file)
         console.log($scope.user_id)
         console.log($scope.project_owner_)
+        console.log($scope.project_owner_2)
+        console.log(hashtag_value)
+        console.log(interested_person_)
+        console.log(project_sponsor)
+
 
         // return false;
 
 
         var data = null;
+
+        //check if the main owner is the same as the minor owner
+        if($scope.project_owner_ == $scope.project_owner_2){
+            Swal.fire({
+                type: 'error',
+                title: 'Invalid Owner',
+                text: 'Project Owner cannot be the same as the secondary owner, if there is no secondary owner kindly leave it blank.',
+            })
+
+            return false;
+        }
+
+        if($scope.checkForHashTag(hashtag_value) === false){
+            Swal.fire({
+                type: 'error',
+                title: 'Hash tag validation',
+                text: 'Hash tag value field must include hash tag at the begining!!',
+            })
+
+            return false;
+        }
 
         //check if the user selected a file
         if($scope.attachment_file=='None'){
@@ -153,31 +206,42 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
                 user_id: $scope.user_info.user_id,
                 project_name: project_name_.trim(),
                 version_no: version_no_.trim(),
+                client_id: client_id,
                 project_description: project_description_.trim(),
                 dept_id: department_id_.trim(),
                 user_id: $scope.user_id.trim(),
                 start_date: start_date_,
                 fileName: null,
                 end_date: end_date_,
-                owner: project_owner_
+                owner: project_owner_,
+                owner_2: project_owner_2,
+                hash_tag: hashtag_value,
+                interested_person: interested_person_,
+                project_sponsor: project_sponsor,
             }
         }else{
             data = {
                 user_id: $scope.user_info.user_id,
                 project_name: project_name_.trim(),
                 version_no: version_no_.trim(),
+                client_id: client_id,
                 project_description: project_description_.trim(),
                 dept_id: department_id_.trim(),
                 user_id: $scope.user_id.trim(),
                 start_date: start_date_,
                 fileName: $scope.attachment_file,
                 end_date: end_date_,
-                owner: project_owner_
+                owner: project_owner_,
+                owner_2 : project_owner_2,
+                hash_tag: hashtag_value,
+                interested_person: interested_person_,
+                project_sponsor: project_sponsor
             }
         }
         
 
-
+        // console.log(data);
+        //  return false;
 
         Swal.queue([{
             title: 'Creating a project ...  ',
@@ -213,12 +277,15 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
 
                     $('#add_project_form')[0].reset()
 
-                    $timeout(
-                        window.location = 'add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_ + '&start_date=' + start_date_ + '&end_date=' + end_date_
+                    // setTimeout(
+                        
+                    //     // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
 
-                        // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
+                    //     , 30000);
 
-                        , 1000);
+                        setTimeout(() => {
+                            window.location = 'add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_ + '&start_date=' + start_date_ + '&end_date=' + end_date_
+                        }, 3000);
 
                     // $timeout(
                     //     window.location = 'add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_ + '&start_date=' + $res.start_date + '&end_date=' + $res.end_date
@@ -271,4 +338,8 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
 
     
 
+  //method to check for # tag value
+  $scope.checkForHashTag = function (str) {
+    return str.charAt(0) === '#';
+  }
 });

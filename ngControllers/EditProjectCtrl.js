@@ -103,7 +103,7 @@ sheetApp.controller("EditProjectCtrl", function (
         })
 
     });
-}
+  }
 $scope.get_all_users($scope.url_department_id)
 
   $scope.UpdateProject = function (
@@ -113,7 +113,9 @@ $scope.get_all_users($scope.url_department_id)
     start_date_,
     end_date_,
     project_owner_,
-    project_description_
+    project_description_,
+    hash_tag,
+    s_owner_
   ) {
 
     var project_name = $('#project_name').val();
@@ -125,6 +127,24 @@ $scope.get_all_users($scope.url_department_id)
     // var project_owner = $("#project_owner_").val();
     // console.log(project_owner);
 
+    //get the select value for version_no
+    if(version_no_ =='' || version_no_==undefined){
+      var version_no_ = $scope.project.version_no;
+      console.log(version_no_);
+    }
+
+    //get the selected value for department_id_
+    if( department_id_ =='' || department_id_ ==undefined){
+      var department_id_ = $scope.project.department_id;
+      console.log(department_id_);
+    }
+
+    //get the owner of the project
+    if( project_owner_ =='' || project_owner_ == undefined){
+      var project_owner_ = $scope.project.owner_id;
+      console.log(project_owner_);
+    }
+
     console.log(department_id_);
     console.log(project_owner_);
     var data = {
@@ -135,6 +155,8 @@ $scope.get_all_users($scope.url_department_id)
       project_owner: project_owner_,
       dept_id: department_id_,
       user_id: $scope.user_id,
+      hash_tag: hash_tag,
+      secondary_owner: s_owner_,
       start_date: new Date(start_date),
       end_date: new Date(end_date)
     };
@@ -201,7 +223,7 @@ $scope.get_all_users($scope.url_department_id)
       );
     };
 
-    if (end_date_ < start_date_) {
+    if (end_date < start_date) {
       console.log("date can not be less");
       Swal.fire({
         type: "error",
@@ -211,5 +233,168 @@ $scope.get_all_users($scope.url_department_id)
     } else {
       sendRequest();
     }
+
+    
   };
+
+  //method to suspend project
+  $scope.suspend_project = function () {
+
+    var comment = $('#comment_approve_or_reject').val();
+
+    if (comment == undefined || comment == '') {
+        // Swal.fire({
+        //     type: 'error',
+        //     title: 'hey',
+        //     text: 'Emptyp',
+        //     toast: true
+        // })
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        })
+
+        Toast.fire({
+            type: 'error',
+            title: 'Comment can be empty'
+        })
+
+    } else {
+        $('#modal-approve').hide();
+        Swal.queue([{
+            title: 'Send Comment ...  ',
+            // showLoaderOnConfirm: true,
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            showLoaderOnConfirm: true,
+        }])
+
+        $http({
+            method: 'GET',
+            url: myConfig.url + '/suspend_project.php?project_id=' + $scope.project_id + '&approvedBy=' + $scope.user_info.user_id + '&department_id=' + $scope.project.department_id + '&comment=' + comment
+
+        }).then(function successCallback(response) {
+            var $res = response.data
+            console.log(response.data)
+            if ($res.status == 'success') {
+                Swal.fire({
+                    type: 'success',
+                    title: $res.message
+                })
+
+                setTimeout(()=> window.location.reload(), 2000)
+                $scope.get_one_project()
+            }
+            if ($res.status == 'failed') {
+                Swal.fire({
+                    type: 'error',
+                    title: $res.message
+                })
+
+                setTimeout(()=> window.location.reload(), 2000)
+                $scope.get_one_project()
+            }
+
+        }, function errorCallback(response) {
+
+            // alert("Error. Try Again!");
+
+        });
+
+    }
+
+  }
+
+  //method to archive project
+  $scope.archive_project = function (comment_project) {
+
+    // var comment = $('#comment_project').val();
+    var comment = comment_project;
+    // console.log(comment);
+    // return false;
+
+    if (comment == undefined || comment == '') {
+        // Swal.fire({
+        //     type: 'error',
+        //     title: 'hey',
+        //     text: 'Emptyp',
+        //     toast: true
+        // })
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        })
+
+        Toast.fire({
+            type: 'error',
+            title: 'Comment cannot be empty'
+        })
+
+    } else {
+        $('#modal-archive').hide();
+        Swal.queue([{
+            title: 'Send Comment ...  ',
+            // showLoaderOnConfirm: true,
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            showLoaderOnConfirm: true,
+        }])
+
+        $http({
+            method: 'GET',
+            url: myConfig.url + '/archive_project.php?project_id=' + $scope.project_id + '&approvedBy=' + $scope.user_info.user_id + '&department_id=' + $scope.project.department_id + '&comment=' + comment
+
+        }).then(function successCallback(response) {
+            var $res = response.data
+            console.log(response.data)
+            if ($res.status == 'success') {
+                Swal.fire({
+                    type: 'success',
+                    title: $res.message
+
+                })
+                setTimeout(()=> window.location.reload(), 2000)
+                
+                $scope.get_one_project()
+            }
+            if ($res.status == 'failed') {
+                Swal.fire({
+                    type: 'error',
+                    title: $res.message
+
+                })
+
+                setTimeout(()=> window.location.reload(), 2000)
+                $scope.get_one_project()
+            }
+
+        }, function errorCallback(response) {
+
+            // alert("Error. Try Again!");
+
+        });
+
+    }
+
+  }
+
+  //method to check for # tag value
+  $scope.checkForHashTag = function (str) {
+    return str.charAt(0) === '#';
+  }
+
+  // $scope.loadOnce = function (){
+  //   window.onload = function(){
+  //     //Reload the page once
+  //     location.reload();
+  //   }
+  // }
+  // $scope.loadOnce();
+  
 });

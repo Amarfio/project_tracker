@@ -11,6 +11,8 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
     $scope.profile_pic = myConfig.file_url + $scope.profile_pic_true
     console.log($scope.profile_pic)
 
+    $scope.myConfig_file_url = myConfig.file_url
+
 
     if ($scope.user_info.role == 'admin' || $scope.user_info.role == 'assigner') {
         $scope.admin_or_assigner_can_see = true
@@ -204,7 +206,7 @@ sheetApp.controller('DashboardCtrl_', function ($scope, check_auth, myConfig, $h
         console.log(user_id)
 
 
-        var _url = myConfig.url + '/getCodeStatusCount_ForDeveloper.php?init=' + init + '&department_id=' + department_id + '&is_dept_head=' + is_dept_head + '&user_id=' + user_id
+        var _url = myConfig.url + '/getCodeStatusCountTasks_ForDeveloper.php?init=' + init + '&department_id=' + department_id + '&is_dept_head=' + is_dept_head + '&user_id=' + user_id
 
         $http({
             method: 'GET',

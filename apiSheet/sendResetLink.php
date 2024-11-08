@@ -9,6 +9,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 require_once 'connect.php';
 require_once 'mailer.php';
+require_once 'functions/passwordResetTemplate.php';
+
 
 //method to check if the email exists in the database
 function check_if_email_exist($email, $conn){
@@ -47,7 +49,7 @@ if (isset($_GET['email'])) {
     // update reset number
     $set_password = md5($email . null . time());
 
-    // return $num; die();
+    // echo $num; die();
 
     if ($num > 0) {
          // update reset number
@@ -55,25 +57,16 @@ if (isset($_GET['email'])) {
 
         $up_query = "UPDATE `users` SET `reset` = '$set_password' WHERE `users`.`email` = '$email'";
         $up_result = mysqli_query($conn, $up_query);
+        // echo($up_result); die();
         if ($up_result == 1) {
-
+            $valueLink = 'http://10.203.14.195:84/project_tracker/set_password/' . $set_password;
+            // echo json_encode($valueLink);
+            // die();
             $from = "Project Tracker (USG)";
             $name = "no-reply";
             $subject = "UNION SYSTEMS GLOBAL";
-            // $txt = 'http://192.168.1.195:84/project_tracker/set_password/' . $set_password;
-            $txt = "
-            Hello $first_name,  
-            <br /><br />
-            The password to your <b>Project Tracker</b> account has been reset successfully.
-            <br />
-            Kindly <a href='http://192.168.1.195:84/project_tracker/set_password/$set_password'>click here</a> to set your password. 
-            <br /><br/>
-            Kind regards,
-            <br/>
-            <a href='http://unionsg.com/' target='_blank'>UNION SYSTEMS GLOBAL</a>.
-            <br/>
-            <img  src='http://issues.unionsg.com/images/logo.png' class='img-circle'/>
-            ";
+            // $txt = 'http://10.203.14.195:84/project_tracker/set_password/' . $set_password;
+            $txt = emailForPasswordReset($first_name, $email, $set_password);
             $headers = "From: UNION SYSTEMS GLOBAL" ;
             
         //Email Settings
@@ -90,7 +83,7 @@ if (isset($_GET['email'])) {
                 array(
                     'message' => 'Check email for password reset link',
                     'status' => 'success',
-                    'set_password' => 'http://192.168.1.195:84/project_tracker/set_password/' . $set_password
+                    'set_password' => 'http://10.203.14.195:84/project_tracker/set_password/' . $set_password
                 )
             );
             exit($message);

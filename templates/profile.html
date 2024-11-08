@@ -135,7 +135,7 @@
                     <div class="card-body pt-0 pt-md-4">
 
 
-                        <div class="text-center"><br><br>
+                        <div class="text-center"><br><br><br>
                             <h3 class="text-capitalize">
                                 {{ user_info.first_name }}
                                 {{ user_info.last_name }}
@@ -155,6 +155,38 @@
                             <br><br>
                             <div class="text-center">
                                 <button class="btn btn-sm btn-default mr-4" ng-click="upload()">upload photo</button>
+                            </div>
+                            <hr class="my-4" />
+                            <br><br><br><br>
+                            <div class="card-profile-image">
+
+                                <!-- <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true == null">
+                                    <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg">
+                                </span>
+                                <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true != null">
+                                    <img alt="Image placeholder" ng-src="{{ profile_pic }}">
+                                </span> -->
+                                <a href="#" ng-if="signature_pic_true != null">
+                                    <img ng-src="{{ signature_pic }}" class="rounded-square">
+                                </a>
+
+                                <span ng-if="signature_pic_true == null">
+                                    <a href="#" ng-if="user_info.gender == 'Male'">
+                                        <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-square">
+                                    </a>
+                                    <a href="#" ng-if="user_info.gender == 'Female'">
+                                        <img src="./assets/img/theme/f_profile_icon.png" class="rounded-square">
+                                    </a>
+                                </span>
+                            </div>
+                            <br><br><br><br><br><br><br><br>
+                            <a href="#">Change Signature</a>
+                            <legend></legend>
+
+                            <input type='file' id='signaturefile' name='file'>
+                            <br><br>
+                            <div class="text-center">
+                                <button class="btn btn-sm btn-default mr-4" ng-click="uploadSignature()">upload Signature</button>
                             </div>
                         </div>
                     </div>
@@ -262,11 +294,19 @@
                             <h6 class="heading-small text-muted mb-4">About me</h6>
                             <div class="pl-lg-4">
                                 <div class="form-group">
-                                    <label>About Me</label>
+                                    <!-- <label>About Me</label> -->
                                     <textarea rows="4" class="form-control form-control-alternative"
                                         placeholder="A few words about you ..." id="bio">{{ user_info.bio }}</textarea>
                                 </div>
                             </div>
+                            <hr class="my-4" />
+                            <!-- Signature-->
+                            <!-- <h6 class="heading-small text-muted mb-4">Signature</h6>
+                            <div class="pl-lg-4">
+                                <div class="form-group">
+                                    <textarea name="" class="form-control form-control-alternative" id="" cols="30" rows="10"></textarea>
+                                </div>
+                            </div> -->
 
                         </div>
                     </div>

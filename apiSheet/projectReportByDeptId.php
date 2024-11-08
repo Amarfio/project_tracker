@@ -1,23 +1,10 @@
 <?php
 
-// header('Access-Control-Allow-Origin: *');
-// header("Content-Type: application/json; charset=UTF-8");
-// header('Access-Control-Allow-Methods: GET');
-// header("Access-Control-Allow-Headers: X-Requested-With");
-// header("Access-Control-Max-Age: 3600");
-// header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"); 
-// Headers for download 
-// header("Content-Type: application/vnd.ms-excel");
-// header("Content-Disposition: attachment; filename=projectUpateReport.xls");
-
-
-// Headers for download 
-// header("Content-Type: application/xls");
-
-
 require_once 'connect.php';
 
 
+
+$output = "";
 
 // echo($data->dept_id); die();
 if(isset($_GET['dept_id'])){
@@ -25,7 +12,7 @@ if(isset($_GET['dept_id'])){
   
     //get the department id 
     // $dept_id = mysqli_escape_string($conn, $_GET['dept_id']);
-    $dept_id = 106;
+    $dept_id = $_GET['dept_id'];
     
     // print_r($dept_id); die();
     $query = "SELECT project_id, project_name, start_date, end_date, department, completion, client, owner, status, last_update, last_update_date FROM `vw_proj_update_by_dept` WHERE dept_id = '$dept_id'";
@@ -35,7 +22,7 @@ if(isset($_GET['dept_id'])){
     // echo json_encode($result); die();
     // $i = 1;
 
-    $output = "";
+    
     $num = mysqli_num_rows($result);
     // echo json_encode($num); die();
     if($num > 0){
@@ -59,7 +46,7 @@ if(isset($_GET['dept_id'])){
 
       while($row = mysqli_fetch_array($result)){
 
-        $output .='<tr>
+        $output .= '<tr>
                     <td>'.$row["project_id"].'</td>
                     <td>'.$row["project_name"].'</td>
                     <td>'.$row["start_date"].'</td>
@@ -75,12 +62,12 @@ if(isset($_GET['dept_id'])){
 
         $outupt .='</table>';
 
-        header('Content-Type: application/xls');
+        header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment; filename=projectUpateReport.xls');
         echo $output;
       }
     }
-    else{
+    else{ 
 
       echo ("no data available");
     }

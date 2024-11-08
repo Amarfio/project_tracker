@@ -48,6 +48,10 @@ function get_status_count($status_id, $conn){
     else if($status_id == 118){
         $query = "SELECT COUNT(*) total_task_status FROM `tasks` WHERE ready_4_test = 1 AND (tasks.completion >=80 AND tasks.completion < 100) ";
     }
+    //code to count the number of archived tasks
+    else if($status_id == 132){
+        $query = "SELECT COUNT(t.status) total_task_status FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE t.is_archive = 1";
+    }
     $result = mysqli_query($conn, $query);
     // $num = mysqli_num_rows($result);
     $count_total_status = array();

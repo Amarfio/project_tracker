@@ -18,7 +18,7 @@ require_once 'connect.php';
 
     }
 
-    $query = "SELECT * FROM code_desc co WHERE co.init = 'dpt'";
+    $query = "SELECT * FROM code_desc co WHERE co.init = 'dpt' AND co.is_active = 1";
 
 
     $result = mysqli_query($conn, $query);

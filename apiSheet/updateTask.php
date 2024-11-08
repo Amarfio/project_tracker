@@ -63,7 +63,7 @@ if(
  
 
     // $query = "INSERT INTO `tasks` (`task_id`, `description`, `start_date`, `end_date`, `client_id`, `assigned_by`, `assigned_to`, `priority`, `project_id`, `ip_address`, `location`) VALUES (NULL, '$task_name', '$start_date', '$end_date', '$client_id', '$assigned_by', '$assigned_to', '$priority', '$project_id', '$ip_address', '$location')";
-    $query = "UPDATE `tasks` SET `description` = '$task_name', `start_date` = '$start_date', `end_date` = '$end_date', `client_id` = '$client_id', `assigned_by` = '$assigned_by', `assigned_to` = '$assigned_to', `priority` = '$priority'   WHERE `tasks`.`task_id` = '$task_id'";
+    $query = "UPDATE `tasks` SET `description` = '$task_name', `start_date` = '$start_date', `end_date` = '$end_date', `client_id` = '$client_id', `assigned_by` = '$assigned_by', `assigned_to` = '$assigned_to', `priority` = '$priority', `updated_at` = NOW()   WHERE `tasks`.`task_id` = '$task_id'";
 
     $result = mysqli_query($conn, $query);
 

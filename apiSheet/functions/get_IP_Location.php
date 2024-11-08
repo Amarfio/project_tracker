@@ -1,5 +1,6 @@
 <?php
     function getSecurity(){
+        $ip_address = "";
         //whether ip is from share internet
         if (!empty($_SERVER['HTTP_CLIENT_IP']))   
         {
@@ -13,7 +14,8 @@
         //whether ip is from remote address
         else
         {
-            $ip_address = $_SERVER['REMOTE_ADDR'];
+            // $ip_address = $_SERVER['REMOTE_ADDR'];
+            $ip_address = "10.203.14.84";
         }
         return $ip_address;
 

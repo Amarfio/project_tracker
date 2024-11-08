@@ -88,7 +88,7 @@
                         <div class="card-body">
 
                             <form id="add_project_form"
-                                ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_owner_, project_description_)">
+                                ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_owner_, project_description_, hash_tag, s_owner_)">
 
 
                                 <div class="col-sm-12">
@@ -110,10 +110,19 @@
 
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Versions</label>
-                                    <select class="form-control" required ng-model="version_no_"
+                                    <select class="form-control" ng-model="version_no_"
                                         id="project_version_no">
-                                        <option value="">Select
-                                            Version</option>
+                                        <option value="">{{project.version_name}}</option>
+                                        <option ng-value="version.code_desc_id" ng-repeat="version in versions">
+                                            {{ version.code_desc }}</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <label for="inputPassword" class=" col-form-label text-primary">Client</label>
+                                    <select class="form-control" ng-model="client_"
+                                        id="project_version_no">
+                                        <option value="">{{project.client}}</option>
                                         <option ng-value="version.code_desc_id" ng-repeat="version in versions">
                                             {{ version.code_desc }}</option>
                                     </select>
@@ -122,10 +131,9 @@
 
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Department</label>
-                                    <select class="form-control" required ng-model="department_id_"
-                                        id="project_department_id" ng-value="project.department_id">
-                                        <option value="">Select
-                                            Department</option>
+                                    <select class="form-control" ng-model="department_id_"
+                                        id="project_department_id" ng-value="">
+                                        <option value="">{{project.department}}</option>
                                         <option ng-value="department.code_desc_id"
                                             ng-repeat="department in departments">
                                             {{ department.code_desc }}</option>
@@ -151,10 +159,18 @@
                                 </div>
 
                                 <div class="col-sm-12">
-                                    <label for="inputPassword" class=" col-form-label text-primary">Description</label>
+                                    <label for="inputPassword" class=" col-form-label text-primary">Details</label>
                                     <textarea class="form-control " id="project_description"
                                         placeholder="Required example textarea" required ng-model="project_description_"
                                         ng-value="project.description">
+                                    </textarea>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <label for="inputPassword" class=" col-form-label text-primary">Hash tag value</label>
+                                    <textarea class="form-control " id="hash_tag"
+                                        placeholder="Required example textarea" required ng-model="hash_tag"
+                                        ng-value="project.hash_tag">
                                     </textarea>
                                 </div>
 
@@ -168,8 +184,18 @@
 
                                <div class="col-sm-12">
                                     <label for="inputPassword" class="col-form-label text-primary">Owner</label>
-                                        <select class="form-control" required ng-model="project_owner_" id="project_owner_id"  ng-value="project.owner_id">
-                                            <option value="">-- Select project owner from list --</option>
+                                        <select class="form-control" ng-model="project_owner_" id="project_owner_id"  ng-value="">
+                                            <option value="">{{project.project_owner}}</option>
+                                            <option ng-value="user.user_id" ng-repeat="user in all_users" 
+                                                ng-hide="user.user_id == '1'">
+                                                {{user.f_name}} {{user.l_name}} </option>
+                                        </select>
+                                </div> 
+
+                                <div class="col-sm-12">
+                                    <label for="inputPassword" class="col-form-label text-primary">Secondary owner</label>
+                                        <select class="form-control" ng-model="s_owner_" id="sec_owner_id"  ng-value="">
+                                            <option value="">{{project.sec_owner}}</option>
                                             <option ng-value="user.user_id" ng-repeat="user in all_users" 
                                                 ng-hide="user.user_id == '1'">
                                                 {{user.f_name}} {{user.l_name}} </option>
@@ -181,18 +207,38 @@
                                 <div class="col-sm-12 row">
 
                                     <!-- <label for="inputPassword" class="col-sm-6 col-form-label text-primary"></label> -->
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-3">
                                         <button type="submit" class="btn btn-primary">
                                             Update
                                         </button>
                                     </div>
-                                    <div class="col-sm-6">
+
+                                    <div class="col-sm-3">
+                                        <a data-toggle="modal" data-target="#modal-archive">
+                                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-toggle="#modal-archive">
+                                                Archive
+                                            </button>
+                                        </a>
+                                        
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        <a data-toggle="modal" data-target="#modal-approve">
+                                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-toggle="#modal-suspend">
+                                                Suspend
+                                            </button>
+                                        </a>
+                                        
+                                    </div>
+                                    
+                                    <div class="col-sm-3">
                                         <a ng-href="project/{{ project_id }}">
                                             <button type="button" class="btn btn-warning">
                                                 Cancel
                                             </button>
                                         </a>
                                     </div>
+
                                 </div>
                             </form>
                         </div>
@@ -204,14 +250,18 @@
                 <div class="card card-stats mb-4 mb-lg-0">
                     <div class="card-body">
                         <p>
-                            <h4>Project Name: &nbsp; <span class="text-primary"> {{ project.name }} </span></h5>
-                                <h4>Version: &nbsp; <span class="text-primary"> {{ project.version_name }} </span></h5>
-                                    <h4>Department: &nbsp; <span class="text-primary"> {{ project.department }} </span>
-                                        </h5>
-                                        <h4>Start Date: &nbsp; <span class="text-primary"> {{ project.start_date }}
-                                            </span></h5>
-                                            <h4>End Date: &nbsp; <span class="text-primary"> {{ project.end_date }}
-                                                </span></h4>
+                            <h4>Project Name: &nbsp; <span class="text-primary"> {{ project.name }} </span></h4>
+                            <h4>Version: &nbsp; <span class="text-primary"> {{ project.version_name }} </span></h4>
+                            <h4>Department: &nbsp; <span class="text-primary"> {{ project.department }} </span></h4>
+                            <h4>Start Date: &nbsp; <span class="text-primary"> {{ project.start_date }}</span></h4>
+                            <h4>End Date: &nbsp; <span class="text-primary"> {{ project.end_date }}</span></h4>
+                            <h4>Project Document: &nbsp; <a ng-href="{{myConfig_file_url}}{{project.attach}}" target="_blank" download>
+                                <!-- <strong ng-if="project.attach != ''">
+                                  &nbsp; &nbsp; <i class="fa fa-paperclip text-blue" id=""></i>
+                                </strong> -->
+                                {{ project.attach }}
+                              
+                                </a></h4>
                         </p>
                     </div>
                 </div>
@@ -221,12 +271,136 @@
             <div class="col-md-2"></div>
         </div>
     </div>
+
+    <!-- START OF SUSPEND MODAL -->
+    <div class="modal fade" id="modal-approve" tabindex="-1" role="dialog" aria-labelledby="modal-add-codex" aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-md" role="document">
+            <div class="modal-content">
+
+            <div class="modal-body p-0">
+                <div class="card bg-secondary shadow border-0">
+
+                <div class="card-body px-lg-5 py-lg-4">
+                    <div class=" text-muted ">
+                    <legend></legend>
+
+                    <span class="text-primary"> Update project status </span>
+
+                    <hr>
+
+                    </div>
+
+                    <div class="col-md-12 form-group mb-3">
+                    <div class="input-group input-group-alternative">
+
+                        <input class="form-control text-uppercase" placeholder="PRO-0000{{ project.project_id }}" type="text"
+                        disabled>
+                    </div>
+                    </div>
+                    <div class="col-md-12 form-group mb-3">
+                    <div class="input-group input-group-alternative">
+
+                        <input class="form-control text-uppercase" placeholder="{{ project.project_status}}" type="text"
+                        disabled>
+                    </div>
+                    </div>
+                    <div class="col-md-12 form-group mb-3">
+                    <label for="">Comment</label><br>
+                    <div class="input-group input-group-alternative">
+
+
+                        <textarea class="form-control" rows="5" id="comment_approve_or_reject"></textarea>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+
+                    <button type="submit" ng-click="suspend_project()" class="btn btn-danger btn-sm float-right mr-4">Suspend
+                    </button>
+                    &nbsp;&nbsp;<button type="button" class="btn btn-secondary btn-sm float-right "
+                        data-dismiss="modal">Close </button>
+
+                    </div>
+                </div>
+
+
+                </div>
+            </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- modal to archive project -->
+    <div class="modal fade" id="modal-archive" tabindex="-1" role="dialog" aria-labelledby="modal-archive-project" aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-md" role="document">
+            <div class="modal-content">
+
+            <form role="form" ng-submit="archive_project(comment_project)">
+                <div class="modal-body p-0">
+                    <div class="card bg-secondary shadow border-0">
+
+                    <div class="card-body px-lg-5 py-lg-4">
+                        <div class=" text-muted ">
+                        <legend></legend>
+
+                        <span class="text-primary"> Update project status </span>
+
+                        <hr>
+
+                        </div>
+
+                        <div class="col-md-12 form-group mb-3">
+                        <div class="input-group input-group-alternative">
+
+                            <input class="form-control text-uppercase" ng-model="project_id" placeholder="PRO-0000{{ project.project_id }}" type="text"
+                            disabled>
+                        </div>
+                        </div>
+                        <div class="col-md-12 form-group mb-3">
+                        <div class="input-group input-group-alternative">
+
+                            <input class="form-control text-uppercase" placeholder="{{ project.project_status}}" type="text"
+                            disabled>
+                        </div>
+                        </div>
+                        <div class="col-md-12 form-group mb-3">
+                        <label for="">Comment</label><br>
+                        <div class="input-group input-group-alternative">
+
+
+                            <textarea class="form-control" rows="5" ng-model="comment_project" ></textarea>
+                        </div>
+                        </div>
+                        <div class="modal-footer">
+
+                        <button type="submit" class="btn btn-danger btn-sm float-right mr-4">Archive
+                        </button>
+                        &nbsp;&nbsp;<button type="button" class="btn btn-secondary btn-sm float-right "
+                            data-dismiss="modal">Close </button>
+
+                        </div>
+                    </div>
+
+
+                    </div>
+                </div>
+            </form>
+
+            </div>
+        </div>
+    </div>
 </div>
 
-<script>
+<!-- <script>
     $(document).ready(function () {
         $(".datepicker").datepicker({
             format: "dd/mm/yyyy"
         });
     });
-</script>
+
+    window.onload = function(){
+          //Reload the page once
+          location.reload();
+    }
+</script> -->

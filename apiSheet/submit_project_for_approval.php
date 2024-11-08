@@ -18,6 +18,8 @@ require_once "PHPMailer/PHPMailer.php";
 require_once "PHPMailer/SMTP.php";
 require_once "PHPMailer/Exception.php";
 require_once 'connect.php';
+require_once 'functions/pendingApprovalTemplate.php';
+require_once 'functions/getClientMembers.php';
 // require_once 'mailer.php';
 
 //mail
@@ -45,8 +47,9 @@ function get_department_head_email($department_id, $conn){
     function get_all_approval_users ($conn, $project_id){
 
         
-        $query_project = "SELECT p.*, p.status status_id, co_sta.desc status_name, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by WHERE project_id = '$project_id'";
-        
+        $query_project = "SELECT p.*, p.status status_id, co_sta.desc status_name, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by, p.client, comment_by, CONCAT(u.f_name, ' ', u.l_name) comment_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by WHERE project_id = '$project_id'";
+        // echo($query_project); die();
+
         $result_project = mysqli_query($conn, $query_project);
         
         $num_project = mysqli_num_rows($result_project); 
@@ -58,6 +61,7 @@ function get_department_head_email($department_id, $conn){
         $version_name  =  $row_project['version_name'];
         $name =  $row_project['name'];
         $description =  $row_project['description'];
+        $client_id = $row_project['client'];
         $is_approved =  $row_project['is_approved'];
         $project_status_id =  $row_project['status_id'];
         $project_status =  $row_project['status_name'];
@@ -84,18 +88,19 @@ function get_department_head_email($department_id, $conn){
 
                 $to = 'ampahkwabena55@gmail.com';
                 // $subject = "UNION SYSTEMS GLOBAL";
-                $txt = "A new Project has been created and is pending approval.<br/> 
-                Project Details includes the following: 
-                <br/><br/>
-                Project ID: PRO-0000 $project_id <br/>
-                Description:  $description <br/>
-                Version: $version_name <br/>
-                Department: $department <br/>
-                Start Date: $start_date <br/>
-                End Date: $end_date <br/> <br/>
-                Kindly <a href='http://192.168.1.195:84/project_tracker/login'>click here</a> to login <br/>
-                <img  src='http://issues.unionsg.com/images/logo.png' class='img-circle'/>
-                ";
+                // $txt = "A new Project has been created and is pending approval.<br/> 
+                // Project Details includes the following: 
+                // <br/><br/>
+                // Project ID: PRO-0000 $project_id <br/>
+                // Project Name:  $name <br/>
+                // Version: $version_name <br/>
+                // Department: $department <br/>
+                // Start Date: $start_date <br/>
+                // End Date: $end_date <br/> <br/>
+                // Kindly <a href='http://192.168.1.195:84/project_tracker/login'>click here</a> to login <br/>
+                // <img  src='http://issues.unionsg.com/images/logo.png' class='img-circle'/>
+                // ";
+                $txt = pendingApproval($project_id, $name,$version_name, $department, $start_date, $end_date);
 
                 // $txt = "New Project has been created and is pending approval: ".  "http://192.168.1.195:84/project_tracker/login". "\r\n" ;
                 // $txt = $txt . 'Project ID: PRO-0000' . $project_id . "\r\n" ;
@@ -109,13 +114,15 @@ function get_department_head_email($department_id, $conn){
                 $mailName= "no-reply";
 
                 $deptHeadEmail = get_department_head_email($department_id, $conn);
+                $emails = getAllClientMembersEmails($conn, $client_id);
+                // print_r($emails); die();
                 // return $deptHeadEmail; die();
 
                 //mail setup
                 $mail = new PHPMailer();
 
 
-                //STMP Settings
+                // STMP Settings
                 $mail->isSMTP();
                 $mail->Host = "server.unionsg.com";
                 $mail->SMTPAuth=true;
@@ -123,32 +130,77 @@ function get_department_head_email($department_id, $conn){
                 $mail->Password="(qLwOdQ3F3cm";
                 $mail->Port = 587;
                 $mail->SMTPSecure = "tls";
+
+                // //SMTP Settings
+                // $mail->isSMTP();
+                // $mail->Host = "smtp.gmail.com";
+                // $mail->SMTPAuth= true;
+                // $mail->Username="joshuaamarfio1@gmail.com";
+                // $mail->Password = "atmoqrmb8N";
+                // $mail->Port = 587; //587
+                // $mail->SMTPSecure ="tls";//tls
            
-                //Email Settings
+                // Email Settings
                 $mail->isHTML(true);
                 $mail->setFrom("hr@unionsg.com", $mailName);
+                foreach($emails as $email){
+                    $mail->addCC($email);
+                    // echo($email);
+                }
+                // die();
                 $mail->addAddress($deptHeadEmail);
+                
                 $mail->Subject="Approval Request";
                 $mail->Body = $txt;
                 $done = $mail->send();
 
-            
+            //revisit and send emails to department heads for approval alert
+                // return true;
 
             // mail($to,$subject,$txt,$headers
-           if( $done){
-                return true;
 
-           }else{
+            // try{
 
-                $message = json_encode(
-                    array(
-                        'message' => 'Failed to send email notication',
-                        'status' => 'failed'
+            // }catch(Exception $ex){
+                
+            // }
+
+           try{
+
+            // return true;
+
+            // if( !$done){
+            //     $message = json_encode(
+            //         array(
+            //             'message' => 'Failed to send email notication',
+            //             'status' => 'failed'
+            //         )
+                    
+            //     );
+            //     exit($message);
+                    
+    
+            //    }else{
+    
+            //     return true;
+    
+            // }
+            return true;
+    
+
+           }catch(Exception $e){
+
+            $message = json_encode(
+                array(
+                    'message' => $e->getMessage(),
+                    'status' => 'failed'
                     )
                 );
+
                 exit($message);
 
-                }
+           }
+           
             }
             
                 else {
@@ -172,32 +224,32 @@ function get_department_head_email($department_id, $conn){
 
     }
 
-function approve ($conn, $project_id){
-    
-    $query = "UPDATE `projects` SET `status` = 84 WHERE `projects`.`project_id` = '$project_id';";
+    function approve ($conn, $project_id){
+        
+        $query = "UPDATE `projects` SET `status` = 84 WHERE `projects`.`project_id` = '$project_id';";
 
-    $result = mysqli_query($conn, $query);
+        $result = mysqli_query($conn, $query);
 
-    if ($result == 1) {
-        $message = json_encode(
-            array(
-                'message' => 'Project has been submitted for Approval',
-                'status' => 'success',
-                'project_id' => $project_id
-            )
-        );
-        exit($message);
-    } else{
-        $message = json_encode(
-            array(
-                'message' => 'failed to approve',
-                'status' => 'failed',
-            )
-        );
+        if ($result == 1) {
+            $message = json_encode(
+                array(
+                    'message' => 'Project has been submitted for Approval',
+                    'status' => 'success',
+                    'project_id' => $project_id
+                )
+            );
+            exit($message);
+        } else{
+            $message = json_encode(
+                array(
+                    'message' => 'failed to approve',
+                    'status' => 'failed',
+                )
+            );
 
-        exit($message);
+            exit($message);
+        }
     }
-}
 
 
 

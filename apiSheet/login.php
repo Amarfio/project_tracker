@@ -13,11 +13,13 @@ require_once 'functions/checkProjsCompleted.php';
 require_once 'functions/checkOverdueTasks.php';
 require_once 'functions/get_IP_Location.php';
 require_once 'functions/activity_logs.php';
+require_once 'functions/deleteRejectedProjects.php';
 // require_once 'projectReport.php';
 
 $data = json_decode(file_get_contents("php://input"));
+// echo json_encode($data); die();
 if (isset($data)) {
-    // echo json_encode($data);
+    
 
 
     if (!isset($data->username) || !isset($data->password)) {
@@ -38,8 +40,10 @@ if (isset($data)) {
 
         // $query = "SELECT * FROM users,code_desc  WHERE (email = '$username' OR username = '$username') AND hash_pass = '$password' AND users.role = code_desc.id LIMIT 1";
 
-        $query = "SELECT u.id as user_id, u.f_name, u.profile_pic, u.bio, u.l_name, u.gender, u.username, u.is_dpt_head, u.can_approve, u.email, u.phone, u.country, u.city, u.postal_addr AS address, u.reset as token, c.id AS department_id, c.desc department, d.id AS role_id, d.desc as role from users u LEFT JOIN code_desc c ON u.dept = c.id left JOIN code_desc d ON u.role = d.id WHERE (LOWER(u.email) = '$username' OR LOWER(u.username) = '$username') AND hash_pass = '$password' LIMIT 1";
-
+        // $query = "SELECT u.id as user_id, u.f_name, u.profile_pic, u.signature, u.bio, u.l_name, u.gender, u.username, u.is_dpt_head, u.can_approve, u.email, u.phone, u.country, u.city, u.postal_addr AS address, u.reset as token, c.id AS department_id, c.desc department, d.id AS role_id, d.desc as role from users u LEFT JOIN code_desc c ON u.dept = c.id left JOIN code_desc d ON u.role = d.id WHERE (LOWER(u.email) = '$username' OR LOWER(u.username) = '$username') AND hash_pass = '$password' LIMIT 1";
+        $query = "SELECT u.id as user_id, u.f_name, u.profile_pic, u.signature, u.bio, u.l_name, u.gender, u.client_id, u.username, u.is_dpt_head, u.can_approve, u.email, u.phone, u.country, u.city, u.postal_addr AS address, u.reset as token, c.id AS department_id, c.desc department, d.id AS role_id, d.desc as role, ic.codeNo as deptIssues from users u LEFT JOIN code_desc c ON u.dept = c.id LEFT JOIN code_desc ic ON u.dept = ic.id left JOIN code_desc d ON u.role = d.id WHERE (LOWER(u.email) = '$username' OR LOWER(u.username) = '$username') AND hash_pass = '$password' LIMIT 1";
+        // $query = "SELECT u.id as user_id, u.f_name, u.profile_pic, u.signature, u.bio, u.l_name, u.gender, u.username, u.is_dpt_head, u.can_approve, u.email, u.phone, u.country, u.city, u.postal_addr AS address, u.reset as token, c.id AS department_id, c.desc department, d.id AS role_id, d.desc as role, ic.codeNo as deptIssues from users u LEFT JOIN code_desc c ON u.dept = c.id LEFT JOIN code_desc ic ON u.dept = ic.id left JOIN code_desc d ON u.role = d.id WHERE (LOWER(u.email) = 'amarfio.joshua@unionsg.com' OR LOWER(u.username) = 'amarfio.joshua@unionsg.com') AND hash_pass = 'f9f64e3d07ad43ca1c0744dfdaac8321' LIMIT 1";
+        // echo($query); die();
         // echo $result; die();
         $result = mysqli_query($conn, $query);
         $num = mysqli_num_rows($result);
@@ -60,11 +64,17 @@ if (isset($data)) {
             checkProjsCompleted($conn);
             
             
+            //check rejected projects and delete them
+            // deleteRejectedProjects($conn);
+
+            //update task status to completed when completion is 100%
+            updateTaskToCompleted($conn);
 
 
             // END LOG ACTIVITY
 
-        echo json_encode('result', $result);
+            //this is the error.
+            // echo json_encode('result', $result);
 
             
             echo json_encode(
@@ -87,12 +97,15 @@ if (isset($data)) {
                         'phone' => $row['phone'],
                         'address' => $row['address'],
                         'country' => $row['country'],
+                        'client_id' => $row['client_id'],
                         'bio' => $row['bio'],
-                        'city' => $row['city']
+                        'city' => $row['city'],
+                        'deptIssues' => $row['deptIssues']
                     ],
                     'token' => $row['token'], 
                     'auth' => true,
-                    'profile_pic' => $row['profile_pic']
+                    'profile_pic' => $row['profile_pic'],
+                    'signature_pic' => $row['signature']
                 )
             );
         } else {
@@ -105,20 +118,24 @@ if (isset($data)) {
             log_activity($conn, $user, $activity, $status, getSecurity());
             
             //code to update the projects that are overdue...
-            overdue_projects($conn);
-            checkProjsInProgress($conn);
+            // overdue_projects($conn);
+            // checkProjsInProgress($conn);
 
             //check projects completed
-            checkProjsCompleted($conn);
-           
+            // checkProjsCompleted($conn);
 
+            //check rejected projects and delete them
+            // deleteRejectedProjects  ($conn);
+           
+            //update task status to completed when completion is 100%
+            // updateTaskToCompleted($conn);
 
             // END LOG ACTIVITY
             
             echo json_encode(
                 array(
                     'message' => 'Incorrect Credentials',
-                    'status' => 'failed'
+                    'status' => 417
                 )
             );
         }

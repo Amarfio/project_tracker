@@ -245,13 +245,13 @@ function query_total_project($conn, $user_id){
   function query_by_status_and_date($user_id, $status_id, $start_date, $end_date, $client_id){
     // echo json_encode($user_id . " " . $status_id . " " . $start_date . " " . $end_date);
     // die();
-    // $query_by_status_and_date = "SELECT * FROM projects WHERE (start_date >= '2022-02-02' AND end_date <= '2022-03-02') AND status = 88";
+    // // $query_by_status_and_date = "SELECT * FROM projects WHERE (start_date >= '2022-02-02' AND end_date <= '2022-03-02') AND status = 88";
     // $query_by_status_and_date = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department, DATEDIFF(NOW(), pro.start_date) AS no_of_days FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE pro.status = '$status_id' AND pro.owner = '$user_id' AND pro.is_archive = 0 AND (start_date >= '2022-02-02' AND end_date <= '2022-03-02') ORDER BY pro.project_id DESC";
     // $query_by_status_and_date = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department, DATEDIFF(NOW(), pro.start_date) AS no_of_days FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE pro.status = '$status_id' AND pro.owner = '$user_id' AND pro.is_archive = 0 AND (pro.start_date >= '$start_date' AND pro.end_date <= '$end_date') ORDER BY pro.project_id DESC";
     $query_by_status_and_date = "";
 
     if($user_id == 'undefined' && $status_id =='undefined'){
-        // echo (json_encode("adey here"));
+        echo (json_encode("adey here"));
         // die();
         $query_by_status_and_date = "SELECT pro.*, co.id version_id, CONCAT(proj_owner.f_name,' ', proj_owner.l_name) as m_o, co.desc version, pro.status status_id, co_p_status.desc status_desc, co_dept.id department_id, co_dept.desc department,cli_p.name client_name, DATEDIFF(NOW(), pro.start_date) AS no_of_days FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id LEFT JOIN clients cli_p ON cli_p.client_id = pro.client LEFT JOIN code_desc co_p_status ON co_p_status.id = pro.status LEFT JOIN users proj_owner ON proj_owner.id = pro.owner WHERE pro.is_archive = 0 AND pro.client= '$client_id' AND (pro.start_date >= '$start_date' AND pro.end_date <= '$end_date') ORDER BY pro.project_id DESC";    
     }

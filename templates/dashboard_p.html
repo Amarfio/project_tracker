@@ -1,20 +1,20 @@
 <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
-  <br />
-  <ng-include src="'side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+    <br />
+    <ng-include src="'side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
 </nav>
 <div class="main-content">
-  <!-- Navbar -->
-  <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
-    <div class="container-fluid">
-      <!-- Brand -->
+    <!-- Navbar -->
+    <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+        <div class="container-fluid">
+            <!-- Brand -->
 
-      <span>
+            <span>
         <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="#">
           {{ dashboard_description }} Dashboard
         </a>
       </span>
 
-      <span ng-if="admin_or_assigner_can_see">
+            <span ng-if="admin_or_assigner_can_see">
         <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block badge badge-info" href="#"
           ng-click="get_default()">
           Admin Dashboard
@@ -22,7 +22,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;
       </span>
 
-      <!-- <span ng-if="user_info.role != 'admin'">
+            <!-- <span ng-if="user_info.role != 'admin'">
 
         <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block badge badge-info" href="#"
           ng-click="get_statics_developer_for_developer('psta', user_info.department_id, user_info.is_dept_head, user_info.user_id, user_info.user_role)">
@@ -31,7 +31,7 @@
 
       </span> -->
 
-      <!-- <span ng-if="admin_or_assigner_can_see">
+            <!-- <span ng-if="admin_or_assigner_can_see">
         <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block badge badge-info" href="#"
           ng-click="get_statics_developer_for_assigner_and_admin('psta')">
           Admin Dashboard
@@ -39,157 +39,156 @@
         &nbsp;&nbsp;&nbsp;&nbsp;
       </span> -->
 
-      <!-- ng-model="get_statics_developer_for_developer('psta', user_info.department_id, user_info.is_dept_head, user.user_id, user.user_role)" -->
+            <!-- ng-model="get_statics_developer_for_developer('psta', user_info.department_id, user_info.is_dept_head, user.user_id, user.user_role)" -->
 
-      
 
-      
 
-      <!-- User -->
-      <ul class="navbar-nav align-items-center d-none d-md-flex">
-        <li class="nav-item dropdown">
-          <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            <div class="media align-items-center">
-              <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true == null">
+
+
+            <!-- User -->
+            <ul class="navbar-nav align-items-center d-none d-md-flex">
+                <li class="nav-item dropdown">
+                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="media align-items-center">
+                            <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true == null">
                 <span ng-if="user_info.gender == 'Male'">
                   <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle" />
                 </span>
-                <span ng-if="user_info.gender == 'Female'">
+                            <span ng-if="user_info.gender == 'Female'">
                   <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle" />
                 </span>
-                <!-- <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg"> -->
-              </span>
+                            <!-- <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg"> -->
+                            </span>
 
-              <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true != null">
+                            <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true != null">
                 <img alt="Image placeholder" ng-src="{{ profile_pic }}" />
               </span>
 
-              <div class="media-body ml-2 d-none d-lg-block">
-                <span class="mb-0 text-sm  font-weight-bold text-uppercase">{{user_info.username}}</span>
-              </div>
-            </div>
-          </a>
-          <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
-            <div class=" dropdown-header noti-title">
-              <h6 class="text-overflow m-0">Welcome {{user_info.username}}</h6>
-            </div>
-            <a href="profile" class="dropdown-item">
-              <i class="ni ni-single-02"></i>
-              <span>My profile</span>
-            </a>
-            <a class="dropdown-item">
-              <i class="ni ni-settings-gear-65"></i>
-              <span>Settings</span>
-            </a>
-            <a class="dropdown-item">
-              <i class="ni ni-calendar-grid-58"></i>
-              <span>Activity</span>
-            </a>
-            <a class="dropdown-item">
-              <i class="ni ni-support-16"></i>
-              <span>Support</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" ng-click="logout()">
-              <i class="ni ni-user-run"></i>
-              <span>Logout</span>
-            </a>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <!-- End Navbar -->
-  <!-- Header -->
-  <div class="header bg-gradient-primary pb-8 pt-5 pt-md-6">
-    <div class="container-fluid">
-      <div class="header-body">
-        <!-- Card stats -->
-        <div class="row">
-          <div class="col-xl-3 col-lg-6 dash_card" ng-click="get_total_projects(user_info.user_id, total_projects.description, _user_info_role,
-            user_info.department_id, dev_changed)">
-            <div class="card card-stats mb-4 mb-xl-0">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-auto">
-                    <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
-                      <i class="ni ni-chart-bar-32"></i>
+                            <div class="media-body ml-2 d-none d-lg-block">
+                                <span class="mb-0 text-sm  font-weight-bold text-uppercase">{{user_info.username}}</span>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                        <div class=" dropdown-header noti-title">
+                            <h6 class="text-overflow m-0">Welcome {{user_info.username}}</h6>
+                        </div>
+                        <a href="profile" class="dropdown-item">
+                            <i class="ni ni-single-02"></i>
+                            <span>My profile</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-settings-gear-65"></i>
+                            <span>Settings</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-calendar-grid-58"></i>
+                            <span>Activity</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="ni ni-support-16"></i>
+                            <span>Support</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" ng-click="logout()">
+                            <i class="ni ni-user-run"></i>
+                            <span>Logout</span>
+                        </a>
                     </div>
-                  </div>
-                  <div class="col">
-                    <h5 class="card-title text-uppercase text-muted mb-0">
-                      {{ total_projects.description }}
-                    </h5>
-                    <span class="h2 font-weight-bold mb-0">{{ total_projects.total_projects }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <legend></legend>
-          </div>
-
-
-
-          <div class="col-xl-3 col-lg-6 dash_card" ng-repeat="status in status_of_project" ng-click="get_tasks_by_status_id(user_info.user_id, status.status_id, status.status, _user_info_role,
-            user_info.department_id, dev_changed)">
-            <div class="card card-stats mb-4 mb-xl-0">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-auto">
-                    <div class="icon icon-shape bg-{{ status.code_color }} text-white rounded-circle shadow">
-                      <i class="ni ni-settings"></i>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <h5 class="card-title text-uppercase text-muted mb-0">
-                      {{ status.status}}
-                    </h5>
-                    <span class="h2 font-weight-bold mb-0">{{ status.status_count}}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <legend></legend>
-          </div>
-
+                </li>
+            </ul>
         </div>
-      </div>
-    </div>
-  </div>
+    </nav>
+    <!-- End Navbar -->
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <!-- Card stats -->
+                <div class="row">
+                    <div class="col-xl-3 col-lg-6 dash_card" ng-click="get_total_projects(user_info.user_id, total_projects.description, _user_info_role,
+            user_info.department_id, dev_changed)">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">
+                                            {{ total_projects.description }}
+                                        </h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ total_projects.total_projects }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <legend></legend>
+                    </div>
 
-  <div class="container-fluid mt--8">
-    <!-- Table -->
-    <br>
-    <!-- Table -->
-    <div class="row">
-      <div class="col-md-4">
-        <a class="h1 mb-0 text-white text-uppercase d-none d-lg-inline-block" title="click to download" id="btnExport">
+
+
+                    <div class="col-xl-3 col-lg-6 dash_card" ng-repeat="status in status_of_project" ng-click="get_tasks_by_status_id(user_info.user_id, status.status_id, status.status, _user_info_role,
+            user_info.department_id, dev_changed)">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-{{ status.code_color }} text-white rounded-circle shadow">
+                                            <i class="ni ni-settings"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">
+                                            {{ status.status}}
+                                        </h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ status.status_count}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <legend></legend>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid mt--8">
+        <!-- Table -->
+        <br>
+        <!-- Table -->
+        <div class="row">
+            <div class="col-md-4">
+                <a class="h1 mb-0 text-white text-uppercase d-none d-lg-inline-block" title="click to download" id="btnExport">
           ( {{ projects.length }} ) - {{ statistics_description_name }} 
           projects &nbsp; &nbsp;<span class="ni ni-cloud-download-95"></span>
         </a>
-      </div>
-      <div class="col-md-8">
-        <div class="row">
-          <!-- <div class="col-xl-2" ng-show="user_info.role == 'admin'">
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <!-- <div class="col-xl-2" ng-show="user_info.role == 'admin'">
             <input class="form-control" placeholder="Start Date" type="date" title="start date" ng-model="tableSearch" style="height: auto;">
           </div>
           <div class="col-xl-2" ng-show="user_info.role == 'admin'">
             <input class="form-control" placeholder="End Date" type="date" title="end date" ng-model="tableSearch" style="height: auto;">
           </div> -->
-          <div class="col-xl-3">
-            <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: auto;">
-          </div>
-          <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner' || user_info.is_dept_head == 1">
-            <!-- <select class="form-control" ng-click="get_statics_developer_for_developer('psta', 104, 0, 115)"> -->
-              <select id="developer" class="form-control">
+                    <div class="col-xl-3">
+                        <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: auto;">
+                    </div>
+                    <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner' || user_info.is_dept_head == 1">
+                        <!-- <select class="form-control" ng-click="get_statics_developer_for_developer('psta', 104, 0, 115)"> -->
+                        <select id="developer" class="form-control">
               <option value="">-- Filter by Dev --</option>
               <option ng-repeat="dev in all_developers" ng-model="user_id_" ng-value="dev.user_id" ng-hide="dev.user_id == '1'" >
                 {{dev.f_name}} {{dev.l_name}} </option>
             </select>
-          </div>
+                    </div>
 
-          <!-- <div class="col-xl-3" ng-show="user_info.is_dept_head == 1">
+                    <!-- <div class="col-xl-3" ng-show="user_info.is_dept_head == 1">
               <select id="developer_s" class="form-control">
               <option value="">-- Filter by Developer --</option>
               <option value="0">-- All Developers --</option>
@@ -197,218 +196,207 @@
                 {{dev.f_name}} {{dev.l_name}} </option>
             </select>
           </div> -->
-          <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner' ">
-            <!-- <select id="department_s" class="form-control " required ng-model="tableSearch_by_department_id"> -->
-              <select id="department_s" class="form-control">
+                    <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner' ">
+                        <!-- <select id="department_s" class="form-control " required ng-model="tableSearch_by_department_id"> -->
+                        <select id="department_s" class="form-control">
               <option value="0">--Filter by Department--</option>
               <option ng-value="department.code_desc_id" ng-repeat="department in departments">{{department.code_desc}}
               </option>
             </select>
-          </div>
+                    </div>
 
-          <div class="col-xl-2" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
-            <a data-toggle="modal" data-target="#modal-search">
-                <button type="submit" class="btn btn-info" data-toggle="modal" data-toggle="#modal-search">
+                    <div class="col-xl-2" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
+                        <a data-toggle="modal" data-target="#modal-search">
+                            <button type="submit" class="btn btn-info" data-toggle="modal" data-toggle="#modal-search">
                     Advanced Search
                 </button>
-            </a>
-          </div>
-          <!-- <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
+                        </a>
+                    </div>
+                    <!-- <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
             <select class="form-control " required ng-model="tableSearch_by_status_id">
               <option value="">-- project Status--</option>
               <option ng-value="status.status_id" ng-repeat="status in status_of_project">{{ status.status}}</option>
             </select>
           </div> -->
-          <!-- <div class="col-xl-2">
+                    <!-- <div class="col-xl-2">
               <button class="btn btn-info text-uppercase" ng-click="apply_filter(filter_department, filter_status)">apply</button>
             </div> -->
-          <!-- <div class="col-xl-2" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
+                    <!-- <div class="col-xl-2" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
             <button class="btn btn-info text-uppercase" ng-click="clear_filter()">clear</button>
           </div> -->
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div class="col">
-      <legend></legend>
-      <div class="card shadow">
-        <h5 class="card-title display-4 text-primary text-center float-center" ng-if="!projects">
-          <br />
-          No Project Available
-        </h5>
+        <div class="col">
+            <legend></legend>
+            <div class="card shadow">
+                <h5 class="card-title display-4 text-primary text-center float-center" ng-if="!projects">
+                    <br /> No Project Available
+                </h5>
 
-        <div class="table-responsive" ng-if="projects">
-          <!-- <form ng-submit="downloadExcelSheet()" ng-show="user_info.is_dept_head == '1' ">
+                <div class="table-responsive" ng-if="projects">
+                    <!-- <form ng-submit="downloadExcelSheet()" ng-show="user_info.is_dept_head == '1' ">
             <div class="col-4 text-left" >
               
               <input type="number" hidden class="form-control" id="dept_id" ng-value="" ng-model="dept_id">
               <button ng-click = downloadExcel() class="btn btn-sm btn-primary">last Update</button> -->
-              <!-- <a href="#!">Save Changes</a> -->
-            <!-- </div>
+                    <!-- <a href="#!">Save Changes</a> -->
+                    <!-- </div>
           </form> -->
-          <legend></legend>
+                    <legend></legend>
 
-          <table class="table align-items-center table-flush" id="statusTable">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">Project ID</th>
-                <th scope="col">Description</th>
-                <th scope="col">Start</th>
-                <th scope="col">End</th>
-                <th scope="col">No of tasks</th>
-                <th scope="col">No of overdue tasks</th>
-                <th scope="col">Client</th>
-                <th scope="col">Owner</th>
-                <th scope="col">Version</th>
-                <th scope="col">Hash tag</th>
-                <th scope="col">File</th>
-                <th scope="col">Status</th>
-                <th scope="col">Age(days)</th>
-                <th scope="col">Completion</th>
-                <th scope="col">Completion date</th>
-                <th scope="col">Department</th>
-                
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="project in projects | filter:{ 'department_id':tableSearch_by_department_id,
+                    <table class="table align-items-center table-flush" id="statusTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Project ID</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Start</th>
+                                <th scope="col">End</th>
+                                <th scope="col">No of tasks</th>
+                                <th scope="col">No of overdue tasks</th>
+                                <th scope="col">Client</th>
+                                <th scope="col">Owner</th>
+                                <th scope="col">Version</th>
+                                <th scope="col">Hash tag</th>
+                                <th scope="col">File</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Age(days)</th>
+                                <th scope="col">Completion</th>
+                                <th scope="col">Completion date</th>
+                                <th scope="col">Department</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="project in projects | filter:{ 'department_id':tableSearch_by_department_id,
                 'status_id':tableSearch_by_status_id} | filter: tableSearch">
-                <th scope="row">
-                  <div class="media align-items-center">
-                    <a href="http://10.203.14.195:84/project_tracker/project/{{ project.project_id }}">PROJ-0000{{project.project_id}}
+                                <th scope="row">
+                                    <div class="media align-items-center">
+                                        <a href="http://10.203.14.195:84/project_tracker/project/{{ project.project_id }}">PROJ-0000{{project.project_id}}
                     </a>
-                    <!-- PROJ-0000{{project.project_id}} -->
-                  </div>
-                </th>
-                <td style="max-width: 300px;">
-                  <div class="col-12 text-truncate" data-toggle="tooltip" data-placement="top"
-                    title="{{ project.name }}">
-                    {{ project.name }}
-                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
-                  </div>
-                </td>
-                <td>
-                  {{ project.start_date | date: mediumDate}}
-                </td>
-                <td>
-                  {{ project.end_date | date: mediumDate}}
-                </td>
-                <td>
-                  {{ project.no_of_tasks }}
-                </td>
-                <td>
-                  {{ project.no_of_overdue_tasks }}
-                </td>
-                <td>
-                  {{ project.client}}
-                </td>
-                <td>
-                  {{ project.owner }}
-                </td>
-                <td>
-                  {{ project.version }} &nbsp;
-                  <a class="badge badge-success">{{ project.tasks.length }}</a>
-                </td>
-                <td style="max-width: 300px;">
-                  <div class="col-12 text-truncate" data-toggle="tooltip" data-placement="top"
-                    title="{{ project.hash_tag }}">
-                    {{ project.hash_tag }}
-                    <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
-                  </div>
-                </td>
-                
-                <td>
-                  <strong ng-if="project.attach ==''">
+                                        <!-- PROJ-0000{{project.project_id}} -->
+                                    </div>
+                                </th>
+                                <td style="max-width: 300px;">
+                                    <div class="col-12 text-truncate" data-toggle="tooltip" data-placement="top" title="{{ project.name }}">
+                                        {{ project.name }}
+                                        <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ project.start_date | date: mediumDate}}
+                                </td>
+                                <td>
+                                    {{ project.end_date | date: mediumDate}}
+                                </td>
+                                <td>
+                                    {{ project.no_of_tasks }}
+                                </td>
+                                <td>
+                                    {{ project.no_of_overdue_tasks }}
+                                </td>
+                                <td>
+                                    {{ project.client}}
+                                </td>
+                                <td>
+                                    {{ project.owner }}
+                                </td>
+                                <td>
+                                    {{ project.version }} &nbsp;
+                                    <a class="badge badge-success">{{ project.tasks.length }}</a>
+                                </td>
+                                <td style="max-width: 300px;">
+                                    <div class="col-12 text-truncate" data-toggle="tooltip" data-placement="top" title="{{ project.hash_tag }}">
+                                        {{ project.hash_tag }}
+                                        <!-- <a href="project/{{project.project_id}}" >{{project.name}}</a> -->
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <strong ng-if="project.attach ==''">
                     no file attached.
                   </strong>
-                  <strong ng-if="project.attach !==''">
+                                    <strong ng-if="project.attach !==''">
                     &nbsp; &nbsp; <i title="download" class="ni ni-cloud-download-95 text-blue text-truncate" id=""></i>
                     <a ng-href="{{myConfig_file_url}}{{project.attach}}" target="_blank" download>
                       {{ project.attach }}
                     </a>
-                  </strong>  
-                </td>
-                
-                <td>
-                  <span class="badge badge-default"
-                    ng-if="project.status_desc == 'drafts'">{{ project.status_desc }}</span>
-                  <span class="badge badge-warning"
-                    ng-if="project.status_desc == 'unapproved'">{{ project.status_desc }}</span>
-                  <span class="badge badge-primary"
-                    ng-if="project.status_desc == 'approved'">{{ project.status_desc }}</span>
-                  <span class="badge badge-secondary"
-                    ng-if="project.status == 'scheduled'">{{ project.status_desc }}</span>
-                  <span class="badge badge-info"
-                    ng-if="project.status_desc == 'work in progress'">{{ project.status_desc }}</span>
-                  <span class="badge badge-success"
-                    ng-if="project.status_desc == 'completed'">{{ project.status_desc }}</span>
-                    <span class="badge badge-danger"
-                    ng-if="project.status_desc == 'overdue'">{{ project.status_desc }}</span>
-                </td>
+                  </strong>
+                                </td>
 
-                
+                                <td>
+                                    <span class="badge badge-default" ng-if="project.status_desc == 'drafts'">{{ project.status_desc }}</span>
+                                    <span class="badge badge-warning" ng-if="project.status_desc == 'unapproved'">{{ project.status_desc }}</span>
+                                    <span class="badge badge-primary" ng-if="project.status_desc == 'approved'">{{ project.status_desc }}</span>
+                                    <span class="badge badge-secondary" ng-if="project.status == 'scheduled'">{{ project.status_desc }}</span>
+                                    <span class="badge badge-info" ng-if="project.status_desc == 'work in progress'">{{ project.status_desc }}</span>
+                                    <span class="badge badge-success" ng-if="project.status_desc == 'completed'">{{ project.status_desc }}</span>
+                                    <span class="badge badge-danger" ng-if="project.status_desc == 'overdue'">{{ project.status_desc }}</span>
+                                </td>
 
-                <td>
-                  {{ project.age }}
-                </td>
-                <td>
-                  <div class="d-flex align-items-center" ng-if="project.completion == null">
-                    <span class="mr-2">0 %</span>
-                  </div>
-                  <div class="d-flex align-items-center" ng-if="project.completion != null">
-                    <span class="mr-2">{{ project.completion | number }} %</span>
-                  </div>
-                </td>
-                <td>
-                  {{ project.date_of_completion | date: mediumDate}}
-                </td>
-                <td>
-                  <span class="text-camelcase"></span>
-                  {{ project.department }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="modal fade" id="modal-search" tabindex="-1" role="dialog" aria-labelledby="modal-add-codex" aria-hidden="true">
-    <div class="modal-dialog modal- modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
 
-        <div class="modal-body p-0">
-            <div class="card bg-secondary shadow border-0">
-
-            <div class="card-body px-lg-5 py-lg-4">
-                <div class=" text-muted ">
-                <legend></legend>
-
-                <span class="text-primary"> Filter by date</span>
-
-                <hr>
-
+                                <td>
+                                    {{ project.age }}
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center" ng-if="project.completion == null">
+                                        <span class="mr-2">0 %</span>
+                                    </div>
+                                    <div class="d-flex align-items-center" ng-if="project.completion != null">
+                                        <span class="mr-2">{{ project.completion | number }} %</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ project.date_of_completion | date: mediumDate}}
+                                </td>
+                                <td>
+                                    <span class="text-camelcase"></span> {{ project.department }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="col-md-12 form-group mb-3">
-                  <label for="inputPassword" class="col-form-label text-primary">Start Date</label>
-                        <input class="form-control" type="date" placeholder="dd-mm-yyyy" ng-model="start_date_" id="start_date" />
-                  <label for="inputPassword" class="col-form-label text-primary">End Date</label>
-                        <input class="form-control" type="date" placeholder="dd-mm-yyyy" ng-model="end_date_" id="end_date" />
-                
-                  <label for="inputPassword" class="col-form-label text-primary">Developer</label>        
-                      <select id="s_developer" class="form-control">
+    <div class="modal fade" id="modal-search" tabindex="-1" role="dialog" aria-labelledby="modal-add-codex" aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-md" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body p-0">
+                    <div class="card bg-secondary shadow border-0">
+
+                        <div class="card-body px-lg-5 py-lg-4">
+                            <div class=" text-muted ">
+                                <legend></legend>
+
+                                <span class="text-primary"> Filter by date</span>
+
+                                <hr>
+
+                            </div>
+
+                            <div class="col-md-12 form-group mb-3">
+                                <label for="inputPassword" class="col-form-label text-primary">Start Date</label>
+                                <input class="form-control" type="date" placeholder="dd-mm-yyyy" ng-model="start_date_" id="start_date" />
+                                <label for="inputPassword" class="col-form-label text-primary">End Date</label>
+                                <input class="form-control" type="date" placeholder="dd-mm-yyyy" ng-model="end_date_" id="end_date" />
+
+                                <label for="inputPassword" class="col-form-label text-primary">Developer</label>
+                                <select id="s_developer" class="form-control">
                         <option value="">-- Filter by Developer --</option>
                         <option value="0">-- All Developers --</option>
                         <option ng-repeat="dev in all_developers" ng-model="user_id_" ng-value="dev.user_id" ng-hide="dev.user_id == '1'" >
                           {{dev.f_name}} {{dev.l_name}} </option>
                       </select>
-                </div>
-                <div class="col-md-12 form-group mb-3">
-                  <label for="inputPassword" class="col-form-label text-primary">Status</label>
-                  <!-- <input class="form-control" type="text" /> -->
-                  <select class="form-control text-uppercase" id="statusS">
+                            </div>
+                            <div class="col-md-12 form-group mb-3">
+                                <label for="inputPassword" class="col-form-label text-primary">Status</label>
+                                <!-- <input class="form-control" type="text" /> -->
+                                <select class="form-control text-uppercase" id="statusS">
                     <option value="0">--Select project status--</option>
                     <!-- <option value="0">--Filter by Department--</option> -->
                     <option ng-value="status.code_desc_id" class="text-uppercase" ng-repeat="status in pstatus">{{status.code_desc}}</option>
@@ -420,101 +408,109 @@
                     <option>COMPLETED</option>
                     <option>OVERDUE</option> -->
                   </select>
-                </div>
+                            </div>
 
-                <div class="col-md-12 form-group mb-3">
-                  <label for="inputPassword" class="col-form-label text-primary">Clients</label>
-                  <!-- <input class="form-control" type="text" /> -->
-                  <select class="form-control" required id="client">
+                            <div class="col-md-12 form-group mb-3">
+                                <label for="inputPassword" class="col-form-label text-primary">Clients</label>
+                                <!-- <input class="form-control" type="text" /> -->
+                                <select class="form-control" required id="client">
                     <option value="">Select client</option>
                     <option ng-repeat="client in all_clients" ng-value="client.client_id">
                         {{client.name}}
                     </option>
                 </select>
+                            </div>
+                            <div class="col-md-12 form-group mb-3">
+                                <label for="inputPassword" class="col-form-label text-primary">Hash tag</label>
+                                <input class="form-control" type="text" placeholder="enter # tag value" />
+                                <!-- <select class="form-control" required id="client">
+                                    <option value="">Select client</option>
+                                    <option ng-repeat="client in all_clients" ng-value="client.client_id">
+                                        {{client.name}}
+                                    </option>
+                                </select> -->
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <button type="submit" ng-click="get_by_date_range_and_status()" class="btn btn-danger btn-sm float-right mr-4">Search
+                </button> &nbsp;&nbsp;
+                                <button type="button" class="btn btn-secondary btn-sm float-right " data-dismiss="modal">Close </button>
+
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
-                
-                <div class="modal-footer">
-
-                <button type="submit" ng-click="get_by_date_range_and_status()" class="btn btn-danger btn-sm float-right mr-4">Search
-                </button>
-                &nbsp;&nbsp;<button type="button" class="btn btn-secondary btn-sm float-right "
-                    data-dismiss="modal">Close </button>
-
-                </div>
-            </div>
 
 
             </div>
-        </div>
-
-
         </div>
     </div>
-  </div>
 </div>
 
 
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />   -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" />  
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>  
-<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>  
-<script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>  
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
 <script src="https://code.angularjs.org/1.3.0/angular.js"></script>
 
 <script>
-  // angular.element(document).ready(function() {  
-  //     dTable = $('#statusTable');
-  //     dTable.DataTable();  
-  //   });  
-  $(document).ready(function () {
+    // angular.element(document).ready(function() {  
+    //     dTable = $('#statusTable');
+    //     dTable.DataTable();  
+    //   });  
+    $(document).ready(function() {
 
-    // $("#statusTable").DataTable();
-    
-    dTable = $('#statusTable').DataTable();
-    // dTable.DataTable();
+        // $("#statusTable").DataTable();
 
-    $("#btnExport").click(function (e) {
+        dTable = $('#statusTable').DataTable();
+        // dTable.DataTable();
 
-      var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
-      var textRange; var j=0;
-      tab = document.getElementById('statusTable'); // id of table
+        $("#btnExport").click(function(e) {
 
-      for(j = 0 ; j < tab.rows.length ; j++)
-      {
-          tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
-          //tab_text=tab_text+"</tr>";
-      }
+            var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+            var textRange;
+            var j = 0;
+            tab = document.getElementById('statusTable'); // id of table
 
-      tab_text=tab_text+"</table>";
-      tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-      tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
-      tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+            for (j = 0; j < tab.rows.length; j++) {
+                tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+                //tab_text=tab_text+"</tr>";
+            }
 
-      var ua = window.navigator.userAgent;
-      var msie = ua.indexOf("MSIE ");
+            tab_text = tab_text + "</table>";
+            tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, ""); //remove if u want links in your table
+            tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+            tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
 
-      if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
-      {
-          txtArea1.document.open("txt/html","replace");
-          txtArea1.document.write(tab_text);
-          txtArea1.document.close();
-          txtArea1.focus();
-          sa=txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
-      }
-      else                 //other browser not tested on IE 11
-          sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) // If Internet Explorer
+            {
+                txtArea1.document.open("txt/html", "replace");
+                txtArea1.document.write(tab_text);
+                txtArea1.document.close();
+                txtArea1.focus();
+                sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+            } else //other browser not tested on IE 11
+                sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+        });
+        // var table = $('#data_table').DataTable({
+        //   lengthChange: false,
+        //   buttons: ['copy', 'excel', 'pdf', 'colvis']
+        // });
+
+        // table.buttons().container()
+        //   .appendTo('#example_wrapper .col-md-6:eq(0)');
     });
-    // var table = $('#data_table').DataTable({
-    //   lengthChange: false,
-    //   buttons: ['copy', 'excel', 'pdf', 'colvis']
+
+    // $(document).ready(function () {
+
     // });
-
-    // table.buttons().container()
-    //   .appendTo('#example_wrapper .col-md-6:eq(0)');
-  });
-
-  // $(document).ready(function () {
-    
-  // });
 </script>
 </div>

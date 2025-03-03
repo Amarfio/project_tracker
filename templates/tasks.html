@@ -157,7 +157,7 @@
                           Add Task
                       </a>
 
-                        <a class="dropdown-item text-uppercase" ng-href="edit_project/{{project.project_id}}" ng-if="user_info.role == 'assigner' || ( user_info.is_dept_head == '1' && user_info.department_id == project.department_id) || project.is_approved == 0">
+                        <a class="dropdown-item text-uppercase" ng-href="edit_project/{{project.project_id}}" ng-if="user_info.role == 'assigner' || user_info.role =='admin' || ( user_info.is_dept_head == '1' && user_info.department_id == project.department_id) || project.is_approved == 0">
                           Edit Project
                       </a>
 
@@ -560,6 +560,7 @@
                 <td>
                   <!-- <span class="badge badge-default" ng-if="task.status == 'unapproved'">{{ task.status }}</span> -->
                   <span class="badge badge-warning" ng-if="task.status == 'suspended'">{{ task.status }}</span>
+                  <span class="badge badge-warning" ng-if="task.status == 'cancelled'">{{ task.status }}</span>
                   <!-- <span class="badge badge-success" ng-if="task.status == 'approved'">{{ task.status }}</span> -->
                   <span class="badge badge-default" ng-if="task.status == 'not started'">{{ task.status }}</span>
                   <span class="badge badge-success" ng-if="task.status == 'in progress'">{{ task.status }}</span>

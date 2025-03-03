@@ -9,16 +9,17 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 
-require_once 'connect.php'; 
+require_once 'connect.php';
 require_once 'functions/get_IP_Location.php';
 require_once 'functions/activity_logs.php';
 
 $data = json_decode(file_get_contents("php://input"));
-if(
+if (
     isset($data) && isset($data->version_no) && isset($data->project_name) && isset($data->user_id) &&
-    isset($data->start_date) && isset($data->end_date)  && isset($data->project_id) 
-){
-    // echo json_encode($data);
+    isset($data->start_date) && isset($data->end_date)  && isset($data->project_id)
+) {
+    // echo json_encode($data->interested_person);
+    // die();
 
     $project_id = mysqli_real_escape_string($conn, $data->project_id);
     $version_no = mysqli_real_escape_string($conn, $data->version_no);
@@ -30,11 +31,12 @@ if(
     $end_date = mysqli_real_escape_string($conn, $data->end_date);
     $project_owner = mysqli_real_escape_string($conn, $data->project_owner);
     $hash_tag = mysqli_real_escape_string($conn, $data->hash_tag);
+    $interested_person = mysqli_real_escape_string($conn, $data->interested_person);
     $sec_owner = mysqli_real_escape_string($conn, $data->secondary_owner);
     // $location = mysqli_real_escape_string($conn, $data->location); 
     $start_date = date("Y-m-d", strtotime($start_date));
     $end_date = date("Y-m-d", strtotime($end_date));
-    
+
     $ip_address = 'DF45-123E-34E-24';
     $location = 'Accra Ghana';
 
@@ -57,12 +59,12 @@ if(
     //         $txt = 'New Project has been created :  http://192.168.1.78/project_tracker/login';
     //         $headers = "From: ampahkwabena55@gmail.com" . "\r\n" . "CC: " .  implode (", ", $email_arr);
 
-           
+
 
     //        if( mail($to,$subject,$txt,$headers)){
     //             return true;
     //        }
-           
+
     //     } else {
     //         echo 'no date exit';
     //     }
@@ -70,9 +72,9 @@ if(
     // }
 
 
-    $query = "UPDATE `projects` SET `name` = '$name', `version_no`= '$version_no',`description` = '$description', `dept_id` = '$dept_id', `start_date` = '$start_date', `end_date` = '$end_date', `owner` = '$project_owner', `s_owner` = '$sec_owner', `hash_tag` = '$hash_tag'  WHERE `projects`.`project_id` = '$project_id'";
+    $query = "UPDATE `projects` SET `name` = '$name', `version_no`= '$version_no',`description` = '$description', `dept_id` = '$dept_id', `start_date` = '$start_date', `end_date` = '$end_date', `owner` = '$project_owner', `s_owner` = '$sec_owner', `hash_tag` = '$hash_tag', `i_person`='$interested_person'  WHERE `projects`.`project_id` = '$project_id'";
 
-    
+
     $result = mysqli_query($conn, $query);
 
     if ($result == 1) {
@@ -80,7 +82,7 @@ if(
 
         $message = json_encode(
             array(
-                'message' =>'project created successfully',
+                'message' => 'project created successfully',
                 'status' => 'success',
                 'data' => [
                     'project_id' => $project_id,
@@ -93,39 +95,39 @@ if(
                 'project_id' => $project_id
             )
         );
-                           
-            // LOG ACTIVITY
-                    
-            $user =  $user_id;
-            $activity =  ' tried to modify a project PROJ-0000' . $project_id. ' | Details: ' . $message;
-            $status = 'success';
-            log_activity($conn, $user, $activity, $status, getSecurity());
 
-            // END LOG ACTIVITY
-            
-        
+        // LOG ACTIVITY
 
-         exit($message);
+        $user =  $user_id;
+        $activity =  ' tried to modify a project PROJ-0000' . $project_id . ' | Details: ' . $message;
+        $status = 'success';
+        log_activity($conn, $user, $activity, $status, getSecurity());
+
+        // END LOG ACTIVITY
+
+
+
+        exit($message);
 
         //  echo get_all_approval_users($conn);
 
         //  if (get_all_approval_users($conn)) {
         //    exit($message);
         // }
-        
+
 
     } else {
-        
-                   
-            // LOG ACTIVITY
-                    
-            $user =  $user_id;
-            $activity =  ' tried to modify a project PROJ-0000' . $project_id;
-            $status = 'failed';
-            log_activity($conn, $user, $activity, $status, getSecurity());
 
-            // END LOG ACTIVITY
-         
+
+        // LOG ACTIVITY
+
+        $user =  $user_id;
+        $activity =  ' tried to modify a project PROJ-0000' . $project_id;
+        $status = 'failed';
+        log_activity($conn, $user, $activity, $status, getSecurity());
+
+        // END LOG ACTIVITY
+
         $message = json_encode(
             array(
                 'message' => 'Failed to update project',
@@ -133,10 +135,8 @@ if(
             )
         );
         exit($message);
-
     }
-
-}else{
+} else {
 
     $message = json_encode(
         array(
@@ -145,7 +145,4 @@ if(
         )
     );
     exit($message);
-
 }
-
-

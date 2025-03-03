@@ -1,400 +1,402 @@
-sheetApp.controller("EditProjectCtrl", function (
-  $scope,
-  $http,
-  $routeParams,
-  $timeout,
-  check_auth,
-  myConfig,
-  get_services,
-  $location,
-  $localStorage,
-  dataService
+sheetApp.controller("EditProjectCtrl", function(
+    $scope,
+    $http,
+    $routeParams,
+    $timeout,
+    check_auth,
+    myConfig,
+    get_services,
+    $location,
+    $localStorage,
+    dataService
 ) {
-  check_auth.verify_auth($localStorage.user_info);
-  console.log($localStorage.user_info.data);
-  $scope.user_info = $localStorage.user_info.data;
-  $scope.user_id = $localStorage.user_info.data["user_id"];
-  $scope.all_departments = get_services.get_departments("dpt");
+    check_auth.verify_auth($localStorage.user_info);
+    console.log($localStorage.user_info.data);
+    $scope.user_info = $localStorage.user_info.data;
+    $scope.user_id = $localStorage.user_info.data["user_id"];
+    $scope.all_departments = get_services.get_departments("dpt");
 
-  // PROFILE PHOTO
-  $scope.profile_pic_true = $localStorage.profile_pic
-  $scope.profile_pic = myConfig.file_url + $scope.profile_pic_true
-  console.log($scope.profile_pic)
+    // PROFILE PHOTO
+    $scope.profile_pic_true = $localStorage.profile_pic
+    $scope.profile_pic = myConfig.file_url + $scope.profile_pic_true
+    console.log($scope.profile_pic)
 
 
-  $scope.project_id = $routeParams.project_id
+    $scope.project_id = $routeParams.project_id
 
-  //logout funtion
-  $scope.logout = function () {
-    check_auth.logout($scope.user_info.user_id);
-  };
-  // end logout function
-
-  $scope.get_one_project = function () {
-    $http({
-      method: "GET",
-      url: myConfig.url + "/getOneProject.php?project_id=" + $scope.project_id
-    }).then(function successCallback(response) {
-      $scope.project = response.data['data'][0];
-      //   $scope.project = response;
-      console.log($scope.project);
-    });
-  }
-
-  $scope.get_one_project()
-
-  // console.log($scope.all_departments)
-
-  // $scope.get_departments = function (code_desc, file){
-  //     // console.log(code_desc, file)
-  //     // $scope.departments = get_services.get_one_code_description(code_desc, file)
-  //     console.log(get_services.get_one_code_description(code_desc, file))
-  // }
-  // $scope.get_departments('dpt', '/getCodeDescription.php?init=')
-
-  $scope.get_versions = function (ver) {
-    $http({
-      method: "GET",
-      url: myConfig.url + "/getCodeDescription.php?init=" + ver
-    }).then(
-      function successCallback(response) {
-        $scope.versions = response.data[0].code_desc;
-        console.log($scope.versions);
-      },
-      function errorCallback(response) {
-        alert("Error. Try Again!");
-      }
-    );
-  };
-  $scope.get_versions("ver");
-
-  $scope.get_departments = function (dpt) {
-    $http({
-      method: "GET",
-      url: myConfig.url + "/getCodeDescription.php?init=" + dpt
-    }).then(
-      function successCallback(response) {
-        $scope.departments = response.data[0].code_desc;
-        console.log($scope.departments);
-      },
-      function errorCallback(response) {
-        // alert("Error. Try Again!");
-      }
-    );
-  };
-  $scope.get_departments("dpt");
-
-  $scope.get_all_users = function (department_id) {
-    // console.log('Department_id = ' + department_id) 
-    $http({
-        method: 'GET',
-        url: myConfig.url + '/getAllUsers.php'
-
-    }).then(function successCallback(response) {
-
-        $scope.all_users = response.data;
-        console.log($scope.all_users)
-
-    }, function errorCallback(response) {
-        Swal.fire({
-            type: 'warning',
-            title: 'Network Connection Erro',
-            text: 'Users Could not loaded'
-        })
-
-    });
-  }
-$scope.get_all_users($scope.url_department_id)
-
-  $scope.UpdateProject = function (
-    project_name_,
-    version_no_,
-    department_id_,
-    start_date_,
-    end_date_,
-    project_owner_,
-    project_description_,
-    hash_tag,
-    s_owner_
-  ) {
-
-    var project_name = $('#project_name').val();
-    // var version_no = $('#project_version_no').val();
-    // var department_id = $('#project_department_id').val();
-    var start_date = $('#project_start_date').val();
-    var end_date = $('#project_end_date').val();
-    var project_description = $('#project_description').val();
-    // var project_owner = $("#project_owner_").val();
-    // console.log(project_owner);
-
-    //get the select value for version_no
-    if(version_no_ =='' || version_no_==undefined){
-      var version_no_ = $scope.project.version_no;
-      console.log(version_no_);
-    }
-
-    //get the selected value for department_id_
-    if( department_id_ =='' || department_id_ ==undefined){
-      var department_id_ = $scope.project.department_id;
-      console.log(department_id_);
-    }
-
-    //get the owner of the project
-    if( project_owner_ =='' || project_owner_ == undefined){
-      var project_owner_ = $scope.project.owner_id;
-      console.log(project_owner_);
-    }
-
-    console.log(department_id_);
-    console.log(project_owner_);
-    var data = {
-      project_id: $scope.project_id,
-      project_name: project_name,
-      version_no: version_no_,
-      project_description: project_description,
-      project_owner: project_owner_,
-      dept_id: department_id_,
-      user_id: $scope.user_id,
-      hash_tag: hash_tag,
-      secondary_owner: s_owner_,
-      start_date: new Date(start_date),
-      end_date: new Date(end_date)
+    //logout funtion
+    $scope.logout = function() {
+        check_auth.logout($scope.user_info.user_id);
     };
+    // end logout function
 
-    // console.log(data);
-    // return false;
+    $scope.get_one_project = function() {
+        $http({
+            method: "GET",
+            url: myConfig.url + "/getOneProject.php?project_id=" + $scope.project_id
+        }).then(function successCallback(response) {
+            $scope.project = response.data['data'][0];
+            //   $scope.project = response;
+            console.log($scope.project);
+        });
+    }
 
+    $scope.get_one_project()
 
-    Swal.queue([{
-      title: "Updating a project ...  ",
-      // showLoaderOnConfirm: true,
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-      showLoaderOnConfirm: true
-    }]);
+    // console.log($scope.all_departments)
 
-    var sendRequest = function () {
-      //$http POST function
-      $http({
-        method: "POST",
-        url: myConfig.url + "/updateProject.php",
-        data: data
-      }).then(
-        function successCallback(response) {
-          var $res = response.data;
-          console.log($res.status);
+    // $scope.get_departments = function (code_desc, file){
+    //     // console.log(code_desc, file)
+    //     // $scope.departments = get_services.get_one_code_description(code_desc, file)
+    //     console.log(get_services.get_one_code_description(code_desc, file))
+    // }
+    // $scope.get_departments('dpt', '/getCodeDescription.php?init=')
 
-          setTimeout(function () {
-            if ($res.status == "success") {
-              Swal.fire({
-                type: "success",
-                title: "PROJ-0000" + $res.project_id,
-                text: $res.message
-              });
-              // // $('#add_project_form')[0].reset();
-
-              // //    Swal.fire($res.status, "success");
-
-              // $("#add_project_form")[0].reset();
-
-              $timeout(
-                window.location = "project/ " + $scope.project_id,
-                // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
-
-                2000
-              );
-            } else {
-              Swal.fire({
-                type: "error",
-                title: $res.status,
-                text: $res.message
-              });
+    $scope.get_versions = function(ver) {
+        $http({
+            method: "GET",
+            url: myConfig.url + "/getCodeDescription.php?init=" + ver
+        }).then(
+            function successCallback(response) {
+                $scope.versions = response.data[0].code_desc;
+                console.log($scope.versions);
+            },
+            function errorCallback(response) {
+                alert("Error. Try Again!");
             }
-          }, 4000);
-        },
-        function errorCallback(response) {
-          Swal.fire({
-            type: "warning",
-            title: "Sorry",
-            text: "Something went wrong"
-          });
+        );
+    };
+    $scope.get_versions("ver");
+
+    $scope.get_departments = function(dpt) {
+        $http({
+            method: "GET",
+            url: myConfig.url + "/getCodeDescription.php?init=" + dpt
+        }).then(
+            function successCallback(response) {
+                $scope.departments = response.data[0].code_desc;
+                console.log($scope.departments);
+            },
+            function errorCallback(response) {
+                // alert("Error. Try Again!");
+            }
+        );
+    };
+    $scope.get_departments("dpt");
+
+    $scope.get_all_users = function(department_id) {
+        // console.log('Department_id = ' + department_id) 
+        $http({
+            method: 'GET',
+            url: myConfig.url + '/getAllUsers.php'
+
+        }).then(function successCallback(response) {
+
+            $scope.all_users = response.data;
+            console.log($scope.all_users)
+
+        }, function errorCallback(response) {
+            Swal.fire({
+                type: 'warning',
+                title: 'Network Connection Erro',
+                text: 'Users Could not loaded'
+            })
+
+        });
+    }
+    $scope.get_all_users($scope.url_department_id)
+
+    $scope.UpdateProject = function(
+        project_name_,
+        version_no_,
+        department_id_,
+        start_date_,
+        end_date_,
+        project_owner_,
+        project_description_,
+        hash_tag,
+        s_owner_,
+        interested_person
+    ) {
+
+        var project_name = $('#project_name').val();
+        // var version_no = $('#project_version_no').val();
+        // var department_id = $('#project_department_id').val();
+        var start_date = $('#project_start_date').val();
+        var end_date = $('#project_end_date').val();
+        var project_description = $('#project_description').val();
+        // var project_owner = $("#project_owner_").val();
+        // console.log(project_owner);
+
+        //get the select value for version_no
+        if (version_no_ == '' || version_no_ == undefined) {
+            var version_no_ = $scope.project.version_no;
+            console.log(version_no_);
         }
-      );
+
+        //get the selected value for department_id_
+        if (department_id_ == '' || department_id_ == undefined) {
+            var department_id_ = $scope.project.department_id;
+            console.log(department_id_);
+        }
+
+        //get the owner of the project
+        if (project_owner_ == '' || project_owner_ == undefined) {
+            var project_owner_ = $scope.project.owner_id;
+            console.log(project_owner_);
+        }
+
+        console.log(department_id_);
+        console.log(project_owner_);
+        var data = {
+            project_id: $scope.project_id,
+            project_name: project_name,
+            version_no: version_no_,
+            project_description: project_description,
+            project_owner: project_owner_,
+            dept_id: department_id_,
+            user_id: $scope.user_id,
+            hash_tag: hash_tag,
+            secondary_owner: s_owner_,
+            start_date: new Date(start_date),
+            end_date: new Date(end_date),
+            interested_person: interested_person
+        };
+
+        // console.log(data);
+        // return false;
+
+
+        Swal.queue([{
+            title: "Updating a project ...  ",
+            // showLoaderOnConfirm: true,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            },
+            showLoaderOnConfirm: true
+        }]);
+
+        var sendRequest = function() {
+            //$http POST function
+            $http({
+                method: "POST",
+                url: myConfig.url + "/updateProject.php",
+                data: data
+            }).then(
+                function successCallback(response) {
+                    var $res = response.data;
+                    console.log($res.status);
+
+                    setTimeout(function() {
+                        if ($res.status == "success") {
+                            Swal.fire({
+                                type: "success",
+                                title: "PROJ-0000" + $res.project_id,
+                                text: $res.message
+                            });
+                            // // $('#add_project_form')[0].reset();
+
+                            // //    Swal.fire($res.status, "success");
+
+                            // $("#add_project_form")[0].reset();
+
+                            $timeout(
+                                window.location = "project/ " + $scope.project_id,
+                                // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
+
+                                2000
+                            );
+                        } else {
+                            Swal.fire({
+                                type: "error",
+                                title: $res.status,
+                                text: $res.message
+                            });
+                        }
+                    }, 4000);
+                },
+                function errorCallback(response) {
+                    Swal.fire({
+                        type: "warning",
+                        title: "Sorry",
+                        text: "Something went wrong"
+                    });
+                }
+            );
+        };
+
+        if (end_date < start_date) {
+            console.log("date can not be less");
+            Swal.fire({
+                type: "error",
+                title: "Invalid Date",
+                text: "End date can go behind start date"
+            });
+        } else {
+            sendRequest();
+        }
+
+
     };
 
-    if (end_date < start_date) {
-      console.log("date can not be less");
-      Swal.fire({
-        type: "error",
-        title: "Invalid Date",
-        text: "End date can go behind start date"
-      });
-    } else {
-      sendRequest();
-    }
+    //method to suspend project
+    $scope.suspend_project = function() {
 
-    
-  };
+        var comment = $('#comment_approve_or_reject').val();
 
-  //method to suspend project
-  $scope.suspend_project = function () {
+        if (comment == undefined || comment == '') {
+            // Swal.fire({
+            //     type: 'error',
+            //     title: 'hey',
+            //     text: 'Emptyp',
+            //     toast: true
+            // })
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            })
 
-    var comment = $('#comment_approve_or_reject').val();
+            Toast.fire({
+                type: 'error',
+                title: 'Comment can be empty'
+            })
 
-    if (comment == undefined || comment == '') {
-        // Swal.fire({
-        //     type: 'error',
-        //     title: 'hey',
-        //     text: 'Emptyp',
-        //     toast: true
-        // })
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        })
+        } else {
+            $('#modal-approve').hide();
+            Swal.queue([{
+                title: 'Send Comment ...  ',
+                // showLoaderOnConfirm: true,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+                showLoaderOnConfirm: true,
+            }])
 
-        Toast.fire({
-            type: 'error',
-            title: 'Comment can be empty'
-        })
+            $http({
+                method: 'GET',
+                url: myConfig.url + '/suspend_project.php?project_id=' + $scope.project_id + '&approvedBy=' + $scope.user_info.user_id + '&department_id=' + $scope.project.department_id + '&comment=' + comment
 
-    } else {
-        $('#modal-approve').hide();
-        Swal.queue([{
-            title: 'Send Comment ...  ',
-            // showLoaderOnConfirm: true,
-            onBeforeOpen: () => {
-                Swal.showLoading()
-            },
-            showLoaderOnConfirm: true,
-        }])
+            }).then(function successCallback(response) {
+                var $res = response.data
+                console.log(response.data)
+                if ($res.status == 'success') {
+                    Swal.fire({
+                        type: 'success',
+                        title: $res.message
+                    })
 
-        $http({
-            method: 'GET',
-            url: myConfig.url + '/suspend_project.php?project_id=' + $scope.project_id + '&approvedBy=' + $scope.user_info.user_id + '&department_id=' + $scope.project.department_id + '&comment=' + comment
+                    setTimeout(() => window.location.reload(), 2000)
+                    $scope.get_one_project()
+                }
+                if ($res.status == 'failed') {
+                    Swal.fire({
+                        type: 'error',
+                        title: $res.message
+                    })
 
-        }).then(function successCallback(response) {
-            var $res = response.data
-            console.log(response.data)
-            if ($res.status == 'success') {
-                Swal.fire({
-                    type: 'success',
-                    title: $res.message
-                })
+                    setTimeout(() => window.location.reload(), 2000)
+                    $scope.get_one_project()
+                }
 
-                setTimeout(()=> window.location.reload(), 2000)
-                $scope.get_one_project()
-            }
-            if ($res.status == 'failed') {
-                Swal.fire({
-                    type: 'error',
-                    title: $res.message
-                })
+            }, function errorCallback(response) {
 
-                setTimeout(()=> window.location.reload(), 2000)
-                $scope.get_one_project()
-            }
+                // alert("Error. Try Again!");
 
-        }, function errorCallback(response) {
+            });
 
-            // alert("Error. Try Again!");
-
-        });
+        }
 
     }
 
-  }
+    //method to archive project
+    $scope.archive_project = function(comment_project) {
 
-  //method to archive project
-  $scope.archive_project = function (comment_project) {
+        // var comment = $('#comment_project').val();
+        var comment = comment_project;
+        // console.log(comment);
+        // return false;
 
-    // var comment = $('#comment_project').val();
-    var comment = comment_project;
-    // console.log(comment);
-    // return false;
+        if (comment == undefined || comment == '') {
+            // Swal.fire({
+            //     type: 'error',
+            //     title: 'hey',
+            //     text: 'Emptyp',
+            //     toast: true
+            // })
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            })
 
-    if (comment == undefined || comment == '') {
-        // Swal.fire({
-        //     type: 'error',
-        //     title: 'hey',
-        //     text: 'Emptyp',
-        //     toast: true
-        // })
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        })
+            Toast.fire({
+                type: 'error',
+                title: 'Comment cannot be empty'
+            })
 
-        Toast.fire({
-            type: 'error',
-            title: 'Comment cannot be empty'
-        })
+        } else {
+            $('#modal-archive').hide();
+            Swal.queue([{
+                title: 'Send Comment ...  ',
+                // showLoaderOnConfirm: true,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+                showLoaderOnConfirm: true,
+            }])
 
-    } else {
-        $('#modal-archive').hide();
-        Swal.queue([{
-            title: 'Send Comment ...  ',
-            // showLoaderOnConfirm: true,
-            onBeforeOpen: () => {
-                Swal.showLoading()
-            },
-            showLoaderOnConfirm: true,
-        }])
+            $http({
+                method: 'GET',
+                url: myConfig.url + '/archive_project.php?project_id=' + $scope.project_id + '&approvedBy=' + $scope.user_info.user_id + '&department_id=' + $scope.project.department_id + '&comment=' + comment
 
-        $http({
-            method: 'GET',
-            url: myConfig.url + '/archive_project.php?project_id=' + $scope.project_id + '&approvedBy=' + $scope.user_info.user_id + '&department_id=' + $scope.project.department_id + '&comment=' + comment
+            }).then(function successCallback(response) {
+                var $res = response.data
+                console.log(response.data)
+                if ($res.status == 'success') {
+                    Swal.fire({
+                        type: 'success',
+                        title: $res.message
 
-        }).then(function successCallback(response) {
-            var $res = response.data
-            console.log(response.data)
-            if ($res.status == 'success') {
-                Swal.fire({
-                    type: 'success',
-                    title: $res.message
+                    })
+                    setTimeout(() => window.location.reload(), 2000)
 
-                })
-                setTimeout(()=> window.location.reload(), 2000)
-                
-                $scope.get_one_project()
-            }
-            if ($res.status == 'failed') {
-                Swal.fire({
-                    type: 'error',
-                    title: $res.message
+                    $scope.get_one_project()
+                }
+                if ($res.status == 'failed') {
+                    Swal.fire({
+                        type: 'error',
+                        title: $res.message
 
-                })
+                    })
 
-                setTimeout(()=> window.location.reload(), 2000)
-                $scope.get_one_project()
-            }
+                    setTimeout(() => window.location.reload(), 2000)
+                    $scope.get_one_project()
+                }
 
-        }, function errorCallback(response) {
+            }, function errorCallback(response) {
 
-            // alert("Error. Try Again!");
+                // alert("Error. Try Again!");
 
-        });
+            });
+
+        }
 
     }
 
-  }
+    //method to check for # tag value
+    $scope.checkForHashTag = function(str) {
+        return str.charAt(0) === '#';
+    }
 
-  //method to check for # tag value
-  $scope.checkForHashTag = function (str) {
-    return str.charAt(0) === '#';
-  }
+    // $scope.loadOnce = function (){
+    //   window.onload = function(){
+    //     //Reload the page once
+    //     location.reload();
+    //   }
+    // }
+    // $scope.loadOnce();
 
-  // $scope.loadOnce = function (){
-  //   window.onload = function(){
-  //     //Reload the page once
-  //     location.reload();
-  //   }
-  // }
-  // $scope.loadOnce();
-  
 });

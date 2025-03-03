@@ -95,7 +95,7 @@ if (isset($_GET['project_id'])) {
 
     // $query = "SELECT p.*, p.status status_id, co_sta.desc status_name, p.owner project_owner, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name, CONCAT(u_a.f_name, ' ', u_a.l_name) approved_by_name, CONCAT(u_p.f_name, ' ', u_p.l_name) posted_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by LEFT JOIN users u_a ON u_a.id = p.approved_by LEFT JOIN users u_p ON u_p.id = p.posted_by  WHERE project_id = '$project_id'";
 
-    $query = "SELECT p.*, p.status status_id, co_sta.desc status_name, p.owner owner_id, CONCAT(u_o.f_name, ' ', u_o.l_name) project_owner, CONCAT(u_s_o.f_name, ' ', u_s_o.l_name) s_owner, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name, CONCAT(u_a.f_name, ' ', u_a.l_name) approved_by_name, CONCAT(u_p.f_name, ' ', u_p.l_name) posted_by_name, cl.name as client_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by LEFT JOIN users u_a ON u_a.id = p.approved_by LEFT JOIN users u_p ON u_p.id = p.posted_by LEFT JOIN users u_o ON u_o.id = p.owner LEFT JOIN users u_s_o ON u_s_o.id = p.s_owner LEFT JOIN clients cl ON cl.client_id = p.client  WHERE project_id = '$project_id'";
+    $query = "SELECT * FROM vw_project_details WHERE project_id = '$project_id'";
     // echo($query);die();
     $result = mysqli_query($conn, $query);
     
@@ -128,7 +128,8 @@ if (isset($_GET['project_id'])) {
                 "owner_id" => $row['owner_id'],
                 "project_owner" => $row['project_owner'],
                 "sec_owner_id" => $row['s_owner_id'],
-                "sec_owner" => $row['s_owner'],
+                "sec_owner" => $row['s_own'],
+                "i_pern" => $row['i_pern'],
                 "department_id" => $row['dept_id'],
                 "department" => get_department_name($row['dept_id'], $conn), 
                 "comment" => $row['comment'],

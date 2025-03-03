@@ -12,13 +12,12 @@ function project_avg_percentage($project_id, $conn){
     $result = mysqli_query($conn, $query);
    $row = mysqli_fetch_array($result);
    return $row['project_average_completion'];
-
-
 }
 
 require_once 'connect.php';
 
-$query = "SELECT pro.*, co.id version_id, co.desc version, co_dept.id department_id, co_dept.desc department FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id ORDER BY pro.project_id DESC";
+// $query = "SELECT pro.*, co.id version_id, co.desc version, co_dept.id department_id, co_dept.desc department FROM projects pro LEFT JOIN code_desc co ON pro.version_no = co.id LEFT JOIN code_desc co_dept ON pro.dept_id = co_dept.id ORDER BY pro.project_id DESC";
+$query="SELECT * from vw_all_projects";
 
 $result = mysqli_query($conn, $query);
 
@@ -61,7 +60,10 @@ $projects_tasks= array();
 if ($num > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
         $projects_tasks[] =  array(
-            'project_id' => $row['project_id'],
+            'project_id' => "PROJ-0000".$row['project_id'],
+            'owner'=>$row['project_owner'],
+            'int_person'=>$row['int_person'],
+            "status"=>$row['status_desc'],
             "version_id"   => $row['version_id'],
             "version"   => $row['version'],
             "department_id"   => $row['department_id'],
@@ -70,6 +72,8 @@ if ($num > 0) {
             "name" => $row['name'],
             "start_date" => $row['start_date'],
             "end_date" => $row['end_date'],
+            "c_date" => $row['completed_date'],
+            "created_at" => $row['created_at'],
             "tasks" => get_all_tasks($row['project_id'], $conn)
         );
     }

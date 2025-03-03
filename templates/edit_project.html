@@ -9,25 +9,24 @@
         <div class="container-fluid">
             <!-- Brand -->
             <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" ng-href="project/{{ project_id }}">
-                <i class="fa fa-arrow-left 2x"></i>&nbsp;&nbsp; &nbsp;&nbsp;Return to
-                Projects</a>
+                <i class="fa fa-arrow-left 2x"></i>&nbsp;&nbsp; &nbsp;&nbsp;Return to Projects
+            </a>
             <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block">Modify Project</a>
 
             <!-- User -->
             <ul class="navbar-nav align-items-center d-none d-md-flex">
                 <li class="nav-item dropdown">
-                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
+                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="media align-items-center">
 
                             <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true == null">
                                 <span ng-if="user_info.gender == 'Male'">
                                     <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle">
                                 </span>
-                                <span ng-if="user_info.gender == 'Female'">
+                            <span ng-if="user_info.gender == 'Female'">
                                     <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle">
                                 </span>
-                                <!-- <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg"> -->
+                            <!-- <img alt="Image placeholder" src="./assets/img/theme/team-4-800x800.jpg"> -->
                             </span>
 
                             <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true != null">
@@ -36,8 +35,7 @@
 
 
                             <div class="media-body ml-2 d-none d-lg-block">
-                                <span
-                                    class="mb-0 text-sm  font-weight-bold text-uppercase">{{user_info.username}}</span>
+                                <span class="mb-0 text-sm  font-weight-bold text-uppercase">{{user_info.username}}</span>
                             </div>
                         </div>
                     </a>
@@ -87,15 +85,12 @@
                     <div class="card card-stats mb-4 mb-lg-0">
                         <div class="card-body">
 
-                            <form id="add_project_form"
-                                ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_owner_, project_description_, hash_tag, s_owner_)">
+                            <form id="add_project_form" ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_owner_, project_description_, hash_tag, s_owner_, interested_person)">
 
 
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" text-primary">Name</label>
-                                    <input type="text" class="form-control" id="project_name" maxlength="60"
-                                        placeholder="Project Name" ng-value="project.name" ng-model="project_name_"
-                                        required />
+                                    <input type="text" class="form-control" id="project_name" maxlength="60" placeholder="Project Name" ng-value="project.name" ng-model="project_name_" required />
                                 </div>
 
 
@@ -110,8 +105,7 @@
 
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Versions</label>
-                                    <select class="form-control" ng-model="version_no_"
-                                        id="project_version_no">
+                                    <select class="form-control" ng-model="version_no_" id="project_version_no">
                                         <option value="">{{project.version_name}}</option>
                                         <option ng-value="version.code_desc_id" ng-repeat="version in versions">
                                             {{ version.code_desc }}</option>
@@ -120,8 +114,7 @@
 
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Client</label>
-                                    <select class="form-control" ng-model="client_"
-                                        id="project_version_no">
+                                    <select class="form-control" ng-model="client_" id="project_version_no">
                                         <option value="">{{project.client}}</option>
                                         <option ng-value="version.code_desc_id" ng-repeat="version in versions">
                                             {{ version.code_desc }}</option>
@@ -131,8 +124,7 @@
 
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Department</label>
-                                    <select class="form-control" ng-model="department_id_"
-                                        id="project_department_id" ng-value="">
+                                    <select class="form-control" ng-model="department_id_" id="project_department_id" ng-value="">
                                         <option value="">{{project.department}}</option>
                                         <option ng-value="department.code_desc_id"
                                             ng-repeat="department in departments">
@@ -144,8 +136,7 @@
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Start
                                         Date</label>
-                                    <input class="form-control" id="project_start_date" ng-value="project.start_date"
-                                        type="date" ng-model="start_date_" />
+                                    <input class="form-control" id="project_start_date" ng-value="project.start_date" type="date" ng-model="start_date_" />
                                 </div>
 
 
@@ -154,23 +145,18 @@
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">End
                                         Date</label>
-                                    <input class="form-control" id="project_end_date" ng-value="project.end_date"
-                                        type="date" ng-model="end_date_" />
+                                    <input class="form-control" id="project_end_date" ng-value="project.end_date" type="date" ng-model="end_date_" />
                                 </div>
 
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Details</label>
-                                    <textarea class="form-control " id="project_description"
-                                        placeholder="Required example textarea" required ng-model="project_description_"
-                                        ng-value="project.description">
+                                    <textarea class="form-control " id="project_description" placeholder="Required example textarea" required ng-model="project_description_" ng-value="project.description">
                                     </textarea>
                                 </div>
 
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Hash tag value</label>
-                                    <textarea class="form-control " id="hash_tag"
-                                        placeholder="Required example textarea" required ng-model="hash_tag"
-                                        ng-value="project.hash_tag">
+                                    <textarea class="form-control " id="hash_tag" placeholder="Required example textarea" required ng-model="hash_tag" ng-value="project.hash_tag">
                                     </textarea>
                                 </div>
 
@@ -181,28 +167,37 @@
                                             placeholder="Upload Document" ng-value="project.attach" ng-click="get_file_input()">
                                     
                                 </div> -->
+                                <div class="col-sm-12">
+                                    <label for="inputPassword" class="col-form-label text-primary">Interested person</label>
+                                    <select class="form-control" ng-model="interested_person" id="interested_person" ng-value="">
+                                            <option value="">{{project.i_pern}}</option>
+                                            <option ng-value="user.user_id" ng-repeat="user in all_users" 
+                                                ng-hide="user.user_id == '1'">
+                                                {{user.f_name}} {{user.l_name}} </option>
+                                        </select>
+                                </div>
 
-                               <div class="col-sm-12">
+                                <div class="col-sm-12">
                                     <label for="inputPassword" class="col-form-label text-primary">Owner</label>
-                                        <select class="form-control" ng-model="project_owner_" id="project_owner_id"  ng-value="">
+                                    <select class="form-control" ng-model="project_owner_" id="project_owner_id" ng-value="">
                                             <option value="">{{project.project_owner}}</option>
                                             <option ng-value="user.user_id" ng-repeat="user in all_users" 
                                                 ng-hide="user.user_id == '1'">
                                                 {{user.f_name}} {{user.l_name}} </option>
                                         </select>
-                                </div> 
+                                </div>
 
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class="col-form-label text-primary">Secondary owner</label>
-                                        <select class="form-control" ng-model="s_owner_" id="sec_owner_id"  ng-value="">
+                                    <select class="form-control" ng-model="s_owner_" id="sec_owner_id" ng-value="">
                                             <option value="">{{project.sec_owner}}</option>
                                             <option ng-value="user.user_id" ng-repeat="user in all_users" 
                                                 ng-hide="user.user_id == '1'">
                                                 {{user.f_name}} {{user.l_name}} </option>
                                         </select>
-                                </div> 
+                                </div>
 
-                                
+
                                 <br>
                                 <div class="col-sm-12 row">
 
@@ -219,7 +214,7 @@
                                                 Archive
                                             </button>
                                         </a>
-                                        
+
                                     </div>
 
                                     <div class="col-sm-3">
@@ -228,9 +223,9 @@
                                                 Suspend
                                             </button>
                                         </a>
-                                        
+
                                     </div>
-                                    
+
                                     <div class="col-sm-3">
                                         <a ng-href="project/{{ project_id }}">
                                             <button type="button" class="btn btn-warning">
@@ -255,13 +250,15 @@
                             <h4>Department: &nbsp; <span class="text-primary"> {{ project.department }} </span></h4>
                             <h4>Start Date: &nbsp; <span class="text-primary"> {{ project.start_date }}</span></h4>
                             <h4>End Date: &nbsp; <span class="text-primary"> {{ project.end_date }}</span></h4>
-                            <h4>Project Document: &nbsp; <a ng-href="{{myConfig_file_url}}{{project.attach}}" target="_blank" download>
-                                <!-- <strong ng-if="project.attach != ''">
+                            <h4>Project Document: &nbsp;
+                                <a ng-href="{{myConfig_file_url}}{{project.attach}}" target="_blank" download>
+                                    <!-- <strong ng-if="project.attach != ''">
                                   &nbsp; &nbsp; <i class="fa fa-paperclip text-blue" id=""></i>
                                 </strong> -->
-                                {{ project.attach }}
-                              
-                                </a></h4>
+                                    {{ project.attach }}
+
+                                </a>
+                            </h4>
                         </p>
                     </div>
                 </div>
@@ -277,54 +274,51 @@
         <div class="modal-dialog modal- modal-dialog-centered modal-md" role="document">
             <div class="modal-content">
 
-            <div class="modal-body p-0">
-                <div class="card bg-secondary shadow border-0">
+                <div class="modal-body p-0">
+                    <div class="card bg-secondary shadow border-0">
 
-                <div class="card-body px-lg-5 py-lg-4">
-                    <div class=" text-muted ">
-                    <legend></legend>
+                        <div class="card-body px-lg-5 py-lg-4">
+                            <div class=" text-muted ">
+                                <legend></legend>
 
-                    <span class="text-primary"> Update project status </span>
+                                <span class="text-primary"> Update project status </span>
 
-                    <hr>
+                                <hr>
 
-                    </div>
+                            </div>
 
-                    <div class="col-md-12 form-group mb-3">
-                    <div class="input-group input-group-alternative">
+                            <div class="col-md-12 form-group mb-3">
+                                <div class="input-group input-group-alternative">
 
-                        <input class="form-control text-uppercase" placeholder="PRO-0000{{ project.project_id }}" type="text"
-                        disabled>
-                    </div>
-                    </div>
-                    <div class="col-md-12 form-group mb-3">
-                    <div class="input-group input-group-alternative">
+                                    <input class="form-control text-uppercase" placeholder="PRO-0000{{ project.project_id }}" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-12 form-group mb-3">
+                                <div class="input-group input-group-alternative">
 
-                        <input class="form-control text-uppercase" placeholder="{{ project.project_status}}" type="text"
-                        disabled>
-                    </div>
-                    </div>
-                    <div class="col-md-12 form-group mb-3">
-                    <label for="">Comment</label><br>
-                    <div class="input-group input-group-alternative">
+                                    <input class="form-control text-uppercase" placeholder="{{ project.project_status}}" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-12 form-group mb-3">
+                                <label for="">Comment</label><br>
+                                <div class="input-group input-group-alternative">
 
 
-                        <textarea class="form-control" rows="5" id="comment_approve_or_reject"></textarea>
-                    </div>
-                    </div>
-                    <div class="modal-footer">
+                                    <textarea class="form-control" rows="5" id="comment_approve_or_reject"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
 
-                    <button type="submit" ng-click="suspend_project()" class="btn btn-danger btn-sm float-right mr-4">Suspend
-                    </button>
-                    &nbsp;&nbsp;<button type="button" class="btn btn-secondary btn-sm float-right "
-                        data-dismiss="modal">Close </button>
+                                <button type="submit" ng-click="suspend_project()" class="btn btn-danger btn-sm float-right mr-4">Suspend
+                    </button> &nbsp;&nbsp;
+                                <button type="button" class="btn btn-secondary btn-sm float-right " data-dismiss="modal">Close </button>
+
+                            </div>
+                        </div>
+
 
                     </div>
                 </div>
-
-
-                </div>
-            </div>
 
 
             </div>
@@ -336,56 +330,53 @@
         <div class="modal-dialog modal- modal-dialog-centered modal-md" role="document">
             <div class="modal-content">
 
-            <form role="form" ng-submit="archive_project(comment_project)">
-                <div class="modal-body p-0">
-                    <div class="card bg-secondary shadow border-0">
+                <form role="form" ng-submit="archive_project(comment_project)">
+                    <div class="modal-body p-0">
+                        <div class="card bg-secondary shadow border-0">
 
-                    <div class="card-body px-lg-5 py-lg-4">
-                        <div class=" text-muted ">
-                        <legend></legend>
+                            <div class="card-body px-lg-5 py-lg-4">
+                                <div class=" text-muted ">
+                                    <legend></legend>
 
-                        <span class="text-primary"> Update project status </span>
+                                    <span class="text-primary"> Update project status </span>
 
-                        <hr>
+                                    <hr>
 
-                        </div>
+                                </div>
 
-                        <div class="col-md-12 form-group mb-3">
-                        <div class="input-group input-group-alternative">
+                                <div class="col-md-12 form-group mb-3">
+                                    <div class="input-group input-group-alternative">
 
-                            <input class="form-control text-uppercase" ng-model="project_id" placeholder="PRO-0000{{ project.project_id }}" type="text"
-                            disabled>
-                        </div>
-                        </div>
-                        <div class="col-md-12 form-group mb-3">
-                        <div class="input-group input-group-alternative">
+                                        <input class="form-control text-uppercase" ng-model="project_id" placeholder="PRO-0000{{ project.project_id }}" type="text" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 form-group mb-3">
+                                    <div class="input-group input-group-alternative">
 
-                            <input class="form-control text-uppercase" placeholder="{{ project.project_status}}" type="text"
-                            disabled>
-                        </div>
-                        </div>
-                        <div class="col-md-12 form-group mb-3">
-                        <label for="">Comment</label><br>
-                        <div class="input-group input-group-alternative">
+                                        <input class="form-control text-uppercase" placeholder="{{ project.project_status}}" type="text" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 form-group mb-3">
+                                    <label for="">Comment</label><br>
+                                    <div class="input-group input-group-alternative">
 
 
-                            <textarea class="form-control" rows="5" ng-model="comment_project" ></textarea>
-                        </div>
-                        </div>
-                        <div class="modal-footer">
+                                        <textarea class="form-control" rows="5" ng-model="comment_project"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
 
-                        <button type="submit" class="btn btn-danger btn-sm float-right mr-4">Archive
-                        </button>
-                        &nbsp;&nbsp;<button type="button" class="btn btn-secondary btn-sm float-right "
-                            data-dismiss="modal">Close </button>
+                                    <button type="submit" class="btn btn-danger btn-sm float-right mr-4">Archive
+                        </button> &nbsp;&nbsp;
+                                    <button type="button" class="btn btn-secondary btn-sm float-right " data-dismiss="modal">Close </button>
+
+                                </div>
+                            </div>
+
 
                         </div>
                     </div>
-
-
-                    </div>
-                </div>
-            </form>
+                </form>
 
             </div>
         </div>

@@ -22,6 +22,11 @@ require_once 'functions/usableFunctions.php';
         // echo "done updating the status to completed"+$result;
     }
 
+    //method 
+    function getTotal($firstValue, $secondValue){
+      return (int)$firstValue + (int)$secondValue;
+    }
+
     function project_avg_percentage($project_id, $conn){
 
         $query = "SELECT AVG(ALL t.completion) project_average_completion FROM tasks t WHERE (t.status <> 137) AND t.project_id = '$project_id'";
@@ -83,24 +88,62 @@ require_once 'functions/usableFunctions.php';
         return $task_arr;
     }
     
+    function get_projects_brought_forward_last_year($deptId, $conn){
+        $query = "SELECT * FROM vw_projects_brot_forward_last_year WHERE dept_id = '$deptId'";
+        // echo($query); die();
+        $result = mysqli_query($conn, $query);
+        if ($result && mysqli_num_rows($result) > 0) {
+          $row = mysqli_fetch_assoc($result); // Fetch the actual row data
+          return $row['projects_brought_forward_last_year'];
+      }
+  
+      return 0;
+    }
 
-if (isset($_GET['project_id'])) {
-    $project_id = mysqli_escape_string($conn, $_GET['project_id']);
+    function get_projects_brought_forward_last_month($deptId, $conn){
+        $query = " SELECT * FROM vw_projects_brot_forward_last_month WHERE dept_id = '$deptId'";
+        $result = mysqli_query($conn, $query);
+        if($result && mysqli_num_rows($result)> 0){
+          $row = mysqli_fetch_assoc($result); // Fetch the actual row data
+          return $row['projects_brought_forward_last_month'];
+        }
+        return 0;        
 
-    // $query = "SELECT p.*, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no WHERE project_id = '$project_id '";
+    }
 
+    function get_new_projets($deptId, $conn){
+      $query = " SELECT * FROM vw_new_projects WHERE dept_id = '$deptId'";
+      $result = mysqli_query($conn, $query);
+      if($result && mysqli_num_rows($result)> 0){
+        $row = mysqli_fetch_assoc($result); // Fetch the actual row data
+        return $row['new_projects_this_month'];
+      }
+      return 0;        
 
-    // $query = "SELECT p.*, p.status status_id, co_sta.desc status_name, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name, CONCAT(u_a.f_name, ' ', u_a.l_name) approved_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by LEFT JOIN users u_a ON u_a.id = p.approved_by  WHERE project_id = '$project_id'";
-    // $query = "SELECT p.*, p.status status_id, co_sta.desc status_name, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name, CONCAT(u_a.f_name, ' ', u_a.l_name) approved_by_name, CONCAT(u_p.f_name, ' ', u_p.l_name) posted_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by LEFT JOIN users u_a ON u_a.id = p.approved_by LEFT JOIN users u_p ON u_p.id = p.posted_by  WHERE project_id = '$project_id'";
+  }
 
-    // $query = "SELECT p.*, p.status status_id, co_sta.desc status_name, p.owner project_owner, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name, p.comment , p.comment_by comment_by_id, CONCAT(u.f_name, ' ', u.l_name) comment_by_name, CONCAT(u_a.f_name, ' ', u_a.l_name) approved_by_name, CONCAT(u_p.f_name, ' ', u_p.l_name) posted_by_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no LEFT JOIN code_desc co_sta ON co_sta.id = p.status LEFT JOIN users u ON u.id = p.comment_by LEFT JOIN users u_a ON u_a.id = p.approved_by LEFT JOIN users u_p ON u_p.id = p.posted_by  WHERE project_id = '$project_id'";
+    function get_projects_exceeded_target($deptId, $conn){
+      $query = " SELECT * FROM vw_projects_exceeded_targets_by_depts WHERE dept_id = '$deptId'";
+      $result = mysqli_query($conn, $query);
+      if($result && mysqli_num_rows($result)> 0){
+        $row = mysqli_fetch_assoc($result); // Fetch the actual row data
+        return $row['projects_exceeded_target'];
+      }
+      return 0; 
+    }
 
-    $query = "SELECT * FROM vw_project_details WHERE project_id = '$project_id'";
-    // echo($query);die();
+if (isset($_GET['deptId'])) {
+    $dept_id = mysqli_escape_string($conn, $_GET['deptId']);
+
+    $query = "SELECT * FROM vw_project_details";
+    
     $result = mysqli_query($conn, $query);
     
     $num = mysqli_num_rows($result); 
-    
+
+    // if deprt is set get the values for the statistics
+    // else
+    // get the all the departments and their corresponding statistics
 
     $projects_tasks= array();
     // $task_arr = array(
@@ -158,13 +201,60 @@ if (isset($_GET['project_id'])) {
         // echo json_encode($projects_tasks);
     } else {
             
-        $message = json_encode(
-            array(
-                'message' => 'Empty data',
-                'status' => 'success'
-            ) 
-        );
-        exit($message);
+      $message = json_encode(
+        array(
+            'message' => 'Great here are your data',
+            'status' => 'success',
+            'data' => $projects_tasks,
+            'project_avg_percentage' => project_avg_percentage($project_id, $conn)
+        )
+    );
+    exit($message);
+        
     }
     
+}else{
+        $query = "SELECT * FROM code_desc WHERE init = 'dpt' AND is_active = 1";
+        $result = mysqli_query($conn, $query);
+    
+        $num = mysqli_num_rows($result); 
+        $depts_array = array();
+
+        if ($num > 0) {
+          while ($row = mysqli_fetch_assoc($result)) {
+              $depts_array[] =  array(
+                  'dept_id' => $row['id'],
+                  "dept_name"   => $row['desc'],
+                  "brought_forward_by_year" => get_projects_brought_forward_last_year($row['id'], $conn),
+                  "new_projects" => get_new_projets($row['id'], $conn),
+                  "brought_forward_by_month"=>get_projects_brought_forward_last_month($row['id'], $conn),
+                  "projects_exceeded_target_dates"=>get_projects_exceeded_target($row['id'], $conn),
+                  "new_total"=> getTotal(get_projects_brought_forward_last_month($row['id'], $conn), get_new_projets($row['id'], $conn))
+              );
+          }
+      
+          
+          $message = json_encode(
+              array(
+                  'message' => 'Great here are your data',
+                  'status' => 'success',
+                  'data' => $depts_array,
+              )
+          );
+          exit($message);
+      
+          // echo json_encode($projects_tasks);
+      } else {
+              
+        $message = json_encode(
+          array(
+              'message' => 'Great here are your data',
+              'status' => 'success',
+              'data' => $projects_tasks,
+              'project_avg_percentage' => project_avg_percentage($project_id, $conn)
+          )
+      );
+      exit($message);
+          
+      }
 }

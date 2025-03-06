@@ -4,10 +4,10 @@ function checkForCompletionDate($conn, $projectId){
     $dateOfCompletion= "";
 
     if(checkPercentageOfProject($conn, $projectId)==100){
-        $query = "SELECT completion_date from projects WHERE  project_id = '$projectId'";
+        $query = "SELECT completed_date from projects WHERE  project_id = '$projectId'";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_array($result);
-        if($row['completion_date']== "" || $row['completion_date']==NULL){
+        if($row['completed_date']== "" || $row['completed_date']==NULL){
             $query = "SELECT created_at from tasks WHERE project_id = '$projectId' ORDER BY created_at DESC LIMIT 1";
             $result = mysqli_query($conn, $query);
             $row = mysqli_fetch_array($result);

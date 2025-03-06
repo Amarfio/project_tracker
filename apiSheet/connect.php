@@ -6,8 +6,9 @@
     // $db_name = 'cheat';
     // $db_name = 'union';
     $db_name = 'project_tracker_db';
+    $port = '3370';
 
-$conn = new mysqli($host, $user, $password, $db_name);
+$conn = new mysqli($host, $user, $password, $db_name, $port);
 
 // if ($conn) {
 //     echo json_encode(

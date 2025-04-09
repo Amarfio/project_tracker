@@ -111,7 +111,7 @@
               <form
                 id="add_task_form"
                 ng-submit="createTask(url_project_id, task_, priority_, developer_,
-                                    client_id_, start_date_, end_date_, risk_)"
+                                    client_id_, start_date_, end_date_, risk_, department_id_, dep_task)"
               >
                 <div class="form-group row">
                   <label
@@ -207,12 +207,12 @@
                 </div>
 
                 <div class="form-group row">
-                  <label
+                  <!--label
                     for="inputPassword"
                     class="col-sm-2 col-form-label text-primary"
-                    >Priority</label
+                    >Priority</!--label
                   >
-                  <div class="col-sm-4">
+                  <div-- class="col-sm-4">
                     <select class="form-control" required ng-model="priority_">
                       <option value="">-- Select Priority --</option>
                       <option
@@ -222,7 +222,7 @@
                         {{code.code_desc}}
                       </option>
                     </select>
-                  </div>
+                  </div-->
 
                   <label
                     for="inputPassword"
@@ -240,31 +240,51 @@
                       </option>
                     </select>
                   </div>
-                </div>
 
-                <div class="form-group row">
-                  <!-- <label for="inputPassword"
-                                            class="col-sm-2 col-form-label text-primary">Detail</label>
-                                        <div class="col-sm-4">
-                                            <input type="text" class="form-control" id="inputPassword"
-                                                placeholder="Detail Control" ng-model="detail_" required>
-                                        </div> -->
-
-                  <label for="" class="col-sm-2 col-form-label text-primary"
-                    >Client</label
+                  <label
+                    for="inputPassword"
+                    class="col-sm-2 col-form-label text-primary"
+                    >Dependent task</label
                   >
                   <div class="col-sm-4">
-                    <select class="form-control" required ng-model="client_id_">
-                      <option value="">-- Select Clients --</option>
+                    <select class="form-control" ng-model="dep_task">
+                      <option value="">-- Select task --</option>
                       <option
-                        ng-repeat="client in all_clients"
-                        ng-value="client.client_id"
+                        ng-repeat="task in all_tasks"
+                        ng-value="task.task_id"
                       >
-                        {{client.name}}
+                        {{task.description}}
                       </option>
                     </select>
                   </div>
+                </div>
 
+                <div class="form-group row">
+                  <label
+                    for="inputPassword"
+                    class="col-sm-2 col-form-label text-primary"
+                    >Department</label
+                  >
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="input-group input-group-alternative">
+                        <select
+                          class="form-control"
+                          required
+                          ng-model="department_id_"
+                          id="departmentElement"
+                        >
+                          <option value="">Select Department</option>
+                          <option
+                            ng-value="department.code_desc_id"
+                            ng-repeat="department in departments"
+                          >
+                            {{department.code_desc}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                   <label
                     for="inputPassword"
                     class="col-sm-2 col-form-label text-primary"
@@ -276,7 +296,7 @@
                         -- Select developer from department --
                       </option>
                       <option
-                        ng-repeat="user in all_users"
+                        ng-repeat="user in departmentMembers"
                         ng-value="user.user_id"
                         ng-hide="user.user_id == '1'"
                       >
@@ -285,22 +305,6 @@
                     </select>
                   </div>
                 </div>
-
-                <!-- <div>
-                            
-                                    <label for="inputPassword"
-                                            class="col-sm-3 col-form-label text-primary">Start Date</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control" type="date" ng-model="start_date_">
-
-                                        </div>
-                                        <label for="inputPassword"
-                                        class="col-sm-3 col-form-label text-primary">Start Date</label>
-                                    <div class="col-sm-9">
-                                        <input class="form-control" type="date" ng-model="start_date_">
-
-                                    </div>
-                                </div> -->
 
                 <div class="form-group row">
                   <label
@@ -357,50 +361,6 @@
                       placeholder="Upload Document"
                       ng-click="get_file_input()"
                     />
-                  </div>
-
-                  <label
-                    for="inputPassword"
-                    class="col-sm-2 col-form-label text-primary"
-                    >Department</label
-                  >
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <div class="input-group input-group-alternative">
-                        <select
-                          class="form-control"
-                          required
-                          ng-model="department_id_"
-                        >
-                          <option value="">Select Department</option>
-                          <option
-                            ng-value="department.code_desc_id"
-                            ng-repeat="department in departments"
-                          >
-                            {{department.code_desc}}
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label
-                    for="inputPassword"
-                    class="col-sm-2 col-form-label text-primary"
-                    >Dependent task</label
-                  >
-                  <div class="col-sm-4">
-                    <select class="form-control" required ng-model="priority_">
-                      <option value="">-- Select task --</option>
-                      <option
-                        ng-repeat="task in all_tasks"
-                        ng-value="task.task_id"
-                      >
-                        {{task.description}}
-                      </option>
-                    </select>
                   </div>
                 </div>
 

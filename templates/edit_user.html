@@ -154,7 +154,7 @@
                 </div>
             </div>
             <div class="col-xl-8 order-xl-1">
-                <form ng-submit="updateUserInfo(emailNotice)">
+                <form ng-submit="updateUserInfo(emailNotice, department_id)">
                     <div class="card bg-secondary shadow">
                         <div class="card-header bg-white border-0">
                             <div class="row align-items-center">
@@ -269,14 +269,17 @@
                                       </select>
                                   </div>
                                   </div>
-                                  <!-- <div class="col-md-4">
+                                   <div class="col-md-4">
                                       <div class="form-group">
-                                          <label class="form-control-label" for="input-address">Address</label>
-                                          <input class="form-control form-control-alternative"
-                                              placeholder="Home Address" ng-value="user.address" type="text"
-                                              id="address">
+                                          <label class="form-control-label" for="input-address">Department</label>
+                                          <select class="form-control" ng-model="department_id" id="department_id">
+                                            <option value="{{user.department_id}}">{{user.department}}</option>
+                                            <option ng-repeat="department in departments" ng-value=department.code_desc_id>
+                                                {{department.code_desc}}
+                                            </option>
+                                        </select>
                                       </div>
-                                  </div> -->
+                                  </div>
                                 </div>
                             </div>
                             <hr class="my-4" />

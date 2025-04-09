@@ -1,127 +1,96 @@
 {
-	"info": {
-		"_postman_id": "319ac34a-3cc9-43f0-a08d-81d07643fe45",
-		"name": "Client logs",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30513987"
-	},
-	"item": [
-		{
-			"name": "Get all clients",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8081/client-logs-api/public/api/clients",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"client-logs-api",
-						"public",
-						"api",
-						"clients"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add client",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Sierra Leone Commercial Bank Ltd\",\r\n    \"apiUrl\": \"\",\r\n    \"logoUrl\": \"\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8081/client-logs-api/public/api/clients",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"client-logs-api",
-						"public",
-						"api",
-						"clients"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get client by id",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8081/client-logs-api/public/api/clients/2",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"client-logs-api",
-						"public",
-						"api",
-						"clients",
-						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Set active url",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"url": {
-					"raw": "localhost:8081/client-logs-api/public/api/clients/set-active-url/1",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"client-logs-api",
-						"public",
-						"api",
-						"clients",
-						"set-active-url",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get active url",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8081/client-logs-api/public/api/active-client-url",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"client-logs-api",
-						"public",
-						"api",
-						"active-client-url"
-					]
-				}
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "319ac34a-3cc9-43f0-a08d-81d07643fe45",
+    "name": "Client logs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30513987"
+  },
+  "item": [
+    {
+      "name": "Get all clients",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8012/client-logs-api/public/api/clients",
+          "host": ["localhost"],
+          "port": "8012",
+          "path": ["client-logs-api", "public", "api", "clients"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add client",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Sierra Leone Commercial Bank Ltd\",\r\n    \"apiUrl\": \"\",\r\n    \"logoUrl\": \"\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8012/client-logs-api/public/api/clients",
+          "host": ["localhost"],
+          "port": "8012",
+          "path": ["client-logs-api", "public", "api", "clients"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get client by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8012/client-logs-api/public/api/clients/2",
+          "host": ["localhost"],
+          "port": "8012",
+          "path": ["client-logs-api", "public", "api", "clients", "2"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Set active url",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "localhost:8012/client-logs-api/public/api/clients/set-active-url/1",
+          "host": ["localhost"],
+          "port": "8012",
+          "path": [
+            "client-logs-api",
+            "public",
+            "api",
+            "clients",
+            "set-active-url",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get active url",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8012/client-logs-api/public/api/active-client-url",
+          "host": ["localhost"],
+          "port": "8012",
+          "path": ["client-logs-api", "public", "api", "active-client-url"]
+        }
+      },
+      "response": []
+    }
+  ]
 }

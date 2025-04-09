@@ -44,7 +44,7 @@ sheetApp.controller(
 
     $scope.get_my_issues = function () {
       var externalApiUrl =
-        "http://localhost:8081/project_tracker/apiSheet/getProjectStatistics.php";
+        "http://localhost:8012/project_tracker/apiSheet/getProjectStatistics.php";
       // if (
       //   $scope.user_info.role == "developer" &&
       //   $scope.user_info.is_dept_head == "1"

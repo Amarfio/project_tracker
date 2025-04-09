@@ -132,6 +132,21 @@ require_once 'functions/usableFunctions.php';
       return 0; 
     }
 
+    function get_projects_completed($deptId, $conn){
+        $query = " SELECT * FROM SELECT * 
+FROM projects 
+WHERE 
+    is_archive = 0 
+    AND MONTH(completed_date) = MONTH(CURRENT_DATE()) 
+    OR YEAR(completed_date) = YEAR(CURRENT_DATE) AND dept_id = '$deptId'";
+        $result = mysqli_query($conn, $query);
+        if($result && mysqli_num_rows($result)> 0){
+          $row = mysqli_fetch_assoc($result); // Fetch the actual row data
+          return $row['projects_exceeded_target'];
+        }
+        return 0; 
+      }
+
 if (isset($_GET['deptId'])) {
     $dept_id = mysqli_escape_string($conn, $_GET['deptId']);
 
@@ -228,8 +243,11 @@ if (isset($_GET['deptId'])) {
                   "brought_forward_by_year" => get_projects_brought_forward_last_year($row['id'], $conn),
                   "new_projects" => get_new_projets($row['id'], $conn),
                   "brought_forward_by_month"=>get_projects_brought_forward_last_month($row['id'], $conn),
+                  "completed_projects"=>get_projects_completed($row['id'], $conn),
                   "projects_exceeded_target_dates"=>get_projects_exceeded_target($row['id'], $conn),
-                  "new_total"=> getTotal(get_projects_brought_forward_last_month($row['id'], $conn), get_new_projets($row['id'], $conn))
+                  "new_total"=> getTotal(get_projects_brought_forward_last_month($row['id'], $conn), get_new_projets($row['id'], $conn),
+                  )
+
               );
           }
       

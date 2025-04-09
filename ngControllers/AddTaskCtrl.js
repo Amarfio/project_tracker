@@ -96,7 +96,12 @@ sheetApp.controller(
           $scope.url_project_id,
       }).then(
         function successCallback(response) {
-          $scope.all_tasks = response?.data?.data[0]?.tasks;
+          console.log(response, "the response");
+          // return false;
+          $scope.client_id = response?.data?.data[0]?.client_id;
+          $scope.all_tasks = $scope.removeCompletedTasks(
+            response?.data?.data[0]?.tasks
+          );
           console.log("all tasks");
           console.log($scope.all_tasks);
         },
@@ -175,7 +180,7 @@ sheetApp.controller(
       }).then(
         function successCallback(response) {
           $scope.all_users = response.data;
-          console.log($scope.all_users);
+          console.log($scope.all_users, "users here");
         },
         function errorCallback(response) {
           Swal.fire({
@@ -220,7 +225,9 @@ sheetApp.controller(
       client_id_,
       start_date_,
       end_date_,
-      risk_
+      risk_,
+      department_id_,
+      dep_task
     ) {
       // console.log(project_id_)
       // console.log(priority_)
@@ -229,6 +236,7 @@ sheetApp.controller(
       // console.log(client_id_)
       // console.log(start_date_)
       // console.log(end_date_)
+      console.log(department_id_, "dept here!!!!");
       console.log("This is start date:");
       console.log(new Date($scope.p_start_date));
       console.log("This is end date:");
@@ -351,37 +359,70 @@ sheetApp.controller(
           project_id: project_id_.trim(),
           priority: priority_,
           task_name: task_.trim(),
-          client_id: client_id_.trim(),
+          client_id: $scope.client_id,
           assigned_to: developer_.trim(),
           assigned_by: $scope.user_id.trim(),
+          dept: department_id_,
           t_start_date: start_date_,
           t_end_date: end_date_,
           p_start_date: p_start_date,
           p_end_date: p_end_date,
           risk: risk_,
+          fileName: "",
+          dependent_task: dep_task,
         };
 
         if ($scope.attachment_file != "None") {
-          data = {
-            user_id: $scope.user_info.user_id,
-            project_id: project_id_.trim(),
-            priority: priority_,
-            task_name: task_.trim(),
-            client_id: client_id_.trim(),
-            assigned_to: developer_.trim(),
-            assigned_by: $scope.user_id.trim(),
-            t_start_date: start_date_,
-            t_end_date: end_date_,
-            p_start_date: p_start_date,
-            p_end_date: p_end_date,
-            risk: risk_,
-            fileName: $scope.attachment_file,
-          };
+          // data = {
+          //   user_id: $scope.user_info.user_id,
+          //   project_id: project_id_.trim(),
+          //   priority: priority_,
+          //   task_name: task_.trim(),
+          //   client_id: client_id_.trim(),
+          //   assigned_to: developer_.trim(),
+          //   assigned_by: $scope.user_id.trim(),
+          //   t_start_date: start_date_,
+          //   t_end_date: end_date_,
+          //   p_start_date: p_start_date,
+          //   p_end_date: p_end_date,
+          //   risk: risk_,
+          //   fileName: $scope.attachment_file,
+          //   dependent_task: dep_task,
+          // };
+          data.fileName = $scope.attachment_file;
         }
         console.log(data);
+        return false;
         $scope.upload();
         sendRequest();
       }
     };
+
+    $scope.removeCompletedTasks = function (tasks) {
+      console.log("in the tasks");
+      console.log(tasks.filter((task) => parseInt(task.completion) !== 100));
+      return tasks.filter((task) => parseInt(task.completion) !== 100);
+    };
+
+    $scope.getDepartmentMembers = function (users, departmentId) {
+      console.log("new members", users);
+      console.log("department id ", departmentId);
+
+      return users.filter(
+        (user) => parseInt(user.department_id, 10) == parseInt(departmentId, 10)
+      );
+    };
+
+    $("#departmentElement").change(function () {
+      var value = $(this).val();
+      console.log("new value", value.split(":")[1]);
+      var deptId = value.split(":")[1];
+      console.log();
+      $scope.departmentMembers = $scope.getDepartmentMembers(
+        $scope.all_users,
+        deptId
+      );
+      console.log("new memebers", $scope.departmentMembers);
+    });
   }
 );

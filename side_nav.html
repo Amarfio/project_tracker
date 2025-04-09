@@ -104,7 +104,8 @@
             class="text-primary">Projects</span>
         </a>
       </li>
-      <li class="nav-item" ng-show="user_info.role == 'admin' || user_info.role =='assigner' || user_info.is_dept_head == 1">
+      <li class="nav-item"
+        ng-show="user_info.role == 'admin' || user_info.role =='assigner' || user_info.is_dept_head == 1">
         <a class=" nav-link active " href="project_updates"> <i class="ni ni-tv-2 text-primary"></i> <span
             class="text-primary">Project Updates</span>
         </a>
@@ -132,12 +133,20 @@
             {{item.label}}
           </a>
         </li> -->
-      <li class="nav-item" ng-show="user_info.role == 'assigner'|| user_info.is_dept_head == '1' || user_info.role == 'developer' ">
+      <li class="nav-item"
+        ng-show="user_info.role == 'assigner'|| user_info.is_dept_head == '1' || user_info.role == 'developer' ">
         <a class="nav-link " href="add_project">
           <i class="ni ni-books text-primary"></i><span class="text-primary">Create Project</span>
         </a>
       </li>
-      <li class="nav-item" ng-show="user_info.is_dept_head == '1' " ng-click = "downloadExcel()" style="cursor: pointer;" title="download project last update">
+      <!-- <li class="nav-item"
+        ng-show="user_info.role == 'assigner'|| user_info.is_dept_head == '1' || (user_info.role == 'admin') ">
+        <a class="nav-link " href="add_project">
+          <i class="ni ni-books text-primary"></i><span class="text-primary">Create Project</span>
+        </a>
+      </li> -->
+      <li class="nav-item" ng-show="user_info.is_dept_head == '1' " ng-click="downloadExcel()" style="cursor: pointer;"
+        title="download project last update">
         <a class="nav-link">
           <i class="ni ni-books text-primary"></i><span class="text-primary">Last Update</span>
         </a>

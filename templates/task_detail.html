@@ -181,6 +181,10 @@
 
 
               </div>
+              <div class="col-md-6">
+                <span class=" badge badge-danger" ng-if="oneTask.dep_task_completion_rate !='completed'">Pending completion from dependent(REF-0000{{oneTask.task_id}}) </span>
+              </div>
+              <div class="col-md-6"></div>
               <!-- 
                   <div class="col-md-12"> 
                       
@@ -362,7 +366,7 @@
         </div>
 
         <legend></legend>
-        <div class="card shadow" ng-hide="project.is_approved == '0'" ng-if="developer_can_see">
+        <div class="card shadow" ng-hide="project.is_approved == '0' || task.dep_task_completion_rate!='completed'" ng-if="developer_can_see">
           <div class="card-header border-0 ">
 
             <p class="card-text">

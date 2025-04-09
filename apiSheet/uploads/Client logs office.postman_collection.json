@@ -1,148 +1,119 @@
 {
-	"info": {
-		"_postman_id": "b0611db5-afca-43f7-8b1b-c49b40799652",
-		"name": "Client logs office",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30513987"
-	},
-	"item": [
-		{
-			"name": "Get all clients",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/clients",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"clients"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add client",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n            \"name\": \"Atwima Kwanwoma Rural Bank Ltd\",\r\n            \"logoUrl\": \"https://www.akrbank.com/images/akrb_logo22.png\",\r\n            \"apiUrl\": \"test\",\r\n            \"activeUrl\": 0,\r\n            \"isActive\": 1\r\n        }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{host}}/clients",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"clients"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get client by id",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8081/client-logs-api/public/api/clients/2",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"client-logs-api",
-						"public",
-						"api",
-						"clients",
-						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Set active url",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"url": {
-					"raw": "localhost:8081/client-logs-api/public/api/clients/set-active-url/1",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"client-logs-api",
-						"public",
-						"api",
-						"clients",
-						"set-active-url",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get active url",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8081/client-logs-api/public/api/active-client-url",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"client-logs-api",
-						"public",
-						"api",
-						"active-client-url"
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "host",
-			"value": "10.203.14.127/client-logs-api/public/api",
-			"type": "string"
-		}
-	]
+  "info": {
+    "_postman_id": "b0611db5-afca-43f7-8b1b-c49b40799652",
+    "name": "Client logs office",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30513987"
+  },
+  "item": [
+    {
+      "name": "Get all clients",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{host}}/clients",
+          "host": ["{{host}}"],
+          "path": ["clients"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add client",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n            \"name\": \"Atwima Kwanwoma Rural Bank Ltd\",\r\n            \"logoUrl\": \"https://www.akrbank.com/images/akrb_logo22.png\",\r\n            \"apiUrl\": \"test\",\r\n            \"activeUrl\": 0,\r\n            \"isActive\": 1\r\n        }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host}}/clients",
+          "host": ["{{host}}"],
+          "path": ["clients"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get client by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8012/client-logs-api/public/api/clients/2",
+          "host": ["localhost"],
+          "port": "8012",
+          "path": ["client-logs-api", "public", "api", "clients", "2"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Set active url",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "localhost:8012/client-logs-api/public/api/clients/set-active-url/1",
+          "host": ["localhost"],
+          "port": "8012",
+          "path": [
+            "client-logs-api",
+            "public",
+            "api",
+            "clients",
+            "set-active-url",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get active url",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8012/client-logs-api/public/api/active-client-url",
+          "host": ["localhost"],
+          "port": "8012",
+          "path": ["client-logs-api", "public", "api", "active-client-url"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "host",
+      "value": "10.203.14.127/client-logs-api/public/api",
+      "type": "string"
+    }
+  ]
 }

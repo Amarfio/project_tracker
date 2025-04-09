@@ -12,6 +12,7 @@ sheetApp.controller(
     check_auth.verify_auth($localStorage.user_info);
     console.log($localStorage.user_info.data);
     $scope.user_info = $localStorage.user_info.data;
+    $scope.user_id = $localStorage.user_info.data["user_id"];
 
     // PROFILE PHOTO
     $scope.profile_pic_true = $localStorage.profile_pic;
@@ -879,5 +880,373 @@ sheetApp.controller(
 
     // $scope.get_statics_developer_for_assigner_and_admin('sta')
     // $scope.get_statics_developer_for_developer('sta', $scope.user_info.department_id, $scope.user_info.is_dept_head, $scope.user_info.user_id)
+
+    //task related methods
+    $scope.get_all_clients = function () {
+      $http({
+        method: "GET",
+        url: myConfig.url + "/getAllClients.php",
+      }).then(
+        function successCallback(response) {
+          $scope.all_clients = response.data;
+          console.log($scope.all_clients);
+        },
+        function errorCallback(response) {
+          // alert("Error. Try Again!");
+          Swal.fire({
+            type: "warning",
+            title: "Network Connection Erro",
+            text: "Clients Could not loaded",
+          });
+        }
+      );
+    };
+    $scope.get_all_clients();
+
+    //get all related tasks
+    $scope.get_related_tasks = function () {
+      $http({
+        method: "GET",
+        url:
+          myConfig.url + "/getOneProject.php?project_id=" + $scope.project_id,
+      }).then(
+        function successCallback(response) {
+          // console.log(response?.data?.data[0]?.priority, "the response");
+          // return false;
+          $scope.client_id = response?.data?.data[0]?.client_id;
+          $scope.all_tasks = $scope.removeCompletedTasks(
+            response?.data?.data[0]?.tasks
+          );
+          console.log("all tasks");
+          console.log($scope.all_tasks);
+          $scope.priority_ = response?.data?.data[0]?.priority;
+          console.log("priority here:::", $scope.priority_);
+        },
+        function errorCallback(response) {
+          // alert("Error. Try Again!");
+          Swal.fire({
+            type: "warning",
+            title: "Network Connection Erro",
+            text: "Clients Could not loaded",
+          });
+        }
+      );
+    };
+    $scope.get_related_tasks();
+
+    // ATTACHMENT ICON FUNCTION
+
+    $scope.attachment_file = "None";
+    $scope.get_file_input = function () {
+      // $("#upload_file").click(function () {
+      //     $("#id_file_field").trigger('click');
+      // });
+      var fileName = "";
+      $("#attached-file").change(function () {
+        var value = this.value;
+        fileName =
+          typeof value == "string" ? value.match(/[^\/\\]+$/)[0] : value[0];
+        console.log(fileName);
+        $scope.attachment_file = fileName;
+        // $('#attached-text').text(fileName);
+      });
+    };
+
+    $scope.get_code_desc = function (init) {
+      $http({
+        method: "GET",
+        url: myConfig.url + "/getCodeDescription.php?init=" + init,
+      }).then(
+        function successCallback(response) {
+          $scope.code_desc = response.data["0"].code_desc;
+          console.log($scope.code_desc);
+        },
+        function errorCallback(response) {
+          Swal.fire({
+            type: "warning",
+            title: "Network Connection Erro",
+            text: "Priority Could not loaded",
+          });
+        }
+      );
+    };
+    $scope.get_code_desc("pri");
+
+    $scope.get_departments = function (dpt) {
+      $http({
+        method: "GET",
+        url: myConfig.url + "/getCodeDescription.php?init=" + dpt,
+      }).then(
+        function successCallback(response) {
+          $scope.departments = response.data[0].code_desc;
+          console.log($scope.departments);
+        },
+        function errorCallback(response) {
+          // alert("Error. Try Again!");
+        }
+      );
+    };
+    $scope.get_departments("dpt");
+
+    $scope.get_all_users = function (department_id) {
+      // console.log('Department_id = ' + department_id)
+      $http({
+        method: "GET",
+        // url: myConfig.url + '/getAllUsers.php'
+        url: myConfig.url + "/getAllDevs.php",
+      }).then(
+        function successCallback(response) {
+          $scope.all_users = response.data;
+          console.log($scope.all_users, "users here");
+        },
+        function errorCallback(response) {
+          Swal.fire({
+            type: "warning",
+            title: "Network Connection Erro",
+            text: "Users Could not loaded",
+          });
+        }
+      );
+    };
+    $scope.get_all_users($scope.url_department_id);
+
+    //code to upload a file
+    //code to get uploaded file value
+    $scope.upload = function () {
+      var file = $scope.uploadfile;
+      var fd = new FormData();
+      var files = document.getElementById("attached-file").files[0];
+      fd.append("file", files);
+
+      $http({
+        method: "post",
+        url: myConfig.url + "/uploadFile.php",
+        data: fd,
+        headers: {
+          "Content-Type": undefined,
+        },
+      }).then(function successCallback(response) {
+        // Store response data
+        $scope.response = response.data;
+        console.log($scope.response);
+        // $('#show_attach_name').text('None');
+        // $scope.attachment_file = 'None'
+      });
+    };
+
+    $scope.createTask = function (
+      project_id_,
+      task_,
+      priority_,
+      developer_,
+      client_id_,
+      start_date_,
+      end_date_,
+      risk_,
+      department_id_,
+      dep_task
+    ) {
+      // console.log(project_id_)
+      // console.log(priority_)
+      // console.log(task_)
+      // console.log(developer_)
+      // console.log(client_id_)
+      // console.log(start_date_)
+      // console.log(end_date_)
+      console.log(department_id_, "dept here!!!!");
+      console.log("This is start date:");
+      console.log(new Date($scope.p_start_date));
+      console.log("This is end date:");
+      console.log($scope.p_end_date);
+      // return false;
+      var p_start_date = Date.parse($scope.project.start_date);
+      console.log(p_start_date);
+      var p_end_date = Date.parse($scope.project.end_date);
+      var start_date_ = Date.parse($scope.start_date_);
+      console.log(start_date_);
+      // return false;
+      var end_date_ = Date.parse($scope.end_date_);
+
+      // return false;
+      var sendRequest = function () {
+        // $http POST function
+        $http({
+          method: "POST",
+          url: myConfig.url + "/createTask.php",
+          data: data,
+        }).then(
+          function successCallback(response) {
+            $res = response.data;
+            console.log($res.status);
+
+            $("#modal-adding-task").modal("hide");
+            if ($res.status == "success") {
+              Swal.fire({
+                type: "success",
+                title: "REFJ-0000" + $res.task_id,
+                text: $res.message,
+              });
+
+              //    Swal.fire($res.status, "success");
+              // document.getElementById("modal-adding-task").style.display =
+              //   "none";
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
+
+              // setTimeout(() => {
+              //   // $scope.get_all_users()
+              //   $("#add_task_form")[0].reset();
+              //   $("#customRadio4").val("");
+              //   $("#customRadio6").val("");
+              //   // $timeout(window.location = '', 2000);
+              //   $timeout(
+              //     $location.path("/project/" + $scope.url_project_id),
+              //     1000
+              //   );
+              // }, 2000);
+            } else {
+              Swal.fire({
+                type: "error",
+                title: $res.status,
+                text: $res.message,
+              });
+
+              // Swal.fire($res.message);
+              // setTimeout(() => {
+              //     // $('#client_message_error').hide();
+              // }, 4000);
+            }
+          },
+          function errorCallback(response) {
+            // $res = response.data
+            // console.log($res)
+            Swal.fire({
+              type: "warning",
+              title: "Sorry",
+              text: "Something went wrong",
+            });
+          }
+        );
+      };
+      //check this code
+      // console.log(p_start_date);
+      // console.log(end_date_);
+
+      // if ( p_start_date > start_date_){
+      //     console.log("true");
+      // }
+      // else {
+      //     console.log("false");
+      // }
+      // return false;
+
+      // if ( p_start_date > start_date_) {
+      //     Swal.fire({
+      //         type: 'error',
+      //         title: 'Invalid Date',
+      //         text: 'Task start date can not be earlier than Project start date',
+      //     })
+      // } else
+      if (p_end_date < start_date_) {
+        Swal.fire({
+          type: "error",
+          title: "Invalid Date",
+          text: "Project end date can not be earlier than task start date",
+        });
+      } else if (p_end_date < end_date_) {
+        Swal.fire({
+          type: "error",
+          title: "Invalid Date",
+          text: "Task end date can not go beyond than Project end date",
+        });
+      } else if (end_date_ < start_date_) {
+        Swal.fire({
+          type: "error",
+          title: "Invalid Date",
+          text: "Task end date can not be less than task start date",
+        });
+      } else if (p_start_date > end_date_) {
+        Swal.fire({
+          type: "error",
+          title: "Invalid Date",
+          text: "Project Start Date Cannot Greater Than Task End Date",
+        });
+      } else {
+        start_date_ = new Date(start_date_).toISOString().substring(0, 10);
+        console.log(start_date_);
+        end_date_ = new Date(end_date_).toISOString().substring(0, 10);
+        console.log(end_date_);
+        // return false;
+        var data = {
+          user_id: $scope.user_info.user_id,
+          project_id: project_id_.trim(),
+          priority: priority_,
+          task_name: task_.trim(),
+          client_id: $scope.client_id,
+          assigned_to: developer_.trim(),
+          assigned_by: $scope.user_id.trim(),
+          dept: department_id_,
+          t_start_date: start_date_,
+          t_end_date: end_date_,
+          p_start_date: p_start_date,
+          p_end_date: p_end_date,
+          risk: risk_,
+          fileName: "",
+          dependent_task: dep_task,
+        };
+
+        if ($scope.attachment_file != "None") {
+          // data = {
+          //   user_id: $scope.user_info.user_id,
+          //   project_id: project_id_.trim(),
+          //   priority: priority_,
+          //   task_name: task_.trim(),
+          //   client_id: client_id_.trim(),
+          //   assigned_to: developer_.trim(),
+          //   assigned_by: $scope.user_id.trim(),
+          //   t_start_date: start_date_,
+          //   t_end_date: end_date_,
+          //   p_start_date: p_start_date,
+          //   p_end_date: p_end_date,
+          //   risk: risk_,
+          //   fileName: $scope.attachment_file,
+          //   dependent_task: dep_task,
+          // };
+          data.fileName = $scope.attachment_file;
+        }
+        console.log(data);
+        // return false;
+        $scope.upload();
+        sendRequest();
+      }
+    };
+
+    $scope.removeCompletedTasks = function (tasks) {
+      console.log("in the tasks");
+      console.log(tasks.filter((task) => parseInt(task.completion) !== 100));
+      return tasks.filter((task) => parseInt(task.completion) !== 100);
+    };
+
+    $scope.getDepartmentMembers = function (users, departmentId) {
+      console.log("new members", users);
+      console.log("department id ", departmentId);
+
+      return users.filter(
+        (user) => parseInt(user.department_id, 10) == parseInt(departmentId, 10)
+      );
+    };
+
+    $("#departmentElement").change(function () {
+      var value = $(this).val();
+      console.log("new value", value.split(":")[1]);
+      var deptId = value.split(":")[1];
+      console.log();
+      $scope.departmentMembers = $scope.getDepartmentMembers(
+        $scope.all_users,
+        deptId
+      );
+      console.log("new memebers", $scope.departmentMembers);
+    });
   }
 );

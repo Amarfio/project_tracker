@@ -112,11 +112,13 @@ if (isset($_GET['project_id'])) {
         while ($row = mysqli_fetch_assoc($result)) {
             $projects_tasks[] =  array(
                 'project_id' => $row['project_id'],
+                'priority' => $row['priority_id'],
                 "version_no"   => $row['version_no'],
                 "version_name"   => $row['version_name'],
                 "name" => $row['name'],
                 "description" => $row['description'],
-                "client"=> $row['client_name'],
+                "client_id" => $row['client'],
+                "client_name"=> $row['client_name'],
                 "hash_tag"=> $row['hash_tag'],
                 "attach" => $row['attach'],
                 "is_approved" => $row['is_approved'],

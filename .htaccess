@@ -2,4 +2,4 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 #RewriteRule ^(.front-end*)$ /front-end [NC,L,QSA]
-RewriteRule ^(.*)$ http://localhost:8081/project_tracker/index.html [NC,L,QSA]  
+RewriteRule ^(.*)$ http://localhost:8012/project_tracker/index.html [NC,L,QSA]  

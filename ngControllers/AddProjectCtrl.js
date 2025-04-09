@@ -1,22 +1,32 @@
-sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_auth, myConfig, get_services, $location, $localStorage, dataService) {
-    check_auth.verify_auth($localStorage.user_info)
+sheetApp.controller(
+  "AddProjectCtrl",
+  function (
+    $scope,
+    $http,
+    $timeout,
+    check_auth,
+    myConfig,
+    get_services,
+    $location,
+    $localStorage,
+    dataService
+  ) {
+    check_auth.verify_auth($localStorage.user_info);
     console.log($localStorage.user_info.data);
-    $scope.user_info = $localStorage.user_info.data
-    $scope.user_id = $localStorage.user_info.data['user_id']
-    $scope.all_departments = get_services.get_departments('dpt')
+    $scope.user_info = $localStorage.user_info.data;
+    $scope.user_id = $localStorage.user_info.data["user_id"];
+    $scope.all_departments = get_services.get_departments("dpt");
 
     // PROFILE PHOTO
-    $scope.profile_pic_true = $localStorage.profile_pic
-    $scope.profile_pic = myConfig.file_url + $scope.profile_pic_true
-    console.log($scope.profile_pic)
+    $scope.profile_pic_true = $localStorage.profile_pic;
+    $scope.profile_pic = myConfig.file_url + $scope.profile_pic_true;
+    console.log($scope.profile_pic);
 
-
-    //logout funtion 
+    //logout funtion
     $scope.logout = function () {
-        check_auth.logout($scope.user_info.user_id)
-    }
-    // end logout function 
-
+      check_auth.logout($scope.user_info.user_id);
+    };
+    // end logout function
 
     // console.log($scope.all_departments)
 
@@ -27,319 +37,406 @@ sheetApp.controller('AddProjectCtrl', function ($scope, $http, $timeout, check_a
     // }
     // $scope.get_departments('dpt', '/getCodeDescription.php?init=')
 
-
     $scope.get_versions = function (ver) {
-        $http({
-            method: 'GET',
-            url: myConfig.url + '/getCodeDescription.php?init=' + ver
-
-        }).then(function successCallback(response) {
-
-            $scope.versions = response.data[0].code_desc;
-            console.log($scope.versions)
-
-        }, function errorCallback(response) {
-
-            alert("Error. Try Again!");
-
-        });
-    }
-    $scope.get_versions('ver')
-
+      $http({
+        method: "GET",
+        url: myConfig.url + "/getCodeDescription.php?init=" + ver,
+      }).then(
+        function successCallback(response) {
+          $scope.versions = response.data[0].code_desc;
+          console.log($scope.versions);
+        },
+        function errorCallback(response) {
+          alert("Error. Try Again!");
+        }
+      );
+    };
+    $scope.get_versions("ver");
 
     $scope.get_departments = function (dpt) {
-        $http({
-            method: 'GET',
-            url: myConfig.url + '/getCodeDescription.php?init=' + dpt
-
-        }).then(function successCallback(response) {
-
-            $scope.departments = response.data[0].code_desc;
-            console.log($scope.departments)
-
-        }, function errorCallback(response) {
-
-            // alert("Error. Try Again!");
-
-        });
-    }
-    $scope.get_departments('dpt')
-
+      $http({
+        method: "GET",
+        url: myConfig.url + "/getCodeDescription.php?init=" + dpt,
+      }).then(
+        function successCallback(response) {
+          $scope.departments = response.data[0].code_desc;
+          console.log($scope.departments);
+        },
+        function errorCallback(response) {
+          // alert("Error. Try Again!");
+        }
+      );
+    };
+    $scope.get_departments("dpt");
 
     //method to get all clients
     //get clients for project
     $scope.get_all_clients = function () {
-        $http({
-            method: 'GET',
-            url: myConfig.url + '/getAllClients.php'
-
-        }).then(function successCallback(response) {
-
-            $scope.all_clients = response.data;
-            console.log($scope.all_clients)
-
-        }, function errorCallback(response) {
-
-            // alert("Error. Try Again!");
-            Swal.fire({
-                type: 'warning',
-                title: 'Network Connection Erro for loading clients',
-                text: 'Clients Could not loaded'
-            })
-
-        });
-    }
-    $scope.get_all_clients()
-
+      $http({
+        method: "GET",
+        url: myConfig.url + "/getAllClients.php",
+      }).then(
+        function successCallback(response) {
+          $scope.all_clients = response.data;
+          console.log($scope.all_clients);
+        },
+        function errorCallback(response) {
+          // alert("Error. Try Again!");
+          Swal.fire({
+            type: "warning",
+            title: "Network Connection Erro for loading clients",
+            text: "Clients Could not loaded",
+          });
+        }
+      );
+    };
+    $scope.get_all_clients();
 
     // ATTACHMENT ICON FUNCTION
 
-    $scope.attachment_file = 'None';
+    $scope.attachment_file = "None";
     $scope.get_file_input = function () {
-        // $("#upload_file").click(function () {
-        //     $("#id_file_field").trigger('click');
-        // });
-        var fileName= "";
-        $('#attached-file').change(function () {
-            var value = this.value;
-             fileName = typeof value == 'string' ? value.match(/[^\/\\]+$/)[0] : value[0]
-            console.log(fileName);
-            $scope.attachment_file = fileName;
-            // $('#attached-text').text(fileName);
-        })
-
-
-    }
+      // $("#upload_file").click(function () {
+      //     $("#id_file_field").trigger('click');
+      // });
+      var fileName = "";
+      $("#attached-file").change(function () {
+        var value = this.value;
+        fileName =
+          typeof value == "string" ? value.match(/[^\/\\]+$/)[0] : value[0];
+        console.log(fileName);
+        $scope.attachment_file = fileName;
+        // $('#attached-text').text(fileName);
+      });
+    };
     // END ATTACHMENT ICON FUNCTION
 
+    $scope.get_code_desc = function (init) {
+      $http({
+        method: "GET",
+        url: myConfig.url + "/getCodeDescription.php?init=" + init,
+      }).then(
+        function successCallback(response) {
+          $scope.code_desc = response.data["0"].code_desc;
+          console.log($scope.code_desc);
+        },
+        function errorCallback(response) {
+          Swal.fire({
+            type: "warning",
+            title: "Network Connection Erro",
+            text: "Priority Could not loaded",
+          });
+        }
+      );
+    };
+    $scope.get_code_desc("pri");
+
     $scope.get_all_users = function (department_id) {
-        // console.log('Department_id = ' + department_id) 
-        $http({
-            method: 'GET',
-            url: myConfig.url + '/getAllUsers.php'
+      // console.log('Department_id = ' + department_id)
+      $http({
+        method: "GET",
+        url: myConfig.url + "/getAllUsers.php",
+      }).then(
+        function successCallback(response) {
+          $scope.all_users = response.data;
+          console.log(response.data);
+          console.log($scope.all_users);
 
-        }).then(function successCallback(response) {
+          // $scope.pDpt = 138;
+          // $scope.all_users = $scope.getDepartmentMembers(
+          //   response.data,
+          //   $scope.pDpt
+          // );
+          // console.log($scope.all_users);
+        },
+        function errorCallback(response) {
+          Swal.fire({
+            type: "warning",
+            title: "Network Connection Erro",
+            text: "Users Could not loaded",
+          });
+        }
+      );
+    };
+    $scope.get_all_users($scope.url_department_id);
 
-            $scope.all_users = response.data;
-            console.log($scope.all_users)
+    $scope.get_project_staff = function (department_id) {
+      // console.log('Department_id = ' + department_id)
+      $http({
+        method: "GET",
+        url: myConfig.url + "/getAllUsers.php",
+      }).then(
+        function successCallback(response) {
+          $scope.all_users = response.data;
+          console.log(response.data);
+          console.log($scope.all_users);
 
-        }, function errorCallback(response) {
-            Swal.fire({
-                type: 'warning',
-                title: 'Network Connection Erro',
-                text: 'Users Could not loaded'
-            })
-
-        });
-    }
-    $scope.get_all_users($scope.url_department_id)
+          $scope.pDpt = 138;
+          $scope.project_staff = $scope.getDepartmentMembers(
+            response.data,
+            $scope.pDpt
+          );
+          console.log($scope.project_staff);
+        },
+        function errorCallback(response) {
+          Swal.fire({
+            type: "warning",
+            title: "Network Connection Erro",
+            text: "Users Could not loaded",
+          });
+        }
+      );
+    };
+    $scope.get_project_staff($scope.url_department_id);
 
     //code to get uploaded file value
     $scope.upload = function () {
-        var file = $scope.uploadfile;
-        var fd = new FormData();
-        var files = document.getElementById('attached-file').files[0];
-        fd.append('file', files);
+      var file = $scope.uploadfile;
+      var fd = new FormData();
+      var files = document.getElementById("attached-file").files[0];
+      fd.append("file", files);
 
-        $http({
-            method: 'post',
-            url: myConfig.url + '/uploadFile.php',
-            data: fd,
-            headers: {
-                'Content-Type': undefined   
-            },
-        }).then(function successCallback(response) {
-            // Store response data
-            $scope.response = response.data;
-            console.log($scope.response)
-            // $('#show_attach_name').text('None');
-            // $scope.attachment_file = 'None'
+      $http({
+        method: "post",
+        url: myConfig.url + "/uploadFile.php",
+        data: fd,
+        headers: {
+          "Content-Type": undefined,
+        },
+      }).then(function successCallback(response) {
+        // Store response data
+        $scope.response = response.data;
+        console.log($scope.response);
+        // $('#show_attach_name').text('None');
+        // $scope.attachment_file = 'None'
+      });
+    };
+
+    $scope.createProject = function (
+      project_name_,
+      version_no_,
+      client_id,
+      start_date_,
+      end_date_,
+      priority_,
+      project_description_,
+      hashtag_value,
+      interested_person_,
+      project_sponsor,
+      project_owner_,
+      project_owner_2
+    ) {
+      console.log(project_name_);
+      console.log(version_no_);
+      console.log(client_id);
+      //   console.log(department_id_);
+      console.log(start_date_);
+      console.log(end_date_);
+      console.log(project_description_);
+      console.log($scope.attachment_file);
+      console.log($scope.user_id);
+      console.log($scope.project_owner_);
+      console.log($scope.project_owner_2);
+      console.log(hashtag_value);
+      console.log(interested_person_);
+      console.log(project_sponsor);
+
+      // return false;
+
+      var data = null;
+
+      //check if the main owner is the same as the minor owner
+      if ($scope.project_owner_ == $scope.project_owner_2) {
+        Swal.fire({
+          type: "error",
+          title: "Invalid Owner",
+          text: "Project Owner cannot be the same as the secondary owner, if there is no secondary owner kindly leave it blank.",
         });
-    }
 
-    $scope.createProject = function (project_name_, version_no_, client_id, department_id_, start_date_, end_date_, project_description_, hashtag_value, interested_person_, project_sponsor, project_owner_, project_owner_2 ) {
-        console.log(project_name_)
-        console.log(version_no_)
-        console.log(client_id)
-        console.log(department_id_)
-        console.log(start_date_)
-        console.log(end_date_)
-        console.log(project_description_)
-        console.log($scope.attachment_file)
-        console.log($scope.user_id)
-        console.log($scope.project_owner_)
-        console.log($scope.project_owner_2)
-        console.log(hashtag_value)
-        console.log(interested_person_)
-        console.log(project_sponsor)
+        return false;
+      }
 
+      if ($scope.checkForHashTag(hashtag_value) === false) {
+        Swal.fire({
+          type: "error",
+          title: "Hash tag validation",
+          text: "Hash tag value field must include hash tag at the begining!!",
+        });
 
-        // return false;
+        return false;
+      }
 
+      //check if the user selected a file
+      if ($scope.attachment_file == "None") {
+        data = {
+          user_id: $scope.user_info.user_id,
+          project_name: project_name_.trim(),
+          version_no: version_no_.trim(),
+          client_id: client_id,
+          project_description: project_description_.trim(),
+          dept_id: 138,
+          user_id: $scope.user_id.trim(),
+          start_date: start_date_,
+          fileName: null,
+          end_date: end_date_,
+          priority: priority_,
+          owner: project_owner_,
+          owner_2: project_owner_2,
+          hash_tag: hashtag_value,
+          interested_person: interested_person_,
+          project_sponsor: project_sponsor,
+        };
+      } else {
+        data = {
+          user_id: $scope.user_info.user_id,
+          project_name: project_name_.trim(),
+          version_no: version_no_.trim(),
+          client_id: client_id,
+          project_description: project_description_.trim(),
+          dept_id: 138,
+          user_id: $scope.user_id.trim(),
+          start_date: start_date_,
+          fileName: $scope.attachment_file,
+          end_date: end_date_,
+          priority: priority_,
+          owner: project_owner_,
+          owner_2: project_owner_2,
+          hash_tag: hashtag_value,
+          interested_person: interested_person_,
+          project_sponsor: project_sponsor,
+        };
+      }
 
-        var data = null;
+      //   console.log(data);
+      //   return false;
 
-        //check if the main owner is the same as the minor owner
-        if($scope.project_owner_ == $scope.project_owner_2){
-            Swal.fire({
-                type: 'error',
-                title: 'Invalid Owner',
-                text: 'Project Owner cannot be the same as the secondary owner, if there is no secondary owner kindly leave it blank.',
-            })
+      Swal.queue([
+        {
+          title: "Creating a project ...  ",
+          // showLoaderOnConfirm: true,
+          onBeforeOpen: () => {
+            Swal.showLoading();
+          },
+          showLoaderOnConfirm: true,
+        },
+      ]);
 
-            return false;
-        }
+      var sendRequest = function () {
+        //$http POST function
+        $http({
+          method: "POST",
+          url: myConfig.url + "/createProject.php",
+          data: data,
+        }).then(
+          function successCallback(response) {
+            var $res = response.data;
+            console.log($res.status);
 
-        if($scope.checkForHashTag(hashtag_value) === false){
-            Swal.fire({
-                type: 'error',
-                title: 'Hash tag validation',
-                text: 'Hash tag value field must include hash tag at the begining!!',
-            })
+            if ($res.status == "success") {
+              Swal.fire({
+                type: "success",
+                title: "PROJ-0000" + $res.project_id,
+                text: $res.message,
+              });
+              // //    Swal.fire($res.status, "success");
 
-            return false;
-        }
+              $("#add_project_form")[0].reset();
 
-        //check if the user selected a file
-        if($scope.attachment_file=='None'){
-            data = {
-                user_id: $scope.user_info.user_id,
-                project_name: project_name_.trim(),
-                version_no: version_no_.trim(),
-                client_id: client_id,
-                project_description: project_description_.trim(),
-                dept_id: department_id_.trim(),
-                user_id: $scope.user_id.trim(),
-                start_date: start_date_,
-                fileName: null,
-                end_date: end_date_,
-                owner: project_owner_,
-                owner_2: project_owner_2,
-                hash_tag: hashtag_value,
-                interested_person: interested_person_,
-                project_sponsor: project_sponsor,
+              // setTimeout(
+
+              //     // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
+
+              //     , 30000);
+              setTimeout(() => {
+                window.location = "project/" + $res.project_id;
+              }, 2000);
+
+              //   setTimeout(() => {
+              //     window.location =
+              //       "add_task?project_id=" +
+              //       $res.project_id +
+              //       "&project_name=" +
+              //       project_name_ +
+              //       "&department_id=" +
+              //       department_id_ +
+              //       "&start_date=" +
+              //       start_date_ +
+              //       "&end_date=" +
+              //       end_date_;
+              //   }, 3000);
+
+              // $timeout(
+              //     window.location = 'add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_ + '&start_date=' + $res.start_date + '&end_date=' + $res.end_date
+
+              //     // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
+
+              //     , 2000);
+            } else {
+              Swal.fire({
+                type: "error",
+                title: $res.status,
+                text: $res.message,
+              });
             }
-        }else{
-            data = {
-                user_id: $scope.user_info.user_id,
-                project_name: project_name_.trim(),
-                version_no: version_no_.trim(),
-                client_id: client_id,
-                project_description: project_description_.trim(),
-                dept_id: department_id_.trim(),
-                user_id: $scope.user_id.trim(),
-                start_date: start_date_,
-                fileName: $scope.attachment_file,
-                end_date: end_date_,
-                owner: project_owner_,
-                owner_2 : project_owner_2,
-                hash_tag: hashtag_value,
-                interested_person: interested_person_,
-                project_sponsor: project_sponsor
-            }
-        }
-        
-
-        // console.log(data);
-        //  return false;
-
-        Swal.queue([{
-            title: 'Creating a project ...  ',
-            // showLoaderOnConfirm: true,
-            onBeforeOpen: () => {
-                Swal.showLoading()
-            },
-            showLoaderOnConfirm: true,
-        }])
-
-
-        var sendRequest = function () {
-            //$http POST function
-            $http({
-
-                method: 'POST',
-                url: myConfig.url + '/createProject.php',
-                data: data
-
-            }).then(function successCallback(response) {
-                var $res = response.data
-                console.log($res.status)
-
-
-                if ($res.status == 'success') {
-
-                    Swal.fire({
-                        type: 'success',
-                        title: 'PROJ-0000' + $res.project_id,
-                        text: $res.message
-                    })
-                    // //    Swal.fire($res.status, "success");
-
-                    $('#add_project_form')[0].reset()
-
-                    // setTimeout(
-                        
-                    //     // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
-
-                    //     , 30000);
-
-                        setTimeout(() => {
-                            window.location = 'add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_ + '&start_date=' + start_date_ + '&end_date=' + end_date_
-                        }, 3000);
-
-                    // $timeout(
-                    //     window.location = 'add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_ + '&start_date=' + $res.start_date + '&end_date=' + $res.end_date
-
-                    //     // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
-
-                    //     , 2000);
-
-
-                } else {
-                    Swal.fire({
-                        type: 'error',
-                        title: $res.status,
-                        text: $res.message,
-                    })
-
-                }
-
-
-
-
-            }, function errorCallback(response) {
-
-                Swal.fire({
-                    type: 'warning',
-                    title: 'Sorry',
-                    text: 'Something went wrong',
-                })
-
+          },
+          function errorCallback(response) {
+            Swal.fire({
+              type: "warning",
+              title: "Sorry",
+              text: "Something went wrong",
             });
+          }
+        );
+      };
 
-        }
+      if (end_date_ < start_date_) {
+        console.log("date can not be less");
+        Swal.fire({
+          type: "error",
+          title: "Invalid Date",
+          text: "End date can go behind start date",
+        });
+      } else {
+        $scope.upload();
 
-        if (end_date_ < start_date_) {
-            console.log('date can not be less')
-            Swal.fire({
-                type: 'error',
-                title: 'Invalid Date',
-                text: 'End date can go behind start date',
-            })
-        } else {
+        sendRequest();
+      }
+    };
 
-            $scope.upload()
+    //method to check for # tag value
+    $scope.checkForHashTag = function (str) {
+      return str.charAt(0) === "#";
+    };
 
-            sendRequest()
+    // $scope.getDepartmentMembers = function (users, departmentId) {
+    //   console.log("new members", users);
+    //   console.log("department id ", departmentId);
 
-        }
+    //   return users.filter(
+    //     (user) => parseInt(user.department_id, 10) == parseInt(departmentId, 10)
+    //   );
+    // };
 
-    }
+    $scope.getDepartmentMembers = function (users, departmentId) {
+      // if (!Array.isArray(users) || !departmentId) {
+      //   console.warn(
+      //     "Invalid input: users should be an array and departmentId should be valid."
+      //   );
+      //   return [];
+      // }
 
-    
+      // console.log("Filtering users for department ID:", departmentId);
 
-  //method to check for # tag value
-  $scope.checkForHashTag = function (str) {
-    return str.charAt(0) === '#';
+      // return users.filter(
+      //   (user) => Number(user.department_id) === Number(departmentId)
+      // );
+
+      console.log("new members", users);
+      console.log("department id ", departmentId);
+
+      return users.filter(
+        (user) => parseInt(user.department_id, 10) == parseInt(departmentId, 10)
+      );
+    };
   }
-});
+);

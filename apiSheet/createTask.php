@@ -51,6 +51,8 @@ if(
     $p_end_date = mysqli_real_escape_string($conn, $data->p_end_date);
     $priority = mysqli_real_escape_string($conn, $data->priority);
     $risk = mysqli_real_escape_string($conn, $data->risk);
+    $dept= mysqli_real_escape_string($conn, $data->dept);
+  
 
     $start_date = date("Y-m-d", strtotime($t_start_date));
     $end_date = date("Y-m-d", strtotime($t_end_date));
@@ -59,6 +61,11 @@ if(
     $p_end_date = date("Y-m-d", strtotime($p_end_date));
     $file_name = mysqli_real_escape_string($conn, $data->fileName);
     // echo ($file_name); die();
+    $dep_task = 0;
+    if(isset($data->dependent_task)){
+        $dep_task = mysqli_real_escape_string($conn, $data->dependent_task);
+    }
+    
     $docAdded = 'NO';
     if($file_name != ''){
         $docAdded = 'YES';
@@ -95,7 +102,9 @@ if(
  
 
     // $query = "INSERT INTO `projects` (`id`, `version_no`, `name`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`) VALUES (NULL, '$version_no', '$name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date')";
-    $query = "INSERT INTO `tasks` (`task_id`, `description`, `start_date`, `end_date`, `client_id`, `assigned_by`, `assigned_to`, `priority`, `project_id`, `ip_address`, `location`, `created_at`, `doc`, `doc_name`, `risk`) VALUES (NULL, '$task_name', '$start_date', '$end_date', '$client_id', '$assigned_by', '$assigned_to', '$priority', '$project_id', '$ip_address', '$location', NOW(), '$docAdded', '$file_name', '$risk')";
+    $query = "INSERT INTO `tasks` (`task_id`, `description`, `start_date`, `end_date`, `client_id`, `assigned_by`, `assigned_to`, `priority`, `project_id`, `ip_address`, `location`, `created_at`, `doc`, `doc_name`, `risk`, `department`, `dep_task`) VALUES (NULL, '$task_name', '$start_date', '$end_date', '$client_id', '$assigned_by', '$assigned_to', '$priority', '$project_id', '$ip_address', '$location', NOW(), '$docAdded', '$file_name', '$risk', '$dept', '$dep_task')";
+
+    // echo($query); die();
 
     $result = mysqli_query($conn, $query);
 
@@ -172,4 +181,3 @@ if(
     exit($message);
     
 }
-

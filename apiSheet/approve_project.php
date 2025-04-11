@@ -127,9 +127,17 @@ function send_email($conn, $toEmail, $client_id, $subject, $txt){
     $mail->addAddress($toEmail);
     $mail->Subject=$subject;
     $mail->Body = $txt;
-    $done = $mail->send();
-    
-    return $done;
+    // Try to send email, catch error if any
+    try {
+        $mail->send();
+        $status = "Email sent successfully.";
+    } catch (Exception $e) {
+        $status = "Email could not be sent. Error: " . $mail->ErrorInfo;
+        // Optionally log the error to a file or database
+    }
+
+    // Continue regardless of email status
+    return $status;
 }
 
 //get the owner's email for the specified project with its id
@@ -275,4 +283,3 @@ function approve_project($conn, $project_id, $approvedBy, $comment ){
 
 
 }
-

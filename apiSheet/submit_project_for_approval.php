@@ -169,23 +169,23 @@ function get_all_approval_users($conn, $project_id)
 
             // return true;
 
-            // if( !$done){
-            //     $message = json_encode(
-            //         array(
-            //             'message' => 'Failed to send email notication',
-            //             'status' => 'failed'
-            //         )
+            if( !$done){
+                $message = json_encode(
+                    array(
+                        'message' => 'Failed to send email notication',
+                        'status' => 'failed'
+                    )
 
-            //     );
-            //     exit($message);
+                );
+                exit($message);
 
 
-            //    }else{
+               }else{
 
-            //     return true;
+                return true;
 
-            // }
-            return true;
+            }
+            // return true;
         } catch (Exception $e) {
 
             $message = json_encode(

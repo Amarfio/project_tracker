@@ -14,11 +14,12 @@ require_once 'functions/get_IP_Location.php';
 require_once 'functions/activity_logs.php';
 
 $data = json_decode(file_get_contents("php://input"));
+// print_r($data); die();
 if (
     isset($data) && isset($data->version_no) && isset($data->project_name) && isset($data->user_id) &&
     isset($data->start_date) && isset($data->end_date)  && isset($data->project_id)
 ) {
-    // echo json_encode($data->interested_person);
+    // echo json_encode($data);
     // die();
 
     $project_id = mysqli_real_escape_string($conn, $data->project_id);
@@ -32,7 +33,8 @@ if (
     $project_owner = mysqli_real_escape_string($conn, $data->project_owner);
     $hash_tag = mysqli_real_escape_string($conn, $data->hash_tag);
     $interested_person = mysqli_real_escape_string($conn, $data->interested_person);
-    $sec_owner = mysqli_real_escape_string($conn, $data->secondary_owner);
+    $sec_owner = mysqli_real_escape_string($conn, $data->secondary_owner ?? "");
+    $client = mysqli_real_escape_string($conn, $data->client??"");
     // $location = mysqli_real_escape_string($conn, $data->location); 
     $start_date = date("Y-m-d", strtotime($start_date));
     $end_date = date("Y-m-d", strtotime($end_date));
@@ -72,7 +74,7 @@ if (
     // }
 
 
-    $query = "UPDATE `projects` SET `name` = '$name', `version_no`= '$version_no',`description` = '$description', `dept_id` = '$dept_id', `start_date` = '$start_date', `end_date` = '$end_date', `owner` = '$project_owner', `s_owner` = '$sec_owner', `hash_tag` = '$hash_tag', `i_person`='$interested_person'  WHERE `projects`.`project_id` = '$project_id'";
+    $query = "UPDATE `projects` SET `name` = '$name', `version_no`= '$version_no',`description` = '$description', `dept_id` = '$dept_id', `start_date` = '$start_date', `end_date` = '$end_date', `owner` = '$project_owner', `s_owner` = '$sec_owner', `hash_tag` = '$hash_tag', `i_person`='$interested_person', `client`='$client' WHERE `projects`.`project_id` = '$project_id'";
 
 
     $result = mysqli_query($conn, $query);
@@ -82,7 +84,7 @@ if (
 
         $message = json_encode(
             array(
-                'message' => 'project created successfully',
+                'message' => 'project Updated successfully',
                 'status' => 'success',
                 'data' => [
                     'project_id' => $project_id,

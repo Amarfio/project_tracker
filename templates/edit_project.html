@@ -85,7 +85,7 @@
                     <div class="card card-stats mb-4 mb-lg-0">
                         <div class="card-body">
 
-                            <form id="add_project_form" ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_owner_, project_description_, hash_tag, s_owner_, interested_person)">
+                            <form id="add_project_form" ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_owner_, project_description_, hash_tag, s_owner_, interested_person, client_)">
 
 
                                 <div class="col-sm-12">
@@ -114,10 +114,10 @@
 
                                 <div class="col-sm-12">
                                     <label for="inputPassword" class=" col-form-label text-primary">Client</label>
-                                    <select class="form-control" ng-model="client_" id="project_version_no">
-                                        <option value="">{{project.client}}</option>
-                                        <option ng-value="version.code_desc_id" ng-repeat="version in versions">
-                                            {{ version.code_desc }}</option>
+                                    <select class="form-control" ng-model="client_" id="project_client">
+                                        <option value="">{{project.client_name}}</option>
+                                        <option ng-value="client.client_id" ng-repeat="client in all_clients">
+                                            {{ client.name }}</option>
                                     </select>
                                 </div>
 
@@ -181,7 +181,7 @@
                                     <label for="inputPassword" class="col-form-label text-primary">Owner</label>
                                     <select class="form-control" ng-model="project_owner_" id="project_owner_id" ng-value="">
                                             <option value="">{{project.project_owner}}</option>
-                                            <option ng-value="user.user_id" ng-repeat="user in all_users" 
+                                            <option ng-value="user.user_id" ng-repeat="user in project_staff" 
                                                 ng-hide="user.user_id == '1'">
                                                 {{user.f_name}} {{user.l_name}} </option>
                                         </select>
@@ -191,7 +191,7 @@
                                     <label for="inputPassword" class="col-form-label text-primary">Secondary owner</label>
                                     <select class="form-control" ng-model="s_owner_" id="sec_owner_id" ng-value="">
                                             <option value="">{{project.sec_owner}}</option>
-                                            <option ng-value="user.user_id" ng-repeat="user in all_users" 
+                                            <option ng-value="user.user_id" ng-repeat="user in project_staff" 
                                                 ng-hide="user.user_id == '1'">
                                                 {{user.f_name}} {{user.l_name}} </option>
                                         </select>

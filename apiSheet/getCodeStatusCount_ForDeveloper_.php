@@ -1,4 +1,3 @@
-
 <?php
 
 header('Access-Control-Allow-Origin: *');
@@ -17,7 +16,7 @@ function get_total_project_count( $conn, $user_id){
         
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
-    $query = "SELECT COUNT(p.project_id) total_project_count FROM projects p WHERE (pro.owner = '$user_id' OR pro.s_owner = '$user_id') AND p.is_archive = 0";
+    $query = "SELECT COUNT(p.project_id) total_project_count FROM projects p WHERE (pro.owner = '$user_id' OR pro.s_owner = '$user_id' OR pro.posted_by='$user_id') AND p.is_archive = 0";
     $result = mysqli_query($conn, $query); 
     // $num = mysqli_num_rows($result);
     $count_total_status = array();
@@ -113,4 +112,3 @@ if (isset($_GET['init'])  ) {
         echo 'empty';
     }
 }
-

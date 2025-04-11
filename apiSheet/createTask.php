@@ -1,6 +1,6 @@
 <?php
 
-  
+
 header('Access-Control-Allow-Origin: *');
 header("Content-Type: application/json; charset=UTF-8");
 header('Access-Control-Allow-Methods: POST');
@@ -22,21 +22,18 @@ function getUsernameById($user_id)
     $result = mysqli_query($conn, $queri);
     // return the username
     $row = mysqli_fetch_assoc($result);
-    $developer_email = $row['email'] ;
+    $developer_email = $row['email'];
     return $developer_email;
-
-
-
 }
 
 
 
 
-$data = json_decode(file_get_contents("php://input")); 
-if(
+$data = json_decode(file_get_contents("php://input"));
+if (
     isset($data) && isset($data->user_id) && isset($data->project_id) && isset($data->task_name) && isset($data->assigned_by) &&
-    isset($data->assigned_to) && isset($data->t_start_date) && isset($data->t_end_date) && isset($data->p_start_date) && isset($data->p_end_date) &&  isset($data->priority)  
-){
+    isset($data->assigned_to) && isset($data->t_start_date) && isset($data->t_end_date) && isset($data->p_start_date) && isset($data->p_end_date)
+) {
     // echo json_encode($data);
 
     $user_id = mysqli_real_escape_string($conn, $data->user_id);
@@ -51,8 +48,8 @@ if(
     $p_end_date = mysqli_real_escape_string($conn, $data->p_end_date);
     $priority = mysqli_real_escape_string($conn, $data->priority);
     $risk = mysqli_real_escape_string($conn, $data->risk);
-    $dept= mysqli_real_escape_string($conn, $data->dept);
-  
+    $dept = mysqli_real_escape_string($conn, $data->dept);
+
 
     $start_date = date("Y-m-d", strtotime($t_start_date));
     $end_date = date("Y-m-d", strtotime($t_end_date));
@@ -62,12 +59,12 @@ if(
     $file_name = mysqli_real_escape_string($conn, $data->fileName);
     // echo ($file_name); die();
     $dep_task = 0;
-    if(isset($data->dependent_task)){
+    if (isset($data->dependent_task)) {
         $dep_task = mysqli_real_escape_string($conn, $data->dependent_task);
     }
-    
+
     $docAdded = 'NO';
-    if($file_name != ''){
+    if ($file_name != '') {
         $docAdded = 'YES';
     }
 
@@ -79,7 +76,7 @@ if(
     //             )
     //         );
     //         exit($message);
-    
+
     // }
     // if ($t_end_date > $p_end_date) {
     //       $message = json_encode(
@@ -89,7 +86,7 @@ if(
     //             )
     //         );
     //         exit($message);
-    
+
     // }
 
     // $status = mysqli_real_escape_string($conn, $data->status);
@@ -98,8 +95,8 @@ if(
     // $ip_address = mysqli_real_escape_string($conn, $data->ip_address);
     // $location = mysqli_real_escape_string($conn, $data->location);
     $ip_address = 'DF45-123E-34E-24';
-    $location = 'Accra Ghana'; 
- 
+    $location = 'Accra Ghana';
+
 
     // $query = "INSERT INTO `projects` (`id`, `version_no`, `name`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`) VALUES (NULL, '$version_no', '$name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date')";
     $query = "INSERT INTO `tasks` (`task_id`, `description`, `start_date`, `end_date`, `client_id`, `assigned_by`, `assigned_to`, `priority`, `project_id`, `ip_address`, `location`, `created_at`, `doc`, `doc_name`, `risk`, `department`, `dep_task`) VALUES (NULL, '$task_name', '$start_date', '$end_date', '$client_id', '$assigned_by', '$assigned_to', '$priority', '$project_id', '$ip_address', '$location', NOW(), '$docAdded', '$file_name', '$risk', '$dept', '$dep_task')";
@@ -115,13 +112,13 @@ if(
         // $txt = 'One new task has been assigned to you'; 
         // $headers = "UNION SYSTEMS GLOBAL" . "\r\n" .
         // "CC: usg@gmail.com";
-    
+
         // mail($to,$subject,$txt,$headers);
 
 
-        $task_id = mysqli_insert_id($conn); 
-                            
-   
+        $task_id = mysqli_insert_id($conn);
+
+
         $message = json_encode(
             array(
                 'message' => 'task created successfully',
@@ -142,36 +139,32 @@ if(
                 'task_id' => $task_id
             )
         );
-            // LOG ACTIVITY
-                    
-            $user =  $user_id;
-            $activity =  ' tried to create a task REF-0000' . $task_id.  ' | Details: ' . $message;
-            $status = 'success';
-            log_activity($conn, $user, $activity, $status, getSecurity());
+        // LOG ACTIVITY
 
-            // END LOG ACTIVITY
-          
-        
+        $user =  $user_id;
+        $activity =  ' tried to create a task REF-0000' . $task_id .  ' | Details: ' . $message;
+        $status = 'success';
+        log_activity($conn, $user, $activity, $status, getSecurity());
+
+        // END LOG ACTIVITY
+
+
         exit($message);
-
-       
     } else {
-            $user =  $user_id;
-            $activity =  ' tried to create a task REF-0000' . $task_id;
-            $status = 'failed';
-            log_activity($conn, $user, $activity, $status, getSecurity());
+        $user =  $user_id;
+        $activity =  ' tried to create a task REF-0000' . $task_id;
+        $status = 'failed';
+        log_activity($conn, $user, $activity, $status, getSecurity());
 
         $message = json_encode(
-             array(
+            array(
                 'message' => 'Failed to create task',
                 'status' => 'failed'
             )
         );
         exit($message);
-        
     }
-
-}else{
+} else {
     $message = json_encode(
         array(
             'message' => 'Invalid Request',
@@ -179,5 +172,4 @@ if(
         )
     );
     exit($message);
-    
 }

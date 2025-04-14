@@ -21,27 +21,32 @@ if (
     isset($data) && isset($data->first_name) && isset($data->last_name) && isset($data->username)   && isset($data->role_id)  && isset($data->can_approve)  && isset($data->email) && isset($data->city) && isset($data->gender) 
 ) {
     // echo json_encode($data); jdfjodf 
+    $user= [];
+    $user['f_name'] = mysqli_real_escape_string($conn, $data->first_name); 
+    $user['l_name'] = mysqli_real_escape_string($conn, $data->last_name);
+    $user['username'] = mysqli_real_escape_string($conn, $data->username);
+    $user['gender'] = mysqli_real_escape_string($conn, $data->gender);
+    $user['dept'] = mysqli_real_escape_string($conn, $data->dept_id);
 
-    $f_name = mysqli_real_escape_string($conn, $data->first_name); 
-    $l_name = mysqli_real_escape_string($conn, $data->last_name);
-    $username = mysqli_real_escape_string($conn, $data->username);
-    $gender = mysqli_real_escape_string($conn, $data->gender);
-    $dept = mysqli_real_escape_string($conn, $data->dept_id);
-
-    $role = mysqli_real_escape_string($conn, $data->role_id);
-    $can_approve = mysqli_real_escape_string($conn, $data->can_approve);
+    $user['role'] = mysqli_real_escape_string($conn, $data->role_id);
+    $user['can_approve'] = mysqli_real_escape_string($conn, $data->can_approve);
     // $position = mysqli_real_escape_string($conn, $data->position);
-    $is_dpt_head = mysqli_real_escape_string($conn, $data->is_dpt_head);
+    $user['is_dpt_head'] = mysqli_real_escape_string($conn, $data->is_dpt_head);
   
-    $email = strtolower( mysqli_real_escape_string($conn, $data->email) );
-    $phone = mysqli_real_escape_string($conn, $data->phone);
-    $country = mysqli_real_escape_string($conn, $data->country);
+    $user['email'] = strtolower( mysqli_real_escape_string($conn, $data->email) );
+    $user['phone'] = mysqli_real_escape_string($conn, $data->phone);
+    // $user['country'] = mysqli_real_escape_string($conn, $data->country);
+    $user['country'] = "Ghana";
   
-    $city = mysqli_real_escape_string($conn, $data->city);
-    $postal_addr = mysqli_real_escape_string($conn, $data->postal_addr);
+    $user['city'] = mysqli_real_escape_string($conn, $data->city);
+    $user['postal_addr'] = mysqli_real_escape_string($conn, $data->postal_addr);
     
     // CHECK IF data->each_request exist. 
 
+    $dept = $user['dept'];
+    $email = $user['email'];
+    $is_dpt_head = $user['is_dpt_head'];
+    
     $check_user_query = "SELECT dept FROM users where users.dept = '$dept' AND is_dpt_head =1 AND is_dpt_head = $is_dpt_head ";
     $result_check_user_query = mysqli_query($conn, $check_user_query);
     $check_dept_head_count = mysqli_num_rows($result_check_user_query);
@@ -606,46 +611,9 @@ if (
         
         // $sent = sendEmail($email, $name, $subject, $txt);
         // exit(json_encode($done));
+       $message =  createUser($conn, $user);
         if ($done) {
-
-            $query = "INSERT INTO `users` (`id`, `f_name`, `l_name`,`username`, `dept`, `role`, `can_approve`, `position`, `is_dpt_head`, `email`, `phone`, `country`, `city`, `postal_addr`, `reset`) VALUES (NULL, '$f_name', '$l_name', '$username', '$dept', '$role', '$can_approve', NULL, '$is_dpt_head', '$email', '$phone', '$country', '$city', '$postal_addr', '$set_password')";
-            $result = mysqli_query($conn, $query);
-     
-            if ($result == 1) {
-
-              $message= json_encode(
-                array(
-                    'status' => 'success',
-                    'message' => "User Successfully create. \n Please check email for change password link" ,
-                    'data' => [
-                        'first_name' => $f_name,
-                        'last_name' => $l_name,
-                        'dept_id' => $dept,
-                        'role_id' => $role,
-                        // 'position' => $position,
-                        'is_dpt_head' => $is_dpt_head,
-                        'email' => $email,
-                        'phone' => $phone,
-                        'country' => $country, 
-                        'city' => $city,
-                        'postal_addr' => $postal_addr
-                    ],
-                    'set_password' => $set_password
-                )
-            );
-             exit($message);
-            
-         } else {
-                $message =  json_encode(
-                     array(
-                         'data' => null,
-                         'message' => 'Failed to create a user',
-                         'status' => 'failed'
-                     )
-                 );
-                  exit($message);
-             } 
-
+          exit($message);  
         }else{
 
             $message =  json_encode(
@@ -658,6 +626,8 @@ if (
              exit($message);
            
         }
+
+        
 
         // if (mail($to,$subject,$txt,$headers)) {
        
@@ -699,4 +669,61 @@ if (
     );
 
      exit($message);
+}
+
+function createUser($conn, $user){
+  $f_name = $user['f_name'];
+  $l_name = $user['l_name'];
+  $username = $user['username'];
+  $dept = $user['dept'];
+  $role = $user['role'];
+  $can_approve = $user['can_approve'];
+  $is_dpt_head = $user['is_dpt_head'];
+  $email = $user['email'];
+  $phone= $user['phone'];
+  $country= $user['country'];
+  $city= $user['city'];
+  $postal_addr = $user['postal_addr'];
+  $set_password = $user['set_password'];
+
+  $query = "INSERT INTO `users` (`id`, `f_name`, `l_name`,`username`, `dept`, `role`, `can_approve`, `position`, `is_dpt_head`, `email`, `phone`, `country`, `city`, `postal_addr`, `reset`) VALUES (NULL, '$f_name', '$l_name', '$username', '$dept', '$role', '$can_approve', NULL, '$is_dpt_head', '$email', '$phone', '$country', '$city', '$postal_addr', '$set_password')";
+  // echo($query); die();
+            $result = mysqli_query($conn, $query);
+     
+            if ($result == 1) {
+
+              $message= json_encode(
+                array(
+                    'status' => 'success',
+                    'message' => "User Successfully create. \n Please check email for change password link" ,
+                    'data' => [
+                        'first_name' => $f_name,
+                        'last_name' => $l_name,
+                        'dept_id' => $dept,
+                        'role_id' => $role,
+                        // 'position' => $position,
+                        'is_dpt_head' => $is_dpt_head,
+                        'email' => $email,
+                        'phone' => $phone,
+                        'country' => $country, 
+                        'city' => $city,
+                        'postal_addr' => $postal_addr
+                    ],
+                    'set_password' => $set_password
+                )
+            );
+            //  exit($message);
+             return $message;
+            
+         } else {
+                $message =  json_encode(
+                     array(
+                         'data' => null,
+                         'message' => 'Failed to create a user',
+                         'status' => 'failed'
+                     )
+                 );
+                  // exit($message);
+                return $message;
+             } 
 }

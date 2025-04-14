@@ -150,7 +150,8 @@ sheetApp.controller(
       console.log(email_notice);
       console.log(isWorking);
       console.log(dept);
-      //   return false;
+      // console.log(userDepartment);
+      // return false;
 
       var data = {
         user_id: $scope.newUser_id,
@@ -163,8 +164,10 @@ sheetApp.controller(
         bio: bio,
         email_notice: email_notice,
         isWorking: isWorking,
-        dept_id: userDepartment,
+        dept_id: dept,
       };
+      console.log(data, "user data");
+      // return false;
 
       $http({
         method: "POST",

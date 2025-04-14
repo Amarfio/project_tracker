@@ -29,8 +29,9 @@ if(
     $bio = mysqli_real_escape_string($conn, $data->bio);
     $emailNotice= mysqli_real_escape_string($conn, $data->email_notice);
     $isWorking = mysqli_real_escape_string($conn, $data->isWorking);
+    $dept_id = mysqli_real_escape_string($conn, $data->dept_id);
 
-    $query = "UPDATE `users` SET `username` = '$username', `f_name` = '$first_name', `l_name` = '$last_name', `postal_addr` = '$address', `city` = '$city', `country` = '$country', `bio` = '$bio', `email_notice` = '$emailNotice', `is_active` = '$isWorking' WHERE `users`.`id` = '$user_id'";
+    $query = "UPDATE `users` SET `username` = '$username', `f_name` = '$first_name', `l_name` = '$last_name', `postal_addr` = '$address', `city` = '$city', `country` = '$country', `bio` = '$bio', `email_notice` = '$emailNotice', `is_active` = '$isWorking',`dept` = '$dept_id' WHERE `users`.`id` = '$user_id'";
 
     // echo($query); die();
     $result = mysqli_query($conn, $query);

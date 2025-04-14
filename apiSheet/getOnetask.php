@@ -26,10 +26,9 @@ if (isset($_GET['task_id'])) {
             $tast_arr[] = $row;
         }
 
-        // echo ($tast_arr[0]['task_id']);
-        // die();
-        $tast_arr[0]['dep_task_completion_rate'] = getDepTaskCompletion($tast_arr[0]['dep_task']);
-        $tast_arr[0]['d_status'] = getStatusOfTask($tast_arr[0]['dep_task']);
+        // echo($tast_arr[0]['task_id']); die();
+        // $tast_arr[0]['dep_task_completion_rate'] = getDepTaskCompletion($tast_arr[0]['dep_task']);
+        // $tast_arr[0]['d_status'] = getStatusOfTask($tast_arr[0]['dep_task']);
 
         // echo json_encode($tast_arr);
         // die();

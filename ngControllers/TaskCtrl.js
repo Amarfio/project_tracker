@@ -1053,7 +1053,9 @@ sheetApp.controller(
       // console.log(client_id_)
       // console.log(start_date_)
       // console.log(end_date_)
+
       console.log(department_id_, "dept here!!!!");
+      // $("#addTaskBtn").prop("disabled", true);
       console.log("This is start date:");
       console.log(new Date($scope.p_start_date));
       console.log("This is end date:");

@@ -354,7 +354,7 @@
 
                   <div class="col-md-4">
                     <span class="text-primary">Document:</span>
-                    <span class=""
+                    <span class="" ng-if="project.attach !=''"
                       ><a
                         ng-href="{{myConfig_file_url}}{{project.attach}}"
                         target="_blank"
@@ -370,19 +370,40 @@
                         {{ project.attach }}
                       </a>
                     </span>
+                    <span
+                      ng-if="project.attach=='' || project.attach== null"
+                    ></span>
                   </div>
 
                   <div class="col-md-4">
                     <span class="text-primary">Approved Date:</span>
-                    &nbsp;&nbsp;{{ project.approved_date | date: mediumDate }}
+                    <span
+                      >&nbsp;&nbsp;{{ project.approved_date | date: mediumDate
+                      }}
+                    </span>
+                    <span ng-if="project.approved_date == null">
+                      {{"N/A"}}
+                    </span>
                   </div>
                   <div class="col-md-4">
                     <span class="text-primary">Approved By:</span>
-                    &nbsp;&nbsp;{{ project.approved_by_name }}
+                    <span ng-if="project.approved_by_name == null"
+                      >{{"N/A"}}</span
+                    >
+                    <span ng-if="project.approved_by_name!=null">
+                      &nbsp;&nbsp;{{project.approved_by_name}}
+                    </span>
                   </div>
                   <div class="col-md-4">
                     <span class="text-primary">Completed date:</span>
-                    &nbsp;&nbsp;{{ project.date_of_completion }}
+                    <span ng-if="project.date_of_completion != null"
+                      >&nbsp;&nbsp;{{ project.date_of_completion }}</span
+                    >
+                    <span
+                      ng-if="project.date_of_completion == null || project.date_of_completion =='' "
+                    >
+                      {{"N/A"}}
+                    </span>
                   </div>
 
                   <div class="col-md-8"></div>
@@ -653,7 +674,10 @@
                   </div>
                 </td>
                 <td>{{task.assigned_to}}</td>
-                <td>{{task.dpt_name}}</td>
+                <td>
+                  <span ng-if="task.dpt_name == null"> {{"N/A"}} </span>
+                  <span ng-if="task.dpt_name !== null">{{task.dpt_name}}</span>
+                </td>
                 <td style="align: center">
                   <a
                     data-toggle="modal"
@@ -723,13 +747,21 @@
 
                 <td class="text-center">
                   <div class="d-flex align-items-center">
-                    <span class="">{{task.last_update_date}}</span>
+                    <span ng-if="task.last_update_date == null">
+                      {{"N/A"}}
+                    </span>
+                    <span class="" ng-if="task.last_update_date != null"
+                      >{{task.last_update_date}}</span
+                    >
                   </div>
                 </td>
 
                 <td class="text-center">
                   <div class="d-flex align-items-center">
-                    <span class="">{{task.last_update}}</span>
+                    <span ng-if="task.last_update == null"> {{"N/A"}} </span>
+                    <span class="" ng-if="task.last_update != null"
+                      >{{task.last_update}}</span
+                    >
                   </div>
                 </td>
               </tr>
@@ -1247,7 +1279,13 @@
                     class="col-sm-6 col-form-label text-primary"
                   ></label>
                   <div class="col-sm-6">
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                      id="addTaskBtn"
+                    >
+                      Add
+                    </button>
                     <!-- href="dashboard_t" -->
 
                     <button

@@ -43,8 +43,8 @@ if (
 
         //code to update project status to completed if so
     //check and update the project to completed
-        // $queryP = "UPDATE projects SET status = 88, completed_date='$dateOfCompletion' WHERE projects.project_id = '$projectId' AND (SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id ='$projectId' )";
-        $queryP = "UPDATE `projects` SET `status` = 88, `completed_date`=NOW(), `updated_at`= NOW() WHERE `project_id` = '$projectId'";
+        $queryP = "UPDATE projects SET status = 88, completed_date=NOW() WHERE projects.project_id = '$projectId' AND (SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id ='$projectId' )";
+        // $queryP = "UPDATE `projects` SET `status` = 88, `completed_date`=NOW(), `updated_at`= NOW() WHERE `project_id` = '$projectId'";
         // echo($queryP); die();
         $resultP = mysqli_query($conn, $queryP);
     }
@@ -109,12 +109,11 @@ if (
 
 function checkPercentageOfProject( $conn, $projectId){
     // echo("here adey"); die();
-    // $query = "SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id ='$projectId' ";
-    $query = "SELECT AVG(t.completion) as completion from tasks t WHERE (t.status=59 OR t.status=61) AND t.project_id ='$projectId' ";
+    $query = "SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id ='$projectId' ";
+    // $query = "SELECT AVG(t.completion)=100 as completion from tasks t WHERE (t.status=59 OR t.status=61) AND t.project_id ='$projectId' ";
     // echo($query); die();
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_array($result);
 
     return intval($row['completion']);
 }
-

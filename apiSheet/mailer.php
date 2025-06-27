@@ -15,10 +15,18 @@ $mail = new PHPMailer();
 
 
 //STMP Settings
+// $mail->isSMTP();
+// $mail->Host = "server.unionsg.com";
+// $mail->SMTPAuth=true;
+// $mail->Username="hr@unionsg.com";
+// $mail->Password="(qLwOdQ3F3cm";
+// $mail->Port = 587;
+// $mail->SMTPSecure = "tls";
+
 $mail->isSMTP();
-$mail->Host = "server.unionsg.com";
-$mail->SMTPAuth=true;
-$mail->Username="hr@unionsg.com";
-$mail->Password="(qLwOdQ3F3cm";
+$mail->Host = "mail.unionsg.com";
+$mail->SMTPAuth = true;
+$mail->Username = "hr@unionsg.com";
+$mail->Password = "(qLwOdQ3F3cm";
 $mail->Port = 587;
 $mail->SMTPSecure = "tls";

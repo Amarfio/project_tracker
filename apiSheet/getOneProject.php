@@ -79,6 +79,7 @@ require_once 'functions/usableFunctions.php';
             $taskConflictsNo = getNoOfConflictingTasks($task_arr[$i]['task_id'], $conn);
             // echo($taskConflictsNo); 
             $task_arr[$i]['noOfConflictsTask'] = $taskConflictsNo;
+            $task_arr[$i]['status'] = strtolower($task_arr[$i]['status']);
         }
         return $task_arr;
     }

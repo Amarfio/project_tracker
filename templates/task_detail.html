@@ -132,8 +132,16 @@
               </div>
 
               <div class="col-md-6">
+                <span class="text-primary">Status :</span>
                 <span class=" badge badge-success" ng-if="project.is_approved == '1'">Approved</span>
                 <span class=" badge badge-danger" ng-if="project.is_approved == '0'">Not Approved</span>
+              </div>
+              <div class="col-md-6">
+                <span class="text-primary">Approved Date :</span>
+                &nbsp;&nbsp;<span class="">{{ project.project_approved_date | date: mediumDate }}</span>
+                <span ng-if="project.project_approved_date == null">
+                      {{"N/A"}}
+                    </span>
               </div>
               <!-- <div class="col-md-4"> -->
               <!-- <div class="icon icon-shape bg-{{percentage_color}} text-white rounded-circle shadow "

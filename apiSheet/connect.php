@@ -5,7 +5,7 @@ $user = 'root';
 $password = '';
 // $db_name = 'cheat';
 // $db_name = 'union';
-$db_name = 'project_tracker_db';
+$db_name = 'project_tracker_test_db';
 $port = '3306';
 
 $conn = new mysqli($host, $user, $password, $db_name, $port);

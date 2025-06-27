@@ -1053,9 +1053,8 @@ sheetApp.controller(
       // console.log(client_id_)
       // console.log(start_date_)
       // console.log(end_date_)
-
+      $("#addTaskBtn").prop("disabled", true);
       console.log(department_id_, "dept here!!!!");
-      // $("#addTaskBtn").prop("disabled", true);
       console.log("This is start date:");
       console.log(new Date($scope.p_start_date));
       console.log("This is end date:");
@@ -1081,7 +1080,7 @@ sheetApp.controller(
             $res = response.data;
             console.log($res.status);
 
-            $("#modal-adding-task").modal("hide");
+            $("#modal-adding-task").hide();
             if ($res.status == "success") {
               Swal.fire({
                 type: "success",

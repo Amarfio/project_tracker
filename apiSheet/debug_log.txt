@@ -1,0 +1,35 @@
+Testing Credits department (ID: 1) from 2025-01-01 to 2025-06-19
+Previous outstanding tasks: 0
+New Tasks Details:
+Testing Credits department (ID: 1) from 2025-01-01 to 2025-06-19
+Previous outstanding tasks: 0
+New Tasks Details:
+Testing Credits department (ID: 110) from 2025-01-01 to 2025-06-19
+Previous outstanding tasks: 33
+New Tasks Details:
+Task ID: 5046, Approved: 2025-01-06 14:49:05, Created: 2025-01-06 10:53:19, Department: Credits
+Task ID: 5079, Approved: 2025-01-14 16:50:22, Created: 2025-01-14 15:46:25, Department: Credits
+Task ID: 5075, Approved: 2025-01-14 16:50:51, Created: 2025-01-14 15:37:02, Department: Credits
+Task ID: 5076, Approved: 2025-01-14 16:50:51, Created: 2025-01-14 15:38:19, Department: Credits
+Task ID: 5077, Approved: 2025-01-14 16:50:51, Created: 2025-01-14 15:39:22, Department: Credits
+Task ID: 5078, Approved: 2025-01-14 16:50:51, Created: 2025-01-14 15:40:30, Department: Credits
+Task ID: 5109, Approved: 2025-01-27 11:45:34, Created: 2025-01-27 09:40:31, Department: Credits
+Task ID: 5108, Approved: 2025-01-27 11:46:04, Created: 2025-01-27 09:37:04, Department: Credits
+Task ID: 5190, Approved: 2025-02-12 08:03:07, Created: 2025-02-10 15:49:17, Department: Credits
+Task ID: 5205, Approved: 2025-02-14 08:38:04, Created: 2025-02-13 19:38:01, Department: Credits
+Task ID: 5196, Approved: 2025-02-14 08:38:31, Created: 2025-02-12 13:36:03, Department: Credits
+Task ID: 5195, Approved: 2025-02-14 08:38:31, Created: 2025-02-12 13:30:18, Department: Credits
+Task ID: 5216, Approved: 2025-02-19 09:50:19, Created: 2025-02-19 09:49:20, Department: Credits
+Task ID: 5260, Approved: 2025-02-27 18:16:44, Created: 2025-02-27 18:14:38, Department: Credits
+Task ID: 5261, Approved: 2025-02-27 18:25:08, Created: 2025-02-27 18:23:57, Department: Credits
+Task ID: 5290, Approved: 2025-03-07 09:17:41, Created: 2025-03-05 14:50:02, Department: Credits
+Task ID: 5294, Approved: 2025-03-07 12:02:12, Created: 2025-03-07 11:49:54, Department: Credits
+Task ID: 5318, Approved: 2025-03-19 15:36:14, Created: 2025-03-19 15:00:48, Department: Credits
+Task ID: 5325, Approved: 2025-03-21 11:23:11, Created: 2025-03-21 09:33:46, Department: Credits
+Task ID: 5473, Approved: 2025-04-25 13:05:09, Created: 2025-04-25 13:12:26, Department: Credits
+Task ID: 5474, Approved: 2025-04-25 13:05:09, Created: 2025-04-25 13:14:01, Department: Credits
+Task ID: 5303, Approved: 2025-04-25 13:05:09, Created: 2025-03-13 16:27:07, Department: Credits
+Task ID: 5471, Approved: 2025-04-25 13:05:09, Created: 2025-04-25 08:23:43, Department: Credits
+Task ID: 5304, Approved: 2025-04-25 13:05:09, Created: 2025-03-13 16:30:05, Department: Credits
+Task ID: 5472, Approved: 2025-04-25 13:05:09, Created: 2025-04-25 08:26:12, Department: Credits
+Task ID: 5305, Approved: 2025-04-25 13:05:09, Created: 2025-03-13 16:32:23, Department: Credits

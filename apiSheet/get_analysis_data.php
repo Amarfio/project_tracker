@@ -44,23 +44,26 @@ try {
     $data = [];
 
     if ($type === 'individual_tasks') {
-        // Query active users with their id, department, role, email, and task count
+        // Query active users with their id, department, role, email, total task count, and completed task count
         $sql = "SELECT 
                     u.id,
                     CONCAT(u.f_name, ' ', u.l_name) AS user,
                     cd_dept.`desc` AS department,
                     cd_role.`desc` AS role,
                     u.email,
-                    COUNT(t.task_id) AS task_count
+                    COUNT(t.task_id) AS task_count,
+                    SUM(CASE WHEN t.status = 61 THEN 1 ELSE 0 END) AS completed_task_count
                 FROM 
                     users u
                 LEFT JOIN 
                     code_desc cd_dept ON u.dept = cd_dept.id AND cd_dept.init = 'dpt'
                 LEFT JOIN 
                     code_desc cd_role ON u.role = cd_role.id AND cd_role.init = 'rol'
-                LEFT JOIN 
+                INNER JOIN 
                     tasks t ON t.assigned_to = u.id 
-                    AND t.created_at BETWEEN ? AND ?
+                INNER JOIN 
+                    projects p ON t.project_id = p.project_id 
+                    AND p.approved_date BETWEEN ? AND ?
                 WHERE 
                     u.is_active = 1
                 GROUP BY 
@@ -87,7 +90,8 @@ try {
                 'department' => $row['department'] ?: 'Unknown Department',
                 'role' => $row['role'] ?: 'Unknown Role',
                 'email' => $row['email'] ?: 'No Email',
-                'task_count' => (int)$row['task_count']
+                'task_count' => (int)$row['task_count'],
+                'completed_task_count' => (int)$row['completed_task_count']
             ];
         }
 

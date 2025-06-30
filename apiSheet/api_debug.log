@@ -4736,3 +4736,462 @@
 [2025-06-27 14:45:58] Response sent: success=true, data_count=67
 [2025-06-27 16:46:01] Request received: user_id=191
 [2025-06-27 16:46:01] User data fetched: user_name=Richard Dankwa
+[2025-06-28 07:05:29] Request received: type=individual_tasks, start_date=2025-02-01, end_date=2025-06-25
+[2025-06-28 07:05:30] Individual tasks data fetched: 67 rows
+[2025-06-28 07:05:30] Response sent: success=true, data_count=67
+[2025-06-28 09:29:41] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 09:29:41] Individual tasks data fetched: 67 rows
+[2025-06-28 09:29:41] Response sent: success=true, data_count=67
+[2025-06-28 11:29:45] Request received: user_id=161, start_date=Wed Jan 01 2025 00:00:00 GMT+0000 (Greenwich Mean Time), end_date=Wed Jun 25 2025 01:00:00 GMT+0100 (British Summer Time)
+[2025-06-28 11:29:45] Error: Invalid start date format. Use YYYY-MM-DD
+[2025-06-28 11:30:02] Request received: user_id=161, start_date=Wed Jan 01 2025 00:00:00 GMT+0000 (Greenwich Mean Time), end_date=Wed Jun 25 2025 01:00:00 GMT+0100 (British Summer Time)
+[2025-06-28 11:30:02] Error: Invalid start date format. Use YYYY-MM-DD
+[2025-06-28 11:36:53] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 11:36:53] User data fetched: user_name=Joshua Amarfio, efficiency=2.7
+[2025-06-28 09:42:30] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 09:42:30] Individual tasks data fetched: 67 rows
+[2025-06-28 09:42:30] Response sent: success=true, data_count=67
+[2025-06-28 11:42:35] Request received: user_id=169, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 11:42:35] User data fetched: user_name=Moses O. Atakorah, efficiency=24.32
+[2025-06-28 12:06:00] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 12:06:00] Individual tasks data fetched: 67 rows
+[2025-06-28 12:06:00] Response sent: success=true, data_count=67
+[2025-06-28 14:06:25] Request received: user_id=191, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:06:26] User data fetched: user_name=Richard Dankwa, efficiency=0
+[2025-06-28 14:07:31] Request received: user_id=191, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:07:31] User data fetched: user_name=Richard Dankwa, efficiency=0
+[2025-06-28 12:07:48] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:07:48] Individual tasks data fetched: 67 rows
+[2025-06-28 12:07:48] Response sent: success=true, data_count=67
+[2025-06-28 14:08:03] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:08:03] User data fetched: user_name=Joshua Amarfio, efficiency=2.7
+[2025-06-28 12:08:38] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:08:38] Individual tasks data fetched: 67 rows
+[2025-06-28 12:08:38] Response sent: success=true, data_count=67
+[2025-06-28 14:09:34] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:09:34] User data fetched: user_name=Theophilus Appah, efficiency=7.14
+[2025-06-28 12:10:11] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:10:11] Individual tasks data fetched: 67 rows
+[2025-06-28 12:10:11] Response sent: success=true, data_count=67
+[2025-06-28 14:25:33] Request received: user_id=221, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:25:33] User data fetched: user_name=Marie-Anne Quainoo, efficiency=0
+[2025-06-28 12:26:21] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:26:21] Individual tasks data fetched: 67 rows
+[2025-06-28 12:26:21] Response sent: success=true, data_count=67
+[2025-06-28 14:26:28] Request received: user_id=164, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:26:28] User data fetched: user_name=Rapheal Djane Kotei, efficiency=0
+[2025-06-28 12:26:50] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:26:50] Individual tasks data fetched: 67 rows
+[2025-06-28 12:26:50] Response sent: success=true, data_count=67
+[2025-06-28 14:27:07] Request received: user_id=187, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:27:07] User data fetched: user_name=Karen Armarfio, efficiency=65
+[2025-06-28 12:27:19] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:27:19] Individual tasks data fetched: 67 rows
+[2025-06-28 12:27:19] Response sent: success=true, data_count=67
+[2025-06-28 14:27:26] Request received: user_id=220, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:27:26] User data fetched: user_name=Benjamin Anderson, efficiency=0
+[2025-06-28 12:27:49] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:27:49] Individual tasks data fetched: 67 rows
+[2025-06-28 12:27:49] Response sent: success=true, data_count=67
+[2025-06-28 14:28:36] Request received: user_id=211, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:28:36] User data fetched: user_name=Joyful Daphnes, efficiency=0
+[2025-06-28 12:28:46] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:28:46] Individual tasks data fetched: 67 rows
+[2025-06-28 12:28:46] Response sent: success=true, data_count=67
+[2025-06-28 14:29:03] Request received: user_id=223, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:29:03] User data fetched: user_name=Cyril Kwashie, efficiency=0
+[2025-06-28 12:29:26] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:29:26] Individual tasks data fetched: 67 rows
+[2025-06-28 12:29:26] Response sent: success=true, data_count=67
+[2025-06-28 14:29:32] Request received: user_id=163, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:29:32] User data fetched: user_name=Henry Caleb Amoh, efficiency=7.14
+[2025-06-28 12:29:36] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:29:36] Individual tasks data fetched: 67 rows
+[2025-06-28 12:29:36] Response sent: success=true, data_count=67
+[2025-06-28 14:29:59] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:29:59] User data fetched: user_name=Joshua Amarfio, efficiency=2.7
+[2025-06-28 12:30:02] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:30:02] Individual tasks data fetched: 67 rows
+[2025-06-28 12:30:02] Response sent: success=true, data_count=67
+[2025-06-28 14:30:11] Request received: user_id=213, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:30:11] User data fetched: user_name=NIi Odartey Lamptey, efficiency=0
+[2025-06-28 12:30:17] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:30:17] Individual tasks data fetched: 67 rows
+[2025-06-28 12:30:17] Response sent: success=true, data_count=67
+[2025-06-28 14:31:19] Request received: user_id=179, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:31:19] User data fetched: user_name=Godfrey Twene, efficiency=0
+[2025-06-28 12:31:44] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 12:31:44] Individual tasks data fetched: 67 rows
+[2025-06-28 12:31:44] Response sent: success=true, data_count=67
+[2025-06-28 14:31:56] Request received: user_id=197, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:31:56] User data fetched: user_name=Ebenezer Kissiedu, efficiency=23.81
+[2025-06-28 14:54:02] Request received: user_id=197, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:54:02] User data fetched: user_name=Ebenezer Kissiedu, efficiency=23.81, completed_tasks=17, total_tasks=21, completion_rate=80.95
+[2025-06-28 14:54:19] Request received: user_id=197, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 14:54:19] User data fetched: user_name=Ebenezer Kissiedu, efficiency=23.81, completed_tasks=17, total_tasks=21, completion_rate=80.95
+[2025-06-28 13:32:02] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 13:32:03] Individual tasks data fetched: 67 rows
+[2025-06-28 13:32:03] Response sent: success=true, data_count=67
+[2025-06-28 13:32:15] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 13:32:15] Individual tasks data fetched: 67 rows
+[2025-06-28 13:32:15] Response sent: success=true, data_count=67
+[2025-06-28 13:32:44] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 13:32:45] Individual tasks data fetched: 67 rows
+[2025-06-28 13:32:45] Response sent: success=true, data_count=67
+[2025-06-28 15:34:20] Request received: user_id=220, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 15:34:20] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97
+[2025-06-28 13:34:40] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 13:34:40] Individual tasks data fetched: 67 rows
+[2025-06-28 13:34:40] Response sent: success=true, data_count=67
+[2025-06-28 15:36:35] Request received: user_id=187, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 15:36:35] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85
+[2025-06-28 13:36:58] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 13:36:58] Individual tasks data fetched: 67 rows
+[2025-06-28 13:36:58] Response sent: success=true, data_count=67
+[2025-06-28 15:37:02] Request received: user_id=220, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 15:37:02] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97
+[2025-06-28 13:37:21] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 13:37:21] Individual tasks data fetched: 67 rows
+[2025-06-28 13:37:21] Response sent: success=true, data_count=67
+[2025-06-28 15:37:28] Request received: user_id=187, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-28 15:37:28] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85
+[2025-06-28 13:37:44] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-28 13:37:44] Individual tasks data fetched: 67 rows
+[2025-06-28 13:37:44] Response sent: success=true, data_count=67
+[2025-06-29 12:02:56] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-29 12:02:56] Individual tasks data fetched: 67 rows
+[2025-06-29 12:02:56] Response sent: success=true, data_count=67
+[2025-06-29 14:03:32] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-29 14:03:32] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35
+[2025-06-29 12:06:35] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-29
+[2025-06-29 12:06:35] Individual tasks data fetched: 67 rows
+[2025-06-29 12:06:35] Response sent: success=true, data_count=67
+[2025-06-29 14:07:10] Request received: user_id=187, start_date=2025-01-01, end_date=2025-06-25
+[2025-06-29 14:07:10] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85
+[2025-06-29 12:08:13] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-29
+[2025-06-29 12:08:13] Individual tasks data fetched: 67 rows
+[2025-06-29 12:08:13] Response sent: success=true, data_count=67
+[2025-06-29 12:08:54] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 12:08:54] Individual tasks data fetched: 67 rows
+[2025-06-29 12:08:54] Response sent: success=true, data_count=67
+[2025-06-29 14:10:20] Request received: user_id=187, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 14:10:20] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85
+[2025-06-29 12:49:15] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 12:49:15] Individual tasks data fetched: 42 rows
+[2025-06-29 12:49:15] Response sent: success=true, data_count=42
+[2025-06-29 14:49:25] Request received: user_id=187, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 14:49:25] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85
+[2025-06-29 12:49:34] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-29
+[2025-06-29 12:49:34] Individual tasks data fetched: 41 rows
+[2025-06-29 12:49:34] Response sent: success=true, data_count=41
+[2025-06-29 14:49:44] Request received: user_id=220, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 14:49:44] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97
+[2025-06-29 12:50:01] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-29
+[2025-06-29 12:50:01] Individual tasks data fetched: 41 rows
+[2025-06-29 12:50:01] Response sent: success=true, data_count=41
+[2025-06-29 14:50:26] Request received: user_id=216, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 14:50:26] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100
+[2025-06-29 12:50:38] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-29
+[2025-06-29 12:50:38] Individual tasks data fetched: 41 rows
+[2025-06-29 12:50:38] Response sent: success=true, data_count=41
+[2025-06-29 14:42:53] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 14:42:53] Individual tasks data fetched: 42 rows
+[2025-06-29 14:42:53] Response sent: success=true, data_count=42
+[2025-06-29 16:44:52] Request received: user_id=169, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 16:44:52] User data fetched: user_name=Moses O. Atakorah, efficiency=37.5, completed_tasks=38, total_tasks=48, completion_rate=79.17
+[2025-06-29 14:45:22] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-29
+[2025-06-29 14:45:22] Individual tasks data fetched: 41 rows
+[2025-06-29 14:45:22] Response sent: success=true, data_count=41
+[2025-06-29 16:48:25] Request received: user_id=220, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 16:48:25] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97
+[2025-06-29 14:48:52] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-29
+[2025-06-29 14:48:52] Individual tasks data fetched: 41 rows
+[2025-06-29 14:48:52] Response sent: success=true, data_count=41
+[2025-06-29 17:14:38] Request received: user_id=169, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 17:14:38] User data fetched: user_name=Moses O. Atakorah, efficiency=37.5, completed_tasks=38, total_tasks=48, completion_rate=79.17
+[2025-06-29 15:46:46] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-29
+[2025-06-29 15:46:46] Individual tasks data fetched: 41 rows
+[2025-06-29 15:46:46] Response sent: success=true, data_count=41
+[2025-06-29 17:47:05] Request received: user_id=187, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-29 17:47:06] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85
+[2025-06-30 07:29:10] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 07:29:10] Individual tasks data fetched: 42 rows
+[2025-06-30 07:29:10] Response sent: success=true, data_count=42
+[2025-06-30 09:29:17] Request received: user_id=187, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:29:17] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85
+[2025-06-30 09:29:25] Request received: user_id=187, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:29:25] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85
+[2025-06-30 09:38:54] Request received: user_id=187, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:38:54] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85
+[2025-06-30 07:39:02] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 07:39:02] Individual tasks data fetched: 41 rows
+[2025-06-30 07:39:02] Response sent: success=true, data_count=41
+[2025-06-30 09:39:07] Request received: user_id=169, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:39:07] User data fetched: user_name=Moses O. Atakorah, efficiency=37.5, completed_tasks=38, total_tasks=48, completion_rate=79.17
+[2025-06-30 07:39:16] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 07:39:16] Individual tasks data fetched: 41 rows
+[2025-06-30 07:39:16] Response sent: success=true, data_count=41
+[2025-06-30 09:39:25] Request received: user_id=223, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:39:25] User data fetched: user_name=Cyril Kwashie, efficiency=0, completed_tasks=15, total_tasks=15, completion_rate=100
+[2025-06-30 09:41:46] Request received: user_id=223, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:41:46] User data fetched: user_name=Cyril Kwashie, efficiency=0, completed_tasks=15, total_tasks=15, completion_rate=100
+[2025-06-30 07:41:57] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 07:41:57] Individual tasks data fetched: 41 rows
+[2025-06-30 07:41:57] Response sent: success=true, data_count=41
+[2025-06-30 09:44:47] Request received: user_id=211, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:44:47] User data fetched: user_name=Joyful Daphnes, efficiency=0, completed_tasks=26, total_tasks=30, completion_rate=86.67
+[2025-06-30 07:46:21] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 07:46:21] Individual tasks data fetched: 41 rows
+[2025-06-30 07:46:21] Response sent: success=true, data_count=41
+[2025-06-30 07:59:14] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 07:59:14] Individual tasks data fetched: 41 rows
+[2025-06-30 07:59:14] Response sent: success=true, data_count=41
+[2025-06-30 09:59:20] Request received: user_id=161, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:59:20] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35
+[2025-06-30 07:59:27] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 07:59:27] Individual tasks data fetched: 41 rows
+[2025-06-30 07:59:27] Response sent: success=true, data_count=41
+[2025-06-30 10:00:59] Request received: user_id=161, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 10:00:59] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35
+[2025-06-30 08:01:00] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 08:01:00] Individual tasks data fetched: 41 rows
+[2025-06-30 08:01:00] Response sent: success=true, data_count=41
+[2025-06-30 08:01:04] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:01:04] Individual tasks data fetched: 42 rows
+[2025-06-30 08:01:04] Response sent: success=true, data_count=42
+[2025-06-30 08:04:36] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:04:36] Individual tasks data fetched: 42 rows
+[2025-06-30 08:04:36] Response sent: success=true, data_count=42
+[2025-06-30 08:05:49] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:05:49] Individual tasks data fetched: 42 rows
+[2025-06-30 08:05:49] Response sent: success=true, data_count=42
+[2025-06-30 08:10:22] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:10:22] Individual tasks data fetched: 42 rows
+[2025-06-30 08:10:22] Response sent: success=true, data_count=42
+[2025-06-30 08:10:26] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:10:26] Individual tasks data fetched: 42 rows
+[2025-06-30 08:10:26] Response sent: success=true, data_count=42
+[2025-06-30 08:14:45] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:14:45] Individual tasks data fetched: 42 rows
+[2025-06-30 08:14:45] Response sent: success=true, data_count=42
+[2025-06-30 08:15:09] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:15:09] Individual tasks data fetched: 42 rows
+[2025-06-30 08:15:09] Response sent: success=true, data_count=42
+[2025-06-30 08:22:50] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:22:50] Individual tasks data fetched: 42 rows
+[2025-06-30 08:22:50] Response sent: success=true, data_count=42
+[2025-06-30 08:47:39] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:47:39] Individual tasks data fetched: 42 rows
+[2025-06-30 08:47:39] Response sent: success=true, data_count=42
+[2025-06-30 08:51:21] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:51:21] Individual tasks data fetched: 42 rows
+[2025-06-30 08:51:21] Response sent: success=true, data_count=42
+[2025-06-30 08:57:59] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 08:57:59] Individual tasks data fetched: 42 rows
+[2025-06-30 08:57:59] Response sent: success=true, data_count=42
+[2025-06-30 10:58:12] Request received: user_id=169, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 10:58:12] User data fetched: user_name=Moses O. Atakorah, efficiency=37.5, completed_tasks=38, total_tasks=48, completion_rate=79.17
+[2025-06-30 08:58:20] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 08:58:20] Individual tasks data fetched: 41 rows
+[2025-06-30 08:58:20] Response sent: success=true, data_count=41
+[2025-06-30 08:58:44] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 08:58:44] Individual tasks data fetched: 41 rows
+[2025-06-30 08:58:44] Response sent: success=true, data_count=41
+[2025-06-30 08:59:15] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 08:59:15] Individual tasks data fetched: 41 rows
+[2025-06-30 08:59:15] Response sent: success=true, data_count=41
+[2025-06-30 08:59:29] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 08:59:29] Individual tasks data fetched: 41 rows
+[2025-06-30 08:59:29] Response sent: success=true, data_count=41
+[2025-06-30 08:59:54] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 08:59:54] Individual tasks data fetched: 41 rows
+[2025-06-30 08:59:54] Response sent: success=true, data_count=41
+[2025-06-30 09:00:36] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 09:00:36] Individual tasks data fetched: 41 rows
+[2025-06-30 09:00:36] Response sent: success=true, data_count=41
+[2025-06-30 09:00:58] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 09:00:58] Individual tasks data fetched: 41 rows
+[2025-06-30 09:00:58] Response sent: success=true, data_count=41
+[2025-06-30 09:02:22] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 09:02:22] Individual tasks data fetched: 41 rows
+[2025-06-30 09:02:22] Response sent: success=true, data_count=41
+[2025-06-30 09:03:27] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 09:03:27] Individual tasks data fetched: 41 rows
+[2025-06-30 09:03:27] Response sent: success=true, data_count=41
+[2025-06-30 11:07:20] Request received: user_id=191, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 11:07:20] User data fetched: user_name=Richard Dankwa, efficiency=0, completed_tasks=31, total_tasks=35, completion_rate=88.57
+[2025-06-30 09:07:48] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 09:07:48] Individual tasks data fetched: 41 rows
+[2025-06-30 09:07:48] Response sent: success=true, data_count=41
+[2025-06-30 11:08:17] Request received: user_id=169, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 11:08:17] User data fetched: user_name=Moses O. Atakorah, efficiency=37.5, completed_tasks=38, total_tasks=48, completion_rate=79.17
+[2025-06-30 09:08:29] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 09:08:29] Individual tasks data fetched: 41 rows
+[2025-06-30 09:08:29] Response sent: success=true, data_count=41
+[2025-06-30 09:28:42] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:28:42] Individual tasks data fetched: 42 rows
+[2025-06-30 09:28:42] Response sent: success=true, data_count=42
+[2025-06-30 11:28:49] Request received: user_id=220, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 11:28:49] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97
+[2025-06-30 09:32:46] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 09:32:46] Individual tasks data fetched: 41 rows
+[2025-06-30 09:32:46] Response sent: success=true, data_count=41
+[2025-06-30 09:43:06] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:43:06] Individual tasks data fetched: 42 rows
+[2025-06-30 09:43:06] Response sent: success=true, data_count=42
+[2025-06-30 09:47:10] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:47:10] Individual tasks data fetched: 42 rows
+[2025-06-30 09:47:10] Response sent: success=true, data_count=42
+[2025-06-30 09:48:57] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:48:57] Individual tasks data fetched: 42 rows
+[2025-06-30 09:48:57] Response sent: success=true, data_count=42
+[2025-06-30 11:49:13] Request received: user_id=169, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 11:49:13] User data fetched: user_name=Moses O. Atakorah, efficiency=37.5, completed_tasks=38, total_tasks=48, completion_rate=79.17
+[2025-06-30 09:39:22] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 09:39:22] Individual tasks data fetched: 41 rows
+[2025-06-30 09:39:22] Response sent: success=true, data_count=41
+[2025-06-30 11:39:29] Request received: user_id=191, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 11:39:29] User data fetched: user_name=Richard Dankwa, efficiency=0, completed_tasks=31, total_tasks=35, completion_rate=88.57
+[2025-06-30 09:39:36] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 09:39:36] Individual tasks data fetched: 41 rows
+[2025-06-30 09:39:36] Response sent: success=true, data_count=41
+[2025-06-30 09:49:40] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 09:49:40] Individual tasks data fetched: 42 rows
+[2025-06-30 09:49:40] Response sent: success=true, data_count=42
+[2025-06-30 11:49:45] Request received: user_id=169, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 11:49:45] User data fetched: user_name=Moses O. Atakorah, efficiency=37.5, completed_tasks=38, total_tasks=48, completion_rate=79.17
+[2025-06-30 10:08:20] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 10:08:20] Individual tasks data fetched: 42 rows
+[2025-06-30 10:08:20] Response sent: success=true, data_count=42
+[2025-06-30 12:08:30] Request received: user_id=220, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:08:30] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97
+[2025-06-30 10:09:55] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 10:09:55] Individual tasks data fetched: 41 rows
+[2025-06-30 10:09:55] Response sent: success=true, data_count=41
+[2025-06-30 12:09:58] Request received: user_id=169, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:09:58] User data fetched: user_name=Moses O. Atakorah, efficiency=37.5, completed_tasks=38, total_tasks=48, completion_rate=79.17
+[2025-06-30 10:10:02] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 10:10:02] Individual tasks data fetched: 41 rows
+[2025-06-30 10:10:02] Response sent: success=true, data_count=41
+[2025-06-30 12:10:04] Request received: user_id=161, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:10:04] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35
+[2025-06-30 10:10:07] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 10:10:07] Individual tasks data fetched: 41 rows
+[2025-06-30 10:10:07] Response sent: success=true, data_count=41
+[2025-06-30 12:10:26] Request received: user_id=161, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:10:26] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35
+[2025-06-30 10:10:38] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 10:10:38] Individual tasks data fetched: 41 rows
+[2025-06-30 10:10:38] Response sent: success=true, data_count=41
+[2025-06-30 12:10:47] Request received: user_id=216, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:10:47] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100
+[2025-06-30 12:39:08] Request received: user_id=216, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:39:08] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=149.44
+[2025-06-30 10:39:38] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 10:39:38] Individual tasks data fetched: 41 rows
+[2025-06-30 10:39:38] Response sent: success=true, data_count=41
+[2025-06-30 12:39:41] Request received: user_id=161, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:39:41] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=571.17
+[2025-06-30 12:53:35] Request received: user_id=161, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:53:35] Total tasks: 37
+[2025-06-30 12:53:35] Efficient tasks: 1
+[2025-06-30 12:53:35] Completed tasks: 19
+[2025-06-30 12:53:35] Avg completion time (seconds): 2056212.47
+[2025-06-30 12:53:35] Previous avg completion time (seconds): 6069918.75, completion_time_change: -4013706.28
+[2025-06-30 12:53:35] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=2056212.47, completion_time_change=-4013706.28
+[2025-06-30 12:54:03] Request received: user_id=161, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:54:03] Total tasks: 37
+[2025-06-30 12:54:03] Efficient tasks: 1
+[2025-06-30 12:54:03] Completed tasks: 19
+[2025-06-30 12:54:03] Avg completion time (seconds): 2056212.47
+[2025-06-30 12:54:03] Previous avg completion time (seconds): 6069918.75, completion_time_change: -4013706.28
+[2025-06-30 12:54:03] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=2056212.47, completion_time_change=-4013706.28
+[2025-06-30 12:54:12] Request received: user_id=161, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:54:12] Total tasks: 37
+[2025-06-30 12:54:12] Efficient tasks: 1
+[2025-06-30 12:54:12] Completed tasks: 19
+[2025-06-30 12:54:12] Avg completion time (seconds): 2056212.47
+[2025-06-30 12:54:12] Previous avg completion time (seconds): 6069918.75, completion_time_change: -4013706.28
+[2025-06-30 12:54:12] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=2056212.47, completion_time_change=-4013706.28
+[2025-06-30 10:54:16] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 10:54:16] Individual tasks data fetched: 41 rows
+[2025-06-30 10:54:16] Response sent: success=true, data_count=41
+[2025-06-30 12:54:23] Request received: user_id=221, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 12:54:23] Total tasks: 26
+[2025-06-30 12:54:23] Efficient tasks: 0
+[2025-06-30 12:54:23] Completed tasks: 26
+[2025-06-30 12:54:23] Avg completion time (seconds): 964071.08
+[2025-06-30 12:54:23] Previous avg completion time (seconds): 0, completion_time_change: 964071.08
+[2025-06-30 12:54:23] User data fetched: user_name=Marie-Anne Quainoo, efficiency=0, completed_tasks=26, total_tasks=26, completion_rate=100, avg_completion_time=964071.08, completion_time_change=964071.08
+[2025-06-30 13:13:08] Request received: user_id=221, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 13:13:08] Total tasks: 26
+[2025-06-30 13:13:08] Efficient tasks: 0
+[2025-06-30 13:13:08] Completed tasks: 26
+[2025-06-30 13:13:08] Avg completion time (seconds): 964071.08
+[2025-06-30 13:13:08] Previous avg completion time (seconds): 0, completion_time_change: 0
+[2025-06-30 13:13:08] User data fetched: user_name=Marie-Anne Quainoo, efficiency=0, completed_tasks=26, total_tasks=26, completion_rate=100, avg_completion_time=964071.08, completion_time_change=0
+[2025-06-30 13:14:02] Request received: user_id=221, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 13:14:02] Total tasks: 26
+[2025-06-30 13:14:02] Efficient tasks: 0
+[2025-06-30 13:14:02] Completed tasks: 26
+[2025-06-30 13:14:02] Avg completion time (seconds): 964071.08
+[2025-06-30 13:14:02] Previous avg completion time (seconds): 0, completion_time_change: 0
+[2025-06-30 13:14:02] User data fetched: user_name=Marie-Anne Quainoo, efficiency=0, completed_tasks=26, total_tasks=26, completion_rate=100, avg_completion_time=964071.08, completion_time_change=0
+[2025-06-30 13:24:03] Request received: user_id=221, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 13:24:03] User data fetched: user_name=Marie-Anne Quainoo, efficiency=0, completed_tasks=26, total_tasks=26, completion_rate=100, avg_completion_time=11.42
+[2025-06-30 11:24:16] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 11:24:16] Individual tasks data fetched: 41 rows
+[2025-06-30 11:24:16] Response sent: success=true, data_count=41
+[2025-06-30 13:27:55] Request received: user_id=216, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 13:27:55] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=6.29
+[2025-06-30 11:48:42] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 11:48:42] Individual tasks data fetched: 42 rows
+[2025-06-30 11:48:42] Response sent: success=true, data_count=42
+[2025-06-30 13:48:47] Request received: user_id=221, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 13:48:48] User data fetched: user_name=Marie-Anne Quainoo, efficiency=0, completed_tasks=26, total_tasks=26, completion_rate=100, avg_completion_time=267.19 hours
+[2025-06-30 11:48:55] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 11:48:55] Individual tasks data fetched: 41 rows
+[2025-06-30 11:48:55] Response sent: success=true, data_count=41
+[2025-06-30 13:49:00] Request received: user_id=223, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 13:49:00] User data fetched: user_name=Cyril Kwashie, efficiency=0, completed_tasks=15, total_tasks=15, completion_rate=100, avg_completion_time=132.87 hours
+[2025-06-30 11:50:48] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 11:50:48] Individual tasks data fetched: 41 rows
+[2025-06-30 11:50:48] Response sent: success=true, data_count=41
+[2025-06-30 13:50:50] Request received: user_id=194, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 13:50:50] User data fetched: user_name=Derrick Adjei-Mensah, efficiency=4.35, completed_tasks=22, total_tasks=23, completion_rate=95.65, avg_completion_time=1018.91 hours
+[2025-06-30 11:53:03] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 11:53:03] Individual tasks data fetched: 41 rows
+[2025-06-30 11:53:03] Response sent: success=true, data_count=41
+[2025-06-30 13:53:06] Request received: user_id=220, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 13:53:06] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97, avg_completion_time=63 hours
+[2025-06-30 11:53:18] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 11:53:18] Individual tasks data fetched: 41 rows
+[2025-06-30 11:53:18] Response sent: success=true, data_count=41
+[2025-06-30 13:53:21] Request received: user_id=221, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 13:53:21] User data fetched: user_name=Marie-Anne Quainoo, efficiency=0, completed_tasks=26, total_tasks=26, completion_rate=100, avg_completion_time=267.19 hours
+[2025-06-30 11:53:39] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 11:53:39] Individual tasks data fetched: 41 rows
+[2025-06-30 11:53:39] Response sent: success=true, data_count=41
+[2025-06-30 11:57:02] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-30 11:57:02] Individual tasks data fetched: 41 rows
+[2025-06-30 11:57:02] Response sent: success=true, data_count=41
+[2025-06-30 13:57:16] Request received: user_id=132, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-30 13:57:16] User data fetched: user_name=Solomon Asante, efficiency=0, completed_tasks=8, total_tasks=18, completion_rate=44.44, avg_completion_time=0 hours
+[2025-06-30 11:57:33] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 11:57:33] Individual tasks data fetched: 41 rows
+[2025-06-30 11:57:33] Response sent: success=true, data_count=41
+[2025-06-30 13:57:36] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-30 13:57:36] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=570.68 hours
+[2025-06-30 11:58:05] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 11:58:05] Individual tasks data fetched: 41 rows
+[2025-06-30 11:58:05] Response sent: success=true, data_count=41
+[2025-06-30 13:58:09] Request received: user_id=187, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-30 13:58:09] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85, avg_completion_time=189.24 hours
+[2025-06-30 11:58:36] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 11:58:36] Individual tasks data fetched: 41 rows
+[2025-06-30 11:58:36] Response sent: success=true, data_count=41
+[2025-06-30 13:58:43] Request received: user_id=166, start_date=2025-01-01, end_date=2025-06-28
+[2025-06-30 13:58:43] User data fetched: user_name=Joshua Tetteh, efficiency=0, completed_tasks=4, total_tasks=12, completion_rate=33.33, avg_completion_time=252.25 hours
+[2025-06-30 11:59:04] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 11:59:04] Individual tasks data fetched: 41 rows
+[2025-06-30 11:59:04] Response sent: success=true, data_count=41

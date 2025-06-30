@@ -18,8 +18,8 @@ sheetApp.controller("StatisticsnewCtrl", function($scope, $http, $location, $tim
         $scope.stat_cards = [
             { id: 1, description: `Total Projects`, value: 0, icon: "ni ni-chart-bar-32" },
             { id: 2, description: `Completed Projects`, value: 0, icon: "ni ni-check-bold" },
-            { id: 5, description: `Total Tasks`, value: 0, icon: "ni ni-pin-3" },
-            { id: 6, description: `Completed Tasks`, value: 0, icon: "ni ni-settings" }
+            { id: 5, description: `Total Tasks`, value: 0, icon: "ni ni-chart-bar-32" },
+            { id: 6, description: `Completed Tasks`, value: 0, icon: "ni ni-check-bold" }
         ];
     };
 

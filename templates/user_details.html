@@ -22,6 +22,8 @@
             --border-color: #e2e8f0;
             --success-color: #38a169;
             --danger-color: #e53e3e;
+            --warning-color: #f6ad55;
+            /* Added for Needs Improvement */
             --teal-primary: #208AAE;
             --teal-light: #4DA8C4;
         }
@@ -48,7 +50,6 @@
             background-color: white;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
-        /* Teal Card Style for all metric cards */
         
         .metric-card {
             padding: 18px;
@@ -96,6 +97,14 @@
         
         .metric-change.negative {
             color: var(--danger-color);
+        }
+        
+        .metric-change.warning {
+            color: var(--warning-color);
+        }
+        
+        .metric-change.neutral {
+            color: var(--teal-primary);
         }
         
         .metric-change i {
@@ -194,7 +203,6 @@
             margin-bottom: 15px;
             font-size: 14px;
         }
-        /* Grid spacing */
         
         .metrics-grid {
             margin-bottom: 30px;
@@ -209,7 +217,6 @@
             padding-left: 8px;
             padding-right: 8px;
         }
-        /* Spacing between card rows */
         
         .card-row-spacer {
             margin-top: 15px;
@@ -223,7 +230,7 @@
             overflow: visible;
             background-color: rgba(32, 138, 174, 0.1);
             box-shadow: none;
-            height: 30px;
+            height: 14px;
             border-radius: 7px;
         }
         
@@ -232,12 +239,28 @@
             transition: width 0.6s ease;
             box-shadow: 0 2px 5px rgba(32, 138, 174, 0.2);
             border-radius: 7px;
-            /* Move this here from inline style */
+            background-color: var(--teal-primary);
+        }
+        
+        .progress-bar:after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: -4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--teal-primary);
+            border: 2px solid white;
+        }
+        
+        .text-muted {
+            color: var(--text-light);
         }
     </style>
 </head>
 
-<body>
+<body ng-controller="UserDetailsCtrl">
     <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidenav-main">
         <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
     </nav>
@@ -261,22 +284,34 @@
                     <div class="col-md-4">
                         <div class="metric-card">
                             <h6>TASK COMPLETION EFFICIENCY</h6>
-                            <div class="metric-value">2%</div>
-                            <div class="metric-change positive"><i class="fas fa-arrow-up"></i> 0.34% from last week</div>
+                            <div class="metric-value">{{ metrics.taskCompletionEfficiency }}%</div>
+                            <div class="metric-change" ng-class="metrics.efficiencyStatus.class">
+                                {{ metrics.efficiencyStatus.text }}
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="metric-card">
                             <h6>AVERAGE TASK COMPLETION TIME</h6>
-                            <div class="metric-value">6%</div>
-                            <div class="metric-change positive"><i class="fas fa-arrow-up"></i> 0.38% from last week</div>
+                            <div class="metric-value">{{ formatTime(metrics.avgCompletionTime) }}</div>
+                            <div class="metric-change positive" ng-if="metrics.completionTimeChange <= 0">
+                                <i class="fas fa-arrow-up"></i> {{ metrics.completionTimeChange * -1 | number:2 }} hours improvement
+                            </div>
+                            <div class="metric-change negative" ng-if="metrics.completionTimeChange > 0">
+                                <i class="fas fa-arrow-down"></i> {{ metrics.completionTimeChange | number:2 }} hours slower
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="metric-card">
                             <h6>NUMBER OF PROJECTS IMPLEMENTED</h6>
-                            <div class="metric-value">8%</div>
-                            <div class="metric-change negative"><i class="fas fa-arrow-down"></i> 0.36% from last week</div>
+                            <div class="metric-value">{{ metrics.projectsImplemented }}</div>
+                            <div class="metric-change positive" ng-if="metrics.projectsChange >= 0">
+                                <i class="fas fa-arrow-up"></i> {{ metrics.projectsChange }} more than last period
+                            </div>
+                            <div class="metric-change negative" ng-if="metrics.projectsChange < 0">
+                                <i class="fas fa-arrow-down"></i> {{ metrics.projectsChange * -1 }} fewer than last period
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -290,14 +325,11 @@
                             <h6>TASK COMPLETION RATE</h6>
                             <div class="progress-container mt-3">
                                 <div class="d-flex justify-content-between mb-2">
-                                    <!-- Increased margin-bottom -->
-                                    <small class="text-muted">COMPLETED TASK(40)</small>
-                                    <!-- Changed text -->
-                                    <small class="text-muted">TOTAL TASKS(140)</small>
+                                    <small class="text-muted">COMPLETED TASKS({{ metrics.completedTasks }})</small>
+                                    <small class="text-muted">TOTAL TASKS({{ metrics.totalTasks }})</small>
                                 </div>
                                 <div class="progress">
-                                    <!-- Removed inline height style -->
-                                    <div class="progress-bar" role="progressbar" style="width: 60%; background-color: var(--teal-primary);" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" role="progressbar" ng-style="{'width': metrics.completionRate + '%'}" aria-valuenow="{{ metrics.completionRate }}" aria-valuemin="0" aria-valuemax="100">
                                     </div>
                                 </div>
                             </div>
@@ -306,15 +338,25 @@
                     <div class="col-md-4">
                         <div class="metric-card">
                             <h6>PRODUCTIVITY RATE</h6>
-                            <div class="metric-value">4%</div>
-                            <div class="metric-change positive"><i class="fas fa-arrow-up"></i> 2.64% from last week</div>
+                            <div class="metric-value">{{ metrics.productivityRate }}%</div>
+                            <div class="metric-change positive" ng-if="metrics.productivityChange >= 0">
+                                <i class="fas fa-arrow-up"></i> {{ metrics.productivityChange }}% from last period
+                            </div>
+                            <div class="metric-change negative" ng-if="metrics.productivityChange < 0">
+                                <i class="fas fa-arrow-down"></i> {{ metrics.productivityChange * -1 }}% from last period
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="metric-card">
                             <h6>OVERALL GROWTH</h6>
-                            <div class="metric-value">10%</div>
-                            <div class="metric-change negative"><i class="fas fa-arrow-down"></i> 2.64% from last week</div>
+                            <div class="metric-value">{{ metrics.overallGrowth }}%</div>
+                            <div class="metric-change positive" ng-if="metrics.growthChange >= 0">
+                                <i class="fas fa-arrow-up"></i> {{ metrics.growthChange }}% from last period
+                            </div>
+                            <div class="metric-change negative" ng-if="metrics.growthChange < 0">
+                                <i class="fas fa-arrow-down"></i> {{ metrics.growthChange * -1 }}% from last period
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -356,38 +398,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        angular.module('sheetApp')
-            .controller('UserDetailsCtrl', function($scope, $http, $location) {
-                // Initialize scope variables
-                $scope.user_info = {
-                    username: 'Guest',
-                    role: 'developer',
-                    gender: 'Male',
-                    dept_id: 1
-                };
-                $scope.profile_pic_true = null;
-                $scope.profile_pic = null;
-                $scope.user = {
-                    name: 'John Doe'
-                };
-                $scope.user_id = $location.search().id || '';
-
-                // Initialize charts when view is loaded
-                $scope.$on('$viewContentLoaded', function() {
-                    initCharts();
-                });
-
-                // Initialize controller
-                $scope.init = function() {
-                    if ($scope.user_info.profile_pic) {
-                        $scope.profile_pic_true = true;
-                        $scope.profile_pic = $scope.user_info.profile_pic;
-                    }
-                };
-
-                $scope.init();
-            });
-
         function initCharts() {
             // Growth Chart
             const growthCtx = document.getElementById('growthChart').getContext('2d');
@@ -512,6 +522,11 @@
                 }
             });
         }
+
+        // Initialize charts when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+        });
     </script>
 </body>
 

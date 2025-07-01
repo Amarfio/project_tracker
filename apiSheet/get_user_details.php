@@ -75,10 +75,14 @@ try {
         'completed_tasks' => $metrics['completed_tasks'],
         'total_tasks' => $metrics['total_tasks'],
         'completion_rate' => $metrics['completion_rate'],
-        'avg_completion_time' => $metrics['avg_completion_time']
+        'avg_completion_time' => $metrics['avg_completion_time'],
+        'projects_completed' => $metrics['projects_completed'],
+        'total_projects' => $metrics['total_projects'],
+        'productivity_rate' => $metrics['productivity_rate'],
+        'overall_growth' => $metrics['overall_growth']
     ];
 
-    debug_log("User data fetched: user_name=$user_name, efficiency={$metrics['task_completion_efficiency']}, completed_tasks={$metrics['completed_tasks']}, total_tasks={$metrics['total_tasks']}, completion_rate={$metrics['completion_rate']}, avg_completion_time={$metrics['avg_completion_time']} hours");
+    debug_log("User data fetched: user_name=$user_name, efficiency={$metrics['task_completion_efficiency']}, completed_tasks={$metrics['completed_tasks']}, total_tasks={$metrics['total_tasks']}, completion_rate={$metrics['completion_rate']}, avg_completion_time={$metrics['avg_completion_time']} hours, projects_completed={$metrics['projects_completed']}, total_projects={$metrics['total_projects']}, productivity_rate={$metrics['productivity_rate']}, overall_growth={$metrics['overall_growth']}");
 
     echo json_encode($response);
 
@@ -94,7 +98,7 @@ try {
 }
 
 function calculateTaskMetrics($conn, $user_id, $start_date, $end_date) {
-    // Build date conditions
+    // Build date conditions for current period
     $date_conditions = "";
     $params = [$user_id];
     $types = "i";
@@ -135,14 +139,28 @@ function calculateTaskMetrics($conn, $user_id, $start_date, $end_date) {
     $total_tasks = $total_row['total_tasks'] ?? 0;
     $stmt_total->close();
     
-    // Query to get efficiently completed tasks (completed on or before end_date)
+    // Query to get efficiently completed tasks (weekday-based)
     $sql_efficient = "
         SELECT COUNT(*) as efficient_tasks
         FROM tasks t
         JOIN projects p ON t.project_id = p.project_id
         WHERE t.assigned_to = ?
-        AND t.status = 61 /* Completed */
-        AND t.updated_at <= t.end_date /* Completed on or before deadline */
+        AND t.status = 61
+        AND (
+            SELECT (
+                DATEDIFF(t.updated_at, p.approved_date) - 
+                (2 * FLOOR(DATEDIFF(t.updated_at, p.approved_date) / 7) + 
+                 LEAST(DATEDIFF(t.updated_at, p.approved_date) % 7, 
+                       1 + (DAYOFWEEK(p.approved_date) + (DATEDIFF(t.updated_at, p.approved_date) % 7) - 1) % 7 IN (1, 7))
+                )
+            ) <= (
+                DATEDIFF(t.end_date, p.approved_date) - 
+                (2 * FLOOR(DATEDIFF(t.end_date, p.approved_date) / 7) + 
+                 LEAST(DATEDIFF(t.end_date, p.approved_date) % 7, 
+                       1 + (DAYOFWEEK(p.approved_date) + (DATEDIFF(t.end_date, p.approved_date) % 7) - 1) % 7 IN (1, 7))
+                )
+            )
+        )
         $date_conditions
     ";
     
@@ -158,13 +176,13 @@ function calculateTaskMetrics($conn, $user_id, $start_date, $end_date) {
     $efficient_tasks = $efficient_row['efficient_tasks'] ?? 0;
     $stmt_efficient->close();
 
-    // Query to get all completed tasks (regardless of deadline)
+    // Query to get all completed tasks
     $sql_completed = "
         SELECT COUNT(*) as completed_tasks
         FROM tasks t
         JOIN projects p ON t.project_id = p.project_id
         WHERE t.assigned_to = ?
-        AND t.status = 61 /* Completed */
+        AND t.status = 61
         $date_conditions
     ";
     
@@ -180,14 +198,21 @@ function calculateTaskMetrics($conn, $user_id, $start_date, $end_date) {
     $completed_tasks = $completed_row['completed_tasks'] ?? 0;
     $stmt_completed->close();
 
-    // Query to get average task completion time in hours
+    // Query to get average task completion time (weekday-based, in hours)
     $sql_avg_time = "
-        SELECT AVG(TIMESTAMPDIFF(HOUR, p.approved_date, t.updated_at)) as avg_completion_time
+        SELECT AVG(
+            (DATEDIFF(t.updated_at, p.approved_date) - 
+             (2 * FLOOR(DATEDIFF(t.updated_at, p.approved_date) / 7) + 
+              LEAST(DATEDIFF(t.updated_at, p.approved_date) % 7, 
+                    1 + (DAYOFWEEK(p.approved_date) + (DATEDIFF(t.updated_at, p.approved_date) % 7) - 1) % 7 IN (1, 7))
+             )
+            ) * 8
+        ) as avg_completion_time
         FROM tasks t
         JOIN projects p ON t.project_id = p.project_id
         WHERE t.assigned_to = ?
-        AND t.status = 61 /* Completed */
-        AND t.updated_at >= p.approved_date /* Ensure positive duration */
+        AND t.status = 61
+        AND t.updated_at >= p.approved_date
         $date_conditions
     ";
     
@@ -203,16 +228,70 @@ function calculateTaskMetrics($conn, $user_id, $start_date, $end_date) {
     $avg_completion_time = $avg_time_row['avg_completion_time'] !== null ? round($avg_time_row['avg_completion_time'], 2) : 0;
     $stmt_avg_time->close();
 
+    // Query to get number of completed projects
+    $sql_projects_completed = "
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        $date_conditions
+    ";
+    
+    $stmt_projects_completed = $conn->prepare($sql_projects_completed);
+    if (!$stmt_projects_completed) {
+        throw new Exception('Prepare failed for projects completed: ' . $conn->error);
+    }
+    
+    $stmt_projects_completed->bind_param($types, ...$params);
+    $stmt_projects_completed->execute();
+    $projects_completed_result = $stmt_projects_completed->get_result();
+    $projects_completed_row = $projects_completed_result->fetch_assoc();
+    $projects_completed = $projects_completed_row['projects_completed'] ?? 0;
+    $stmt_projects_completed->close();
+
+    // Query to get total distinct projects
+    $sql_total_projects = "
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        $date_conditions
+    ";
+    
+    $stmt_total_projects = $conn->prepare($sql_total_projects);
+    if (!$stmt_total_projects) {
+        throw new Exception('Prepare failed for total projects: ' . $conn->error);
+    }
+    
+    $stmt_total_projects->bind_param($types, ...$params);
+    $stmt_total_projects->execute();
+    $total_projects_result = $stmt_total_projects->get_result();
+    $total_projects_row = $total_projects_result->fetch_assoc();
+    $total_projects = $total_projects_row['total_projects'] ?? 0;
+    $stmt_total_projects->close();
+
     // Calculate efficiency and completion rate
     $task_completion_efficiency = $total_tasks > 0 ? round(($efficient_tasks / $total_tasks) * 100, 2) : 0;
     $completion_rate = $total_tasks > 0 ? round(($completed_tasks / $total_tasks) * 100, 2) : 0;
+
+    // Calculate productivity rate
+    $productivity_rate = round($task_completion_efficiency * $completion_rate / 100, 2);
+
+    // Calculate overall growth
+    $normalized_projects_completed = $total_projects > 0 ? round(($projects_completed / $total_projects) * 100, 2) : 0;
+    $overall_growth = round((0.4 * $task_completion_efficiency) + (0.4 * $completion_rate) + (0.2 * $normalized_projects_completed), 2);
 
     return [
         'task_completion_efficiency' => $task_completion_efficiency,
         'completed_tasks' => $completed_tasks,
         'total_tasks' => $total_tasks,
         'completion_rate' => $completion_rate,
-        'avg_completion_time' => $avg_completion_time
+        'avg_completion_time' => $avg_completion_time,
+        'projects_completed' => $projects_completed,
+        'total_projects' => $total_projects,
+        'productivity_rate' => $productivity_rate,
+        'overall_growth' => $overall_growth
     ];
 }
 

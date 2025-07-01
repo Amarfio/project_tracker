@@ -5195,3 +5195,153 @@
 [2025-06-30 11:59:04] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
 [2025-06-30 11:59:04] Individual tasks data fetched: 41 rows
 [2025-06-30 11:59:04] Response sent: success=true, data_count=41
+[2025-06-30 14:05:08] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 14:05:08] Individual tasks data fetched: 42 rows
+[2025-06-30 14:05:08] Response sent: success=true, data_count=42
+[2025-06-30 16:05:21] Request received: user_id=161, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 16:05:21] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=570.68 hours
+[2025-06-30 14:05:29] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 14:05:29] Individual tasks data fetched: 41 rows
+[2025-06-30 14:05:29] Response sent: success=true, data_count=41
+[2025-06-30 16:05:32] Request received: user_id=169, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 16:05:32] User data fetched: user_name=Moses O. Atakorah, efficiency=37.5, completed_tasks=38, total_tasks=48, completion_rate=79.17, avg_completion_time=138.08 hours
+[2025-06-30 22:36:48] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 22:36:48] Individual tasks data fetched: 42 rows
+[2025-06-30 22:36:48] Response sent: success=true, data_count=42
+[2025-06-30 22:36:52] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-05-31
+[2025-06-30 22:36:52] Individual tasks data fetched: 42 rows
+[2025-06-30 22:36:52] Response sent: success=true, data_count=42
+[2025-07-01 00:36:58] Request received: user_id=216, start_date=2024-12-01, end_date=2025-05-31
+[2025-07-01 00:36:58] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=148.71 hours, projects_completed=1
+[2025-06-30 22:37:20] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 22:37:20] Individual tasks data fetched: 41 rows
+[2025-06-30 22:37:20] Response sent: success=true, data_count=41
+[2025-06-30 22:38:22] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-06-30
+[2025-06-30 22:38:22] Individual tasks data fetched: 42 rows
+[2025-06-30 22:38:22] Response sent: success=true, data_count=42
+[2025-07-01 00:38:28] Request received: user_id=216, start_date=2024-12-01, end_date=2025-06-30
+[2025-07-01 00:38:28] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=148.71 hours, projects_completed=1
+[2025-06-30 22:38:41] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 22:38:41] Individual tasks data fetched: 41 rows
+[2025-06-30 22:38:41] Response sent: success=true, data_count=41
+[2025-07-01 00:38:51] Request received: user_id=220, start_date=2024-12-01, end_date=2025-06-30
+[2025-07-01 00:38:51] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97, avg_completion_time=63 hours, projects_completed=2
+[2025-06-30 22:39:03] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-30
+[2025-06-30 22:39:03] Individual tasks data fetched: 41 rows
+[2025-06-30 22:39:03] Response sent: success=true, data_count=41
+[2025-06-30 22:43:33] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-06-30
+[2025-06-30 22:43:33] Individual tasks data fetched: 42 rows
+[2025-06-30 22:43:33] Response sent: success=true, data_count=42
+[2025-07-01 00:43:45] Request received: user_id=187, start_date=2024-12-01, end_date=2025-06-30
+[2025-07-01 00:43:45] User data fetched: user_name=Karen Armarfio, efficiency=65, completed_tasks=17, total_tasks=20, completion_rate=85, avg_completion_time=189.24 hours, projects_completed=6
+[2025-07-01 07:07:36] Request received: type=individual_tasks, start_date=2024-12-01, end_date=2025-06-30
+[2025-07-01 07:07:36] Individual tasks data fetched: 42 rows
+[2025-07-01 07:07:36] Response sent: success=true, data_count=42
+[2025-07-01 09:07:42] Request received: user_id=161, start_date=2024-12-01, end_date=2025-06-30
+[2025-07-01 09:07:42] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=570.68 hours, projects_completed=4
+[2025-07-01 07:18:17] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-07-01
+[2025-07-01 07:18:17] Individual tasks data fetched: 41 rows
+[2025-07-01 07:18:17] Response sent: success=true, data_count=41
+[2025-07-01 09:18:23] Request received: user_id=216, start_date=2024-12-01, end_date=2025-06-30
+[2025-07-01 09:18:23] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=148.71 hours, projects_completed=1
+[2025-07-01 07:46:50] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 07:46:50] Individual tasks data fetched: 41 rows
+[2025-07-01 07:46:50] Response sent: success=true, data_count=41
+[2025-07-01 09:46:56] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 09:46:56] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=148.71 hours, projects_completed=1
+[2025-07-01 09:47:00] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 09:47:00] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=148.71 hours, projects_completed=1
+[2025-07-01 10:23:35] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 10:23:35] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=148.71 hours, projects_completed=1, productivity_rate=7.14, productivity_change=7.14, overall_growth=49.52, growth_change=49.52
+[2025-07-01 08:58:56] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 08:58:56] Individual tasks data fetched: 41 rows
+[2025-07-01 08:58:56] Response sent: success=true, data_count=41
+[2025-07-01 10:58:58] Request received: user_id=191, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 10:58:58] User data fetched: user_name=Richard Dankwa, efficiency=0, completed_tasks=31, total_tasks=35, completion_rate=88.57, avg_completion_time=311.74 hours, projects_completed=7, productivity_rate=0, productivity_change=-6.94, overall_growth=50.98, growth_change=-5.68
+[2025-07-01 08:59:14] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-07-01
+[2025-07-01 08:59:14] Individual tasks data fetched: 41 rows
+[2025-07-01 08:59:14] Response sent: success=true, data_count=41
+[2025-07-01 10:59:17] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 10:59:17] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=145.68 hours, projects_completed=4, productivity_rate=1.39, productivity_change=-7.99, overall_growth=31.62, growth_change=-28.5
+[2025-07-01 09:50:11] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 09:50:11] Individual tasks data fetched: 41 rows
+[2025-07-01 09:50:11] Response sent: success=true, data_count=41
+[2025-07-01 11:50:13] Request received: user_id=169, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 11:50:13] User data fetched: user_name=Moses O. Atakorah, efficiency=35.14, completed_tasks=27, total_tasks=37, completion_rate=72.97, avg_completion_time=50.96 hours, projects_completed=10, productivity_rate=25.64, productivity_change=-48.52, overall_growth=57.53, growth_change=-29.55, prev_efficiency=74.16, prev_completion_rate=100, prev_productivity_rate=74.16, prev_overall_growth=87.08, prev_normalized_projects_completed=87.1
+[2025-07-01 09:50:23] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-07-01
+[2025-07-01 09:50:23] Individual tasks data fetched: 41 rows
+[2025-07-01 09:50:23] Response sent: success=true, data_count=41
+[2025-07-01 11:50:26] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 11:50:26] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=42.29 hours, projects_completed=1, productivity_rate=7.14, productivity_change=7.14, overall_growth=49.52, growth_change=49.52, prev_efficiency=0, prev_completion_rate=0, prev_productivity_rate=0, prev_overall_growth=0, prev_normalized_projects_completed=0
+[2025-07-01 12:10:43] Request received: user_id=1, start_date=2025-01-01, end_date=2025-06-30.
+[2025-07-01 12:10:43] Error: Invalid end date format. Use YYYY-MM-DD
+[2025-07-01 12:41:24] Request received: user_id=1, start_date=2025-01-01, end_date=2025-06-30.
+[2025-07-01 12:41:24] Error: Invalid end date format. Use YYYY-MM-DD
+[2025-07-01 10:42:29] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 10:42:29] Individual tasks data fetched: 41 rows
+[2025-07-01 10:42:29] Response sent: success=true, data_count=41
+[2025-07-01 12:42:33] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 12:42:33] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=42.29 hours, projects_completed=1, productivity_rate=7.14, productivity_change=7.14, overall_growth=49.52, growth_change=49.52, prev_efficiency=0, prev_completion_rate=0, prev_productivity_rate=0, prev_overall_growth=0, prev_normalized_projects_completed=0
+[2025-07-01 10:42:47] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-07-01
+[2025-07-01 10:42:47] Individual tasks data fetched: 41 rows
+[2025-07-01 10:42:47] Response sent: success=true, data_count=41
+[2025-07-01 12:43:01] Request received: user_id=220, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 12:43:01] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97, avg_completion_time=24 hours, projects_completed=2, productivity_rate=0, productivity_change=0, overall_growth=58.79, growth_change=58.79, prev_efficiency=0, prev_completion_rate=0, prev_productivity_rate=0, prev_overall_growth=0, prev_normalized_projects_completed=0
+[2025-07-01 12:43:55] Request received: user_id=220, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 12:43:55] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97, avg_completion_time=24 hours, projects_completed=2, productivity_rate=0, productivity_change=0, overall_growth=58.79, growth_change=58.79
+[2025-07-01 12:47:54] Request received: user_id=1, start_date=2025-01-01, end_date=2025-06-30.
+[2025-07-01 12:47:54] Error: Invalid end date format. Use YYYY-MM-DD
+[2025-07-01 12:47:58] Request received: user_id=1, start_date=2025-01-01, end_date=2025-06-30.
+[2025-07-01 12:47:58] Error: Invalid end date format. Use YYYY-MM-DD
+[2025-07-01 12:48:53] Request received: user_id=220, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 12:48:53] User data fetched: user_name=Benjamin Anderson, efficiency=0, completed_tasks=32, total_tasks=33, completion_rate=96.97, avg_completion_time=24 hours, projects_completed=2, productivity_rate=0, productivity_change=0, overall_growth=58.79, growth_change=58.79
+[2025-07-01 12:50:29] Request received: user_id=1, start_date=2025-01-01, end_date=25-06-30.
+[2025-07-01 12:50:29] Error: Invalid end date format. Use YYYY-MM-DD
+[2025-07-01 12:50:49] Request received: user_id=1, start_date=2025-01-01, end_date=2025/06/30.
+[2025-07-01 12:50:49] Error: Invalid end date format. Use YYYY-MM-DD
+[2025-07-01 12:51:12] Request received: user_id=1, start_date=2025-01-01, end_date=2025-06-30
+[2025-07-01 12:51:12] User data fetched: user_name=TEST USER, efficiency=0, completed_tasks=0, total_tasks=0, completion_rate=0, avg_completion_time=0 hours, projects_completed=0, productivity_rate=0, productivity_change=0, overall_growth=0, growth_change=0
+[2025-07-01 12:51:32] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-30
+[2025-07-01 12:51:32] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=145.68 hours, projects_completed=4, productivity_rate=1.39, productivity_change=-7.99, overall_growth=31.62, growth_change=-28.5
+[2025-07-01 11:30:58] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 11:30:58] Individual tasks data fetched: 41 rows
+[2025-07-01 11:30:58] Response sent: success=true, data_count=41
+[2025-07-01 13:31:04] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 13:31:04] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=42.29 hours, projects_completed=1, total_projects=3, productivity_rate=7.14, overall_growth=49.52
+[2025-07-01 13:33:20] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-30
+[2025-07-01 13:33:20] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=145.68 hours, projects_completed=4, total_projects=8, productivity_rate=1.39, overall_growth=31.62
+[2025-07-01 11:37:30] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-07-01
+[2025-07-01 11:37:30] Individual tasks data fetched: 41 rows
+[2025-07-01 11:37:30] Response sent: success=true, data_count=41
+[2025-07-01 13:37:41] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 13:37:41] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=145.68 hours, projects_completed=4, total_projects=8, productivity_rate=1.39, overall_growth=31.62
+[2025-07-01 11:37:50] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-07-01
+[2025-07-01 11:37:50] Individual tasks data fetched: 41 rows
+[2025-07-01 11:37:50] Response sent: success=true, data_count=41
+[2025-07-01 13:48:55] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 13:48:55] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=145.68 hours, projects_completed=4, total_projects=8, productivity_rate=1.39, overall_growth=31.62
+[2025-07-01 12:34:46] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 12:34:46] Individual tasks data fetched: 41 rows
+[2025-07-01 12:34:46] Response sent: success=true, data_count=41
+[2025-07-01 14:34:52] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 14:34:52] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=42.29 hours, projects_completed=1, total_projects=3, productivity_rate=7.14, overall_growth=49.52
+[2025-07-01 14:53:02] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 14:53:02] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=42.29 hours, projects_completed=1, total_projects=3, productivity_rate=7.14, overall_growth=49.52
+[2025-07-01 14:55:59] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 14:55:59] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=42.29 hours, projects_completed=1, total_projects=3, productivity_rate=7.14, overall_growth=49.52
+[2025-07-01 15:07:07] Request received: user_id=216, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 15:07:07] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=42.29 hours, projects_completed=1, total_projects=3, productivity_rate=7.14, overall_growth=49.52
+[2025-07-01 13:07:37] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-07-01
+[2025-07-01 13:07:37] Individual tasks data fetched: 41 rows
+[2025-07-01 13:07:37] Response sent: success=true, data_count=41
+[2025-07-01 13:49:54] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 13:49:54] Individual tasks data fetched: 41 rows
+[2025-07-01 13:49:54] Response sent: success=true, data_count=41
+[2025-07-01 13:50:04] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 13:50:04] Individual tasks data fetched: 41 rows
+[2025-07-01 13:50:04] Response sent: success=true, data_count=41
+[2025-07-01 15:50:14] Request received: user_id=161, start_date=2025-01-01, end_date=2025-06-25
+[2025-07-01 15:50:14] User data fetched: user_name=Joshua Amarfio, efficiency=2.7, completed_tasks=19, total_tasks=37, completion_rate=51.35, avg_completion_time=145.68 hours, projects_completed=4, total_projects=8, productivity_rate=1.39, overall_growth=31.62
+[2025-07-01 13:51:35] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-07-01
+[2025-07-01 13:51:35] Individual tasks data fetched: 41 rows
+[2025-07-01 13:51:35] Response sent: success=true, data_count=41

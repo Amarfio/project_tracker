@@ -33,19 +33,15 @@ angular.module('sheetApp')
         // Initialize metrics with default values
         $scope.metrics = {
             taskCompletionEfficiency: 0,
-            efficiencyChange: 0,
             efficiencyStatus: { text: 'No Data', class: 'neutral' },
             avgCompletionTime: 0,
-            completionTimeChange: 0,
-            projectsImplemented: 0,
-            projectsChange: 0,
+            projectsCompleted: 0,
             completedTasks: 0,
             totalTasks: 0,
             completionRate: 0,
             productivityRate: 0,
-            productivityChange: 0,
             overallGrowth: 0,
-            growthChange: 0
+            totalProjects: 0
         };
 
         // Function to format hours into days and hours
@@ -68,6 +64,80 @@ angular.module('sheetApp')
             } else {
                 return { text: 'Highly Efficient', class: 'positive' };
             }
+        };
+
+        // Function to show metric information in a modal
+        $scope.showMetricInfo = function(metricType) {
+            const metricInfo = {
+                taskEfficiency: {
+                    title: 'Task Completion Efficiency',
+                    description: 'Measures how often tasks are completed within their estimated timeframe.',
+                    calculation: 'Task Completion Efficiency = (Tasks completed on or before their end date) ÷ (Total tasks assigned to the user)',
+                    interpretation: 'Higher values indicate better time management and efficiency.'
+                },
+                avgCompletionTime: {
+                    title: 'Average Task Completion Time',
+                    description: 'The average time taken to complete tasks, excluding weekends.',
+                    calculation: 'Calculated as the average working days between task assignment and completion.',
+                    interpretation: 'Lower values indicate faster task completion.'
+                },
+                projectsCompleted: {
+                    title: 'Projects Completed',
+                    description: 'The total number of projects successfully completed by the user.',
+                    calculation: 'Count of distinct projects where all assigned tasks are marked as completed.',
+                    interpretation: 'Higher values indicate greater project contribution.'
+                },
+                completionRate: {
+                    title: 'Task Completion Bar',
+                    description: 'Shows how close a user is to finishing all assigned tasks.',
+                    calculation: 'Completed Tasks - Total Assigned Tasks',
+                    interpretation: 'Progress of completed tasks out of total assigned tasks.'
+                },
+                productivityRate: {
+                    title: 'Productivity Rate',
+                    description: 'A combined metric of efficiency and completion rate.',
+                    calculation: '(Task Completion Efficiency × Completion Rate) / 100',
+                    interpretation: 'Higher values indicate overall better productivity.'
+                },
+                overallGrowth: {
+                    title: 'Overall Growth',
+                    description: 'A comprehensive performance score combining multiple metrics.',
+                    calculation: '40% (Efficiency) + 40% (Completion Rate) + 20% (Projects Completed)',
+                    interpretation: 'Higher values indicate better overall performance growth.'
+                }
+            };
+
+            const info = metricInfo[metricType];
+
+            Swal.fire({
+                title: `<strong>${info.title}</strong>`,
+                icon: 'info',
+                html: `
+                    <div class="text-left">
+                        <p class="mb-3">${info.description}</p>
+                        <p class="mb-2"><strong>How it's calculated:</strong></p>
+                        <p class="mb-3">${info.calculation}</p>
+                        <p class="mb-2"><strong>interpretation:</strong></p>
+                        <p>${info.interpretation}</p>
+                    </div>
+                `,
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: 'Got it!',
+                confirmButtonColor: '#208AAE',
+                customClass: {
+                    popup: 'metric-info-popup',
+                    title: 'metric-info-title'
+                },
+                background: '#ffffff',
+                backdrop: `
+                    rgba(32,138,174,0.1)
+                    url("/images/nyan-cat.gif")
+                    left top
+                    no-repeat
+                `
+            });
         };
 
         // Fetch user details and metrics
@@ -103,13 +173,26 @@ angular.module('sheetApp')
                     if (response.data.completed_tasks !== undefined && response.data.total_tasks !== undefined) {
                         $scope.metrics.completedTasks = response.data.completed_tasks;
                         $scope.metrics.totalTasks = response.data.total_tasks;
-                        $scope.metrics.completionRate = response.data.total_tasks > 0 ?
-                            Math.round((response.data.completed_tasks / response.data.total_tasks) * 100) : 0;
+                        $scope.metrics.completionRate = response.data.completion_rate;
                     }
                     if (response.data.avg_completion_time !== undefined) {
                         $scope.metrics.avgCompletionTime = response.data.avg_completion_time;
                     }
+                    if (response.data.projects_completed !== undefined) {
+                        $scope.metrics.projectsCompleted = response.data.projects_completed;
+                    }
+                    if (response.data.total_projects !== undefined) {
+                        $scope.metrics.totalProjects = response.data.total_projects;
+                    }
+                    if (response.data.productivity_rate !== undefined) {
+                        $scope.metrics.productivityRate = response.data.productivity_rate;
+                    }
+                    if (response.data.overall_growth !== undefined) {
+                        $scope.metrics.overallGrowth = response.data.overall_growth;
+                    }
 
+                    // Update charts with new data
+                    $scope.updateCharts();
                 } else {
                     console.error('Error fetching user details:', response.data.message);
                     $scope.userName = $scope.userName || 'Unknown User';
@@ -118,6 +201,124 @@ angular.module('sheetApp')
                 console.error('HTTP error:', error);
                 console.error('Error details:', error.data);
                 $scope.userName = $scope.userName || 'Unknown User';
+            });
+        };
+
+        // Function to update charts
+        $scope.updateCharts = function() {
+            // Task Performance Metrics Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(performanceCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Task Efficiency', 'Completion Rate', 'Productivity Rate', 'Overall Growth'],
+                    datasets: [{
+                        label: 'Performance Metrics',
+                        data: [
+                            $scope.metrics.taskCompletionEfficiency,
+                            $scope.metrics.completionRate,
+                            $scope.metrics.productivityRate,
+                            $scope.metrics.overallGrowth
+                        ],
+                        backgroundColor: [
+                            'rgba(94, 114, 228, 0.8)',
+                            'rgba(94, 114, 228, 0.7)',
+                            'rgba(94, 114, 228, 0.6)',
+                            'rgba(94, 114, 228, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(94, 114, 228, 1)',
+                            'rgba(94, 114, 228, 1)',
+                            'rgba(94, 114, 228, 1)',
+                            'rgba(94, 114, 228, 1)'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Completion Overview Chart
+            const completionCtx = document.getElementById('completionChart').getContext('2d');
+            new Chart(completionCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Completed Tasks', 'Incomplete Tasks', 'Completed Projects', 'Incomplete Projects'],
+                    datasets: [{
+                        data: [
+                            $scope.metrics.completedTasks,
+                            $scope.metrics.totalTasks - $scope.metrics.completedTasks,
+                            $scope.metrics.projectsCompleted,
+                            $scope.metrics.totalProjects - $scope.metrics.projectsCompleted
+                        ],
+                        backgroundColor: [
+                            'rgba(94, 114, 228, 0.8)',
+                            'rgba(94, 114, 228, 0.4)',
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(40, 167, 69, 0.4)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed;
+                                }
+                            }
+                        }
+                    }
+                }
             });
         };
 

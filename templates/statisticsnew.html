@@ -366,7 +366,7 @@
                     </ul>
                 </div>
             </nav>
-            <!-- Updated Date Range Picker with flatpickr directive -->
+            <!-- Updated Date Range Picker with flatpickr directive and date validation -->
             <div class="date-picker container-fluid">
                 <div class="row gx-0">
                     <div class="col-md-2 mb-2">
@@ -374,7 +374,7 @@
                         <div class="date-picker-container">
                             <div class="date-display">{{ fromDate | date:'MMM d, y' }}</div>
                             <div class="calendar-icon">
-                                <input type="text" flatpickr ng-model="fromDate" data-date-format="Y-m-d" class="flatpickr-input">
+                                <input type="text" flatpickr ng-model="fromDate" data-date-format="Y-m-d" max-date="toDate" class="flatpickr-input">
                                 <i class="bi bi-calendar"></i>
                             </div>
                         </div>
@@ -384,7 +384,7 @@
                         <div class="date-picker-container">
                             <div class="date-display">{{ toDate | date:'MMM d, y' }}</div>
                             <div class="calendar-icon">
-                                <input type="text" flatpickr ng-model="toDate" data-date-format="Y-m-d" class="flatpickr-input">
+                                <input type="text" flatpickr ng-model="toDate" data-date-format="Y-m-d" min-date="fromDate" class="flatpickr-input">
                                 <i class="bi bi-calendar"></i>
                             </div>
                         </div>
@@ -454,13 +454,13 @@
                         </div>
                     </div>
                     <div class="col-xl-3 col-sm-6 col-md-6 dash_card">
-                        <div class="card card-stats mb-4 mb-xl-0 clickable-card" ng-click="navigateToAnalysis('completion_metrics')">
+                        <div class="card card-stats mb-4 mb-xl-0 clickable-card" ng-click="navigateToAnalysis('comparison_tool')">
                             <div class="card-body">
-                                <div class="icon-shape bg-danger text-white rounded-circle shadow">
+                                <div class="icon-shape bg-info text-white rounded-circle shadow">
                                     <i class="ni ni-chart-bar-32"></i>
                                 </div>
                                 <div class="card-content">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">COMPLETION METRICS</h5>
+                                    <h5 class="card-title text-uppercase text-muted mb-0">COMPARISON TOOL</h5>
                                     <span class="card-value">View</span>
                                 </div>
                             </div>
@@ -487,7 +487,7 @@
                                 <th class="sortable-header">Department</th>
                                 <th class="sortable-header">Pending Completion</th>
                                 <th class="sortable-header">Tasks</th>
-                                <th class="sortable-header">Total Completed</th>
+                                <th class="sortable-header">Completed Task</th>
                                 <th class="sortable-header">Oldest Outstanding In Days</th>
                                 <th class="sortable-header">Number of Tasks Exceeded</th>
                                 <th class="sortable-header">Average Days to Complete</th>
@@ -618,7 +618,8 @@
         };
 
         $scope.navigateToAnalysis = function(analysisType) {
-            $location.path('/tasks-analysis').search({
+            var path = analysisType === 'department_performance' ? '/department_performance' : '/tasks-analysis';
+            $location.path(path).search({
                 type: analysisType,
                 start_date: $scope.formatDateForAPI($scope.fromDate),
                 end_date: $scope.formatDateForAPI($scope.toDate)
@@ -655,72 +656,58 @@
                 maxDate: '=?'
             },
             link: function(scope, element, attrs, ngModel) {
-                if (typeof flatpickr === 'undefined') {
-                    console.error('Flatpickr is not loaded. Please include flatpickr.js before this directive.');
-                    return;
-                }
-
                 var options = {
                     dateFormat: attrs.dateFormat || "Y-m-d",
                     defaultDate: ngModel.$viewValue,
-                    appendTo: element[0].closest('.date-picker-container'),
-                    onOpen: function(selectedDates, dateStr, instance) {
-                        var icon = element[0].closest('.calendar-icon');
-                        var rect = icon.getBoundingClientRect();
-                        var calendar = instance.calendarContainer;
-
-                        calendar.style.top = (rect.bottom - rect.top + 5) + 'px';
-                        calendar.style.left = rect.left + 'px';
-
-                        var calendarRect = calendar.getBoundingClientRect();
-                        if (calendarRect.right > window.innerWidth - 10) {
-                            calendar.classList.add('right-align');
-                        } else {
-                            calendar.classList.remove('right-align');
-                        }
-
-                        var container = element[0].closest('.header');
-                        if (container) {
-                            container.scrollIntoView({
-                                block: 'nearest',
-                                behavior: 'smooth'
-                            });
-                        }
+                    allowInput: true, // Allow manual date input
+                    clickOpens: true, // Open calendar on click
+                    static: true, // Position calendar relative to input
+                    monthSelectorType: 'static', // Don't scroll months
+                    minDate: attrs.minDate ? new Date(attrs.minDate) : null,
+                    maxDate: attrs.maxDate ? new Date(attrs.maxDate) : null,
+                    onReady: function(selectedDates, dateStr, instance) {
+                        // Highlight today's date
+                        instance.calendarContainer.querySelector('.today').classList.add('highlight-today');
                     },
-                    onChange: function(selectedDates, dateStr) {
+                    onChange: function(selectedDates, dateStr, instance) {
                         $timeout(function() {
                             ngModel.$setViewValue(dateStr);
                             if (attrs.ngChange) {
                                 scope.$eval(attrs.ngChange);
                             }
-                            scope.$apply(function() {
-                                scope.fetchStatistics();
-                            });
                         });
+                    },
+                    onClose: function(selectedDates, dateStr, instance) {
+                        // Validate the date when picker closes
+                        if (!selectedDates[0]) return;
+
+                        if (attrs.minDate && new Date(dateStr) < new Date(attrs.minDate)) {
+                            instance.setDate(attrs.minDate);
+                        }
+                        if (attrs.maxDate && new Date(dateStr) > new Date(attrs.maxDate)) {
+                            instance.setDate(attrs.maxDate);
+                        }
                     }
                 };
 
-                if (attrs.minDate) {
-                    options.minDate = new Date(scope.minDate);
-                }
-                if (attrs.maxDate) {
-                    options.maxDate = new Date(scope.maxDate);
-                }
-
                 var fp = flatpickr(element[0], options);
 
+                // Update when model changes
                 ngModel.$render = function() {
                     if (ngModel.$viewValue) {
                         fp.setDate(ngModel.$viewValue);
                     }
                 };
 
+                // Watch for min/max date changes
                 if (attrs.minDate) {
                     scope.$watch('minDate', function(newVal) {
                         if (newVal) {
                             options.minDate = new Date(newVal);
-                            if (fp) {
-                                fp.set('minDate', options.minDate);
+                            fp.set('minDate', options.minDate);
+                            // If current date is before new min, set to min
+                            if (fp.selectedDates[0] && fp.selectedDates[0] < options.minDate) {
+                                fp.setDate(options.minDate);
                             }
                         }
                     });
@@ -730,18 +717,39 @@
                     scope.$watch('maxDate', function(newVal) {
                         if (newVal) {
                             options.maxDate = new Date(newVal);
-                            if (fp) {
-                                fp.set('maxDate', options.maxDate);
+                            fp.set('maxDate', options.maxDate);
+                            // If current date is after new max, set to max
+                            if (fp.selectedDates[0] && fp.selectedDates[0] > options.maxDate) {
+                                fp.setDate(options.maxDate);
                             }
                         }
                     });
                 }
 
+                // Clean up
                 scope.$on('$destroy', function() {
                     if (fp) {
                         fp.destroy();
                     }
                 });
+
+                // Add some CSS for the highlight
+                var style = document.createElement('style');
+                style.textContent = `
+                .highlight-today {
+                    font-weight: bold;
+                    border: 2px solid #5e72e4 !important;
+                }
+                .flatpickr-day.inRange {
+                    background: rgba(94, 114, 228, 0.1);
+                    border-color: rgba(94, 114, 228, 0.1);
+                }
+                .flatpickr-day.selected {
+                    background: #5e72e4;
+                    border-color: #5e72e4;
+                }
+            `;
+                document.head.appendChild(style);
             }
         };
     }]);

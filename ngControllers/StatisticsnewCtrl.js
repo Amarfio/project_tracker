@@ -10,8 +10,8 @@ sheetApp.controller("StatisticsnewCtrl", function($scope, $http, $location, $tim
     $scope.profile_pic = null;
 
     // Date range variables
-    $scope.fromDate = localStorage.getItem('fromDate') ? new Date(localStorage.getItem('fromDate')) : new Date(new Date().getFullYear(), 0, 1); // Default to Jan 1 of current year
-    $scope.toDate = localStorage.getItem('toDate') ? new Date(localStorage.getItem('toDate')) : new Date(); // Default to today
+    $scope.fromDate = localStorage.getItem('fromDate') ? new Date(localStorage.getItem('fromDate')) : new Date(new Date().getFullYear(), 0, 1);
+    $scope.toDate = localStorage.getItem('toDate') ? new Date(localStorage.getItem('toDate')) : new Date();
 
     // Initialize stat_cards
     $scope.updateCardDescriptions = function() {
@@ -61,7 +61,6 @@ sheetApp.controller("StatisticsnewCtrl", function($scope, $http, $location, $tim
                         icon: card.icon
                     };
                 });
-                // Force digest cycle to ensure UI updates
                 $timeout(function() {
                     $scope.$apply();
                 });
@@ -95,8 +94,28 @@ sheetApp.controller("StatisticsnewCtrl", function($scope, $http, $location, $tim
 
     // Function to navigate to analysis page
     $scope.navigateToAnalysis = function(analysisType) {
-        $location.path('/tasks_analysis').search({
+        var path = '';
+        if (analysisType === 'individual_tasks') {
+            path = '/tasks_analysis';
+        } else if (analysisType === 'department_performance') {
+            path = '/department_performance';
+        } else if (analysisType === 'task_timelines') {
+            path = '/task_delivery_insights';
+        } else if (analysisType === 'comparison_tool') {
+            path = '/comparison';
+        } else {
+            path = '/tasks_analysis';
+        }
+        $location.path(path).search({
             type: analysisType,
+            start_date: $scope.formatDateForAPI($scope.fromDate),
+            end_date: $scope.formatDateForAPI($scope.toDate)
+        });
+    };
+
+    // Function to navigate directly to comparison page
+    $scope.navigateToComparison = function() {
+        $location.path('/comparison').search({
             start_date: $scope.formatDateForAPI($scope.fromDate),
             end_date: $scope.formatDateForAPI($scope.toDate)
         });
@@ -109,7 +128,6 @@ sheetApp.controller("StatisticsnewCtrl", function($scope, $http, $location, $tim
 
     // Initialize controller
     $scope.init = function() {
-        // Set profile picture based on gender
         if ($scope.user_info.profile_pic) {
             $scope.profile_pic_true = true;
             $scope.profile_pic = $scope.user_info.profile_pic;
@@ -117,18 +135,16 @@ sheetApp.controller("StatisticsnewCtrl", function($scope, $http, $location, $tim
             $scope.profile_pic_true = null;
         }
 
-        // Update card descriptions and fetch statistics
         $scope.updateCardDescriptions();
         $timeout(function() {
             $scope.fetchStatistics();
         }, 0);
     };
 
-    // Call initialization
     $scope.init();
 });
 
-// Enhanced flatpickr directive with availability check and dynamic loading
+// Enhanced flatpickr directive
 sheetApp.directive('flatpickr', ['$timeout', '$document', '$window', function($timeout, $document, $window) {
     return {
         restrict: 'A',
@@ -149,25 +165,18 @@ sheetApp.directive('flatpickr', ['$timeout', '$document', '$window', function($t
             };
 
             function initializeFlatpickr() {
-                // Set min/max dates if available
                 if (attrs.minDate) {
                     options.minDate = new Date(scope.minDate);
                 }
                 if (attrs.maxDate) {
                     options.maxDate = new Date(scope.maxDate);
                 }
-
-                // Initialize flatpickr
                 fp = flatpickr(element[0], options);
-
-                // Update when model changes
                 ngModel.$render = function() {
                     if (ngModel.$viewValue) {
                         fp.setDate(ngModel.$viewValue);
                     }
                 };
-
-                // Watch for min/max date changes
                 if (attrs.minDate) {
                     scope.$watch('minDate', function(newVal) {
                         if (newVal) {
@@ -178,7 +187,6 @@ sheetApp.directive('flatpickr', ['$timeout', '$document', '$window', function($t
                         }
                     });
                 }
-
                 if (attrs.maxDate) {
                     scope.$watch('maxDate', function(newVal) {
                         if (newVal) {
@@ -193,16 +201,13 @@ sheetApp.directive('flatpickr', ['$timeout', '$document', '$window', function($t
 
             function loadFlatpickr() {
                 if (typeof $window.flatpickr === 'undefined') {
-                    // Load flatpickr dynamically
                     var script = $document[0].createElement('script');
                     script.src = 'https://cdn.jsdelivr.net/npm/flatpickr';
                     script.onload = function() {
-                        // Also load the CSS
                         var link = $document[0].createElement('link');
                         link.rel = 'stylesheet';
                         link.href = 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css';
                         $document[0].head.appendChild(link);
-
                         initializeFlatpickr();
                     };
                     $document[0].body.appendChild(script);
@@ -211,14 +216,12 @@ sheetApp.directive('flatpickr', ['$timeout', '$document', '$window', function($t
                 }
             }
 
-            // Clean up
             scope.$on('$destroy', function() {
                 if (fp) {
                     fp.destroy();
                 }
             });
 
-            // Initialize
             loadFlatpickr();
         }
     };

@@ -5,11 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tasks Analysis</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <!-- Custom styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         .card-stats {
             min-height: 100px;
@@ -119,10 +117,8 @@
         }
         
         .back-button {
-            margin-bottom: 25px;
-            background-color: #485fe0;
-            border: none;
-            color: var(--primary-color);
+            background-color: #5e72e4;
+            color: #fff;
             width: 42px;
             height: 42px;
             border-radius: 50%;
@@ -131,11 +127,11 @@
             justify-content: center;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(94, 114, 228, 0.15);
+            margin-bottom: 1rem;
         }
         
         .back-button:hover {
-            background-color: cornflowerblue;
-            color: black;
+            background-color: #485fe0;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(94, 114, 228, 0.25);
         }
@@ -231,6 +227,69 @@
             text-align: center;
         }
         
+        .top-performer {
+            background: linear-gradient(135deg, #ffd700, #ffca28);
+            border: 2px solid #d4a017;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            color: #1a1a1a;
+            position: relative;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+        
+        .top-performer td {
+            color: #1a1a1a;
+        }
+        
+        .top-performer td a {
+            color: #b71c1c;
+            font-weight: bold;
+        }
+        
+        .top-performer td a:hover {
+            color: #8e0000;
+            text-decoration: underline;
+        }
+        
+        .star-icons {
+            margin-left: 8px;
+        }
+        
+        .star-icons i {
+            color: #b71c1c;
+            font-size: 1.2rem;
+            margin: 0 2px;
+            animation: twinkle 1s ease-in-out infinite;
+        }
+        
+        .star-icons i:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .star-icons i:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+            to {
+                box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+            }
+        }
+        
+        @keyframes twinkle {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+        
         @media (max-width: 1200px) {
             .stats-table th,
             .stats-table td {
@@ -243,6 +302,9 @@
             .search-input {
                 font-size: 0.8rem;
                 padding: 0.4rem;
+            }
+            .star-icons i {
+                font-size: 1rem;
             }
         }
         
@@ -258,6 +320,9 @@
             .download-btn {
                 margin-left: 0;
             }
+            .star-icons i {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -272,13 +337,14 @@
             <div class="row">
                 <div class="col">
                     <div class="button-container">
-                        <a href="statisticsnew" class="btn back-button" title="Back">
-                            <i class="fas fa-arrow-left"></i></a>
+                        <a ng-href="statisticsnew?start_date={{formatDateForAPI(fromDate)}}&end_date={{formatDateForAPI(toDate)}}" class="btn back-button" title="Back to Project Statistics">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
                         <div class="search-container">
                             <input type="text" class="search-input" ng-model="searchQuery" placeholder="Search users..." ng-change="filterTasks()">
                         </div>
                         <button class="download-btn" id="btnExportTasks" title="Download as Excel">
-                            <i class="ni ni-cloud-download-95"></i>
+                            <i class="bi bi-cloud-download"></i>
                         </button>
                     </div>
                 </div>
@@ -306,9 +372,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="task in filteredTasks">
+                                    <tr ng-repeat="task in filteredTasks" ng-class="{ 'top-performer': $index == 0 }">
                                         <td>{{ $index + 1 }}</td>
-                                        <td><a href="user_details.html?id={{task.id}}&name={{task.user}}">{{ task.user }}</a></td>
+                                        <td>
+                                            <a href="user_details.html?id={{task.id}}&name={{task.user}}&start_date={{formatDateForAPI(fromDate)}}&end_date={{formatDateForAPI(toDate)}}">{{ task.user }}</a>
+                                            <span ng-if="$index == 0" class="star-icons">
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                        </td>
                                         <td>{{ task.department }}</td>
                                         <td>{{ task.role }}</td>
                                         <td>{{ task.email }}</td>
@@ -321,41 +392,12 @@
                     </div>
                 </div>
 
-                <!-- Department Performance -->
-                <div class="col-12" ng-switch-when="department_performance">
+                <!-- Task Delivery Insights -->
+                <div class="col-12" ng-switch-when="task_delivery_insights">
                     <div class="card shadow">
                         <div class="page-header">
                             <h2 class="page-header-title">
-                                Department Performance
-                            </h2>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table align-items-center table-flush stats-table">
-                                <thead class="text-primary">
-                                    <tr>
-                                        <th class="sortable-header"><span class="no-header">NO</span></th>
-                                        <th class="sortable-header">Department</th>
-                                        <th class="sortable-header">Total Tasks</th>
-                                        <th class="sortable-header">Completed Tasks</th>
-                                        <th class="sortable-header">Average Days to Complete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="5">Department performance data will be displayed here.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Task Timelines -->
-                <div class="col-12" ng-switch-when="task_timelines">
-                    <div class="card shadow">
-                        <div class="page-header">
-                            <h2 class="page-header-title">
-                                Task Timelines
+                                Task Delivery Insights
                             </h2>
                         </div>
                         <div class="table-responsive">
@@ -371,7 +413,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td colspan="5">Task timeline data will be displayed here.</td>
+                                        <td colspan="5">
+                                            <a ng-href="task_delivery_insights.html?start_date={{formatDateForAPI(fromDate)}}&end_date={{formatDateForAPI(toDate)}}">View Task Delivery Insights</a>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -379,77 +423,47 @@
                     </div>
                 </div>
 
-                <!-- Completion Metrics -->
-                <div class="col-12" ng-switch-when="completion_metrics">
-                    <div class="card shadow">
-                        <div class="page-header">
-                            <h2 class="page-header-title">
-                                Completion Metrics
-                            </h2>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table align-items-center table-flush stats-table">
-                                <thead class="text-primary">
-                                    <tr>
-                                        <th class="sortable-header"><span class="no-header">NO</span></th>
-                                        <th class="sortable-header">Metric</th>
-                                        <th class="sortable-header">Value</th>
-                                        <th class="sortable-header">Details</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="4">Completion metrics data will be displayed here.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- JavaScript dependencies -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+                <!-- JavaScript dependencies -->
+                <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+                <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            $("#btnExportTasks").click(function(e) {
-                // Create title row
-                var title = '<tr><th colspan="7" style="font-size:18px;background:#5e72e4;color:white;">' +
-                    $('.page-header-title').text().trim() + '</th></tr>';
+                <script>
+                    $(document).ready(function() {
+                        $("#btnExportTasks").click(function(e) {
+                            // Create title row
+                            var title = '<tr><th colspan="7" style="font-size:18px;background:#5e72e4;color:white;">' +
+                                $('.page-header-title').text().trim() + '</th></tr>';
 
-                var tab_text = "<table border='2px'>" + title + "<tr bgcolor='#87AFC6'>";
-                var j = 0;
-                var tab = document.getElementById('taskDetailsTable');
+                            var tab_text = "<table border='2px'>" + title + "<tr bgcolor='#87AFC6'>";
+                            var j = 0;
+                            var tab = document.getElementById('taskDetailsTable');
 
-                for (j = 0; j < tab.rows.length; j++) {
-                    tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
-                }
+                            for (j = 0; j < tab.rows.length; j++) {
+                                tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+                            }
 
-                tab_text = tab_text + "</table>";
-                tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");
-                tab_text = tab_text.replace(/<img[^>]*>/gi, "");
-                tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, "");
+                            tab_text = tab_text + "</table>";
+                            tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");
+                            tab_text = tab_text.replace(/<img[^>]*>|<\/input>/gi, "");
+                            tab_text = tab_text.replace(/<span[^>]*>.*?<\/span>/gi, ""); // Remove star icons for Excel
 
-                var ua = window.navigator.userAgent;
-                var msie = ua.indexOf("MSIE ");
+                            var ua = window.navigator.userAgent;
+                            var msie = ua.indexOf("MSIE ");
 
-                if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
-                    txtArea1.document.open("txt/html", "replace");
-                    txtArea1.document.write(tab_text);
-                    txtArea1.document.close();
-                    txtArea1.focus();
-                    sa = txtArea1.document.execCommand("SaveAs", true, "Task_Analysis.xls");
-                } else {
-                    sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
-                }
-            });
-        });
-    </script>
+                            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+                                txtArea1.document.open("txt/html", "replace");
+                                txtArea1.document.write(tab_text);
+                                txtArea1.document.close();
+                                txtArea1.focus();
+                                sa = txtArea1.document.execCommand("SaveAs", true, "Task_Analysis.xls");
+                            } else {
+                                sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+                            }
+                        });
+                    });
+                </script>
 </body>
 
 </html>

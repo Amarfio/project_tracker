@@ -121,8 +121,7 @@ try {
         ORDER BY 
             CASE WHEN ? = 'oldest_outstanding' THEN p.approved_date END ASC,
             CASE WHEN ? != 'oldest_outstanding' THEN p.approved_date END DESC
-        LIMIT 25
-    ";
+    " . ($metric == 'oldest_outstanding' ? " LIMIT 1" : "");
 
     $stmt = $conn->prepare($sql);
     if (!$stmt) throw new Exception('Prepare failed: ' . $conn->error);

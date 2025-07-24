@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sheetApp">
+
+<head>
+    <meta charset="utf-8" />
+    <base href="/project_tracker_test/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Work Sheet</title>
+    <!-- Favicon -->
+    <link href="./assets/img/brand/usg_logo.png" rel="icon" type="image/png">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <!-- Icons -->
+    <link href="./assets/js/plugins/nucleo/css/nucleo.css" rel="stylesheet" />
+    <link href="./assets/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link href="./assets/css/argon-dashboard.css?v=1.1.0" rel="stylesheet" />
+    <style>
+         :root {
+            --primary-color: #5e72e4;
+            --primary-light: #8290e8;
+            --teal-primary: #208AAE;
+            --teal-light: #4DA8C4;
+            --border-color: #e2e8f0;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .dashboard-container {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        
+        .navbar-vertical {
+            width: 250px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1030;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .back-button {
+            background-color: white;
+            border: none;
+            color: var(--primary-color);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(94, 114, 228, 0.15);
+            margin-bottom: 25px;
+        }
+        
+        .back-button:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(94, 114, 228, 0.25);
+        }
+        
+        .back-button i {
+            font-size: 17px;
+        }
+        
+        .comparison-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+        
+        .toggle-btn {
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            color: var(--teal-primary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .toggle-btn.active {
+            background-color: var(--teal-primary);
+            color: white;
+            border-color: var(--teal-primary);
+            box-shadow: 0 4px 10px rgba(32, 138, 174, 0.2);
+        }
+        
+        .toggle-btn:hover:not(.active) {
+            background-color: var(--teal-light);
+            color: var(--teal-primary);
+        }
+        
+        .comparison-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            position: relative;
+        }
+        
+        .comparison-card {
+            flex: 1;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(32, 138, 174, 0.15);
+            padding: 20px;
+            min-height: 400px;
+        }
+        
+        .vs-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            color: var(--teal-primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--teal-primary);
+            z-index: 10;
+        }
+        
+        .card-header {
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--teal-primary);
+            margin: 0;
+        }
+        
+        .select-container {
+            margin-bottom: 15px;
+        }
+        
+        .custom-select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            font-size: 0.9rem;
+            color: var(--teal-primary);
+        }
+        
+        .custom-select:focus {
+            outline: none;
+            border-color: var(--teal-primary);
+            box-shadow: 0 0 5px rgba(32, 138, 174, 0.3);
+        }
+        
+        .metric {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--teal-primary);
+            margin-bottom: 5px;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+        
+        .metric-loading {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+        
+        @media (max-width: 992px) {
+            .dashboard-container {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .comparison-container {
+                flex-direction: column;
+            }
+            .vs-badge {
+                position: static;
+                transform: none;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+
+<body ng-controller="ComparisonCtrl">
+    <!-- Sidebar -->
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidenav-main">
+        <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Page Title -->
+        <h1 class="page-title">Performance Comparison</h1>
+
+        <!-- Back Button -->
+        <a ng-href="statisticsnew?start_date={{formatDateForAPI(fromDate)}}&end_date={{formatDateForAPI(toDate)}}" class="btn back-button" title="Back to Statistics">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <!-- Comparison Type Toggle Buttons -->
+        <div class="comparison-toggle">
+            <div class="toggle-btn" ng-class="{active: comparisonType === 'individual'}" ng-click="setComparisonType('individual')">
+                INDIVIDUALS
+            </div>
+            <div class="toggle-btn" ng-class="{active: comparisonType === 'department'}" ng-click="setComparisonType('department')">
+                DEPARTMENT
+            </div>
+        </div>
+
+        <!-- Comparison Containers -->
+        <div class="comparison-container">
+            <!-- Left Container -->
+            <div class="comparison-card">
+                <div class="select-container">
+                    <select class="custom-select" ng-model="leftSelection" ng-options="item.name for item in (comparisonType === 'individual' ? users : departments) track by item.id" ng-change="updateLeftSelection()">
+                        <option value="" disabled selected>Select {{comparisonType === 'individual' ? 'Individual' : 'Department'}}</option>
+                    </select>
+                </div>
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <span ng-if="comparisonType === 'individual'">{{leftSelection && leftSelection.name || 'First Individual'}}</span>
+                        <span ng-if="comparisonType === 'department'">{{leftSelection && leftSelection.name || 'First Department'}}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="metric">
+                        <div class="metric-label">Total Tasks</div>
+                        <div class="metric-value" ng-if="!leftMetricsLoading && leftMetrics.totalTasks !== null">{{leftMetrics.totalTasks}}</div>
+                        <div class="metric-loading" ng-if="leftMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!leftMetricsLoading && leftMetrics.totalTasks === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Total Completed Tasks</div>
+                        <div class="metric-value" ng-if="!leftMetricsLoading && leftMetrics.totalCompletedTasks !== null">{{leftMetrics.totalCompletedTasks}}</div>
+                        <div class="metric-loading" ng-if="leftMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!leftMetricsLoading && leftMetrics.totalCompletedTasks === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Task Completion Efficiency (%)</div>
+                        <div class="metric-value" ng-if="!leftMetricsLoading && leftMetrics.taskCompletionEfficiency !== null">{{leftMetrics.taskCompletionEfficiency}}</div>
+                        <div class="metric-loading" ng-if="leftMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!leftMetricsLoading && leftMetrics.taskCompletionEfficiency === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Avg. Completion Time (Hours)</div>
+                        <div class="metric-value" ng-if="!leftMetricsLoading && leftMetrics.avgCompletionTime !== null">{{leftMetrics.avgCompletionTime}}</div>
+                        <div class="metric-loading" ng-if="leftMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!leftMetricsLoading && leftMetrics.avgCompletionTime === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Projects Completed</div>
+                        <div class="metric-value" ng-if="!leftMetricsLoading && leftMetrics.projectsCompleted !== null">{{leftMetrics.projectsCompleted}}</div>
+                        <div class="metric-loading" ng-if="leftMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!leftMetricsLoading && leftMetrics.projectsCompleted === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Productivity Rate (%)</div>
+                        <div class="metric-value" ng-if="!leftMetricsLoading && leftMetrics.productivityRate !== null">{{leftMetrics.productivityRate}}</div>
+                        <div class="metric-loading" ng-if="leftMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!leftMetricsLoading && leftMetrics.productivityRate === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Overall Growth (%)</div>
+                        <div class="metric-value" ng-if="!leftMetricsLoading && leftMetrics.overallGrowth !== null">{{leftMetrics.overallGrowth}}</div>
+                        <div class="metric-loading" ng-if="leftMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!leftMetricsLoading && leftMetrics.overallGrowth === null">No data</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VS Badge -->
+            <div class="vs-badge">VS</div>
+
+            <!-- Right Container -->
+            <div class="comparison-card">
+                <div class="select-container">
+                    <select class="custom-select" ng-model="rightSelection" ng-options="item.name for item in (comparisonType === 'individual' ? users : departments) track by item.id" ng-change="updateRightSelection()">
+                        <option value="" disabled selected>Select {{comparisonType === 'individual' ? 'Individual' : 'Department'}}</option>
+                    </select>
+                </div>
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <span ng-if="comparisonType === 'individual'">{{rightSelection && rightSelection.name || 'Second Individual'}}</span>
+                        <span ng-if="comparisonType === 'department'">{{rightSelection && rightSelection.name || 'Second Department'}}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="metric">
+                        <div class="metric-label">Total Tasks</div>
+                        <div class="metric-value" ng-if="!rightMetricsLoading && rightMetrics.totalTasks !== null">{{rightMetrics.totalTasks}}</div>
+                        <div class="metric-loading" ng-if="rightMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!rightMetricsLoading && rightMetrics.totalTasks === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Total Completed Tasks</div>
+                        <div class="metric-value" ng-if="!rightMetricsLoading && rightMetrics.totalCompletedTasks !== null">{{rightMetrics.totalCompletedTasks}}</div>
+                        <div class="metric-loading" ng-if="rightMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!rightMetricsLoading && rightMetrics.totalCompletedTasks === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Task Completion Efficiency (%)</div>
+                        <div class="metric-value" ng-if="!rightMetricsLoading && rightMetrics.taskCompletionEfficiency !== null">{{rightMetrics.taskCompletionEfficiency}}</div>
+                        <div class="metric-loading" ng-if="rightMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!rightMetricsLoading && rightMetrics.taskCompletionEfficiency === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Avg. Completion Time (Hours)</div>
+                        <div class="metric-value" ng-if="!rightMetricsLoading && rightMetrics.avgCompletionTime !== null">{{rightMetrics.avgCompletionTime}}</div>
+                        <div class="metric-loading" ng-if="rightMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!rightMetricsLoading && rightMetrics.avgCompletionTime === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Projects Completed</div>
+                        <div class="metric-value" ng-if="!rightMetricsLoading && rightMetrics.projectsCompleted !== null">{{rightMetrics.projectsCompleted}}</div>
+                        <div class="metric-loading" ng-if="rightMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!rightMetricsLoading && rightMetrics.projectsCompleted === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Productivity Rate (%)</div>
+                        <div class="metric-value" ng-if="!rightMetricsLoading && rightMetrics.productivityRate !== null">{{rightMetrics.productivityRate}}</div>
+                        <div class="metric-loading" ng-if="rightMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!rightMetricsLoading && rightMetrics.productivityRate === null">No data</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Overall Growth (%)</div>
+                        <div class="metric-value" ng-if="!rightMetricsLoading && rightMetrics.overallGrowth !== null">{{rightMetrics.overallGrowth}}</div>
+                        <div class="metric-loading" ng-if="rightMetricsLoading">Loading...</div>
+                        <div class="metric-loading" ng-if="!rightMetricsLoading && rightMetrics.overallGrowth === null">No data</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core JS Files -->
+    <script src="./assets/js/plugins/jquery/dist/jquery.min.js"></script>
+    <script src="./assets/js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Argon JS -->
+    <script src="./assets/js/argon-dashboard.min.js?v=1.1.0"></script>
+    <!-- Angular -->
+    <script src="./app/lib/angular.min.js"></script>
+    <script src="./app/lib/angular-route.min.js"></script>
+    <script src="./ngControllers/ComparisonCtrl.js"></script>
+</body>
+
+</html>

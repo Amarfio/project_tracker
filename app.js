@@ -144,6 +144,18 @@ sheetApp.config([
                 templateUrl: "./templates/user_details.html",
                 controller: "UserDetailsCtrl",
             })
+            .when("/department_performance", {
+                templateUrl: "./templates/department_performance.html",
+                controller: "TasksAnalysisCtrl",
+            })
+            .when("/task_delivery_insights", {
+                templateUrl: "./templates/task_delivery_insights.html",
+                controller: "TasksAnalysisCtrl",
+            })
+            .when("/comparison", {
+                templateUrl: "./templates/comparison.html",
+                controller: "ComparisonCtrl",
+            })
             .when("/logout", {
                 templateUrl: "./templates/logout.html",
                 controller: "LogoutCtrl",

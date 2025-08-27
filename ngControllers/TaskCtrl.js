@@ -193,6 +193,26 @@ sheetApp.controller(
     $scope.submit_for_approval = function () {
       $(".modal").hide();
 
+      let todaysDate = new Date();
+      todaysDate.setHours(0, 0, 0, 0); // Reset time to midnight
+
+      // Example start date string
+      // let start_date_ = "2025-08-20"; // YYYY-MM-DD format
+
+      // Convert start_date_ to Date object
+      let start_date_ = new Date($scope.project.start_date);
+      start_date_.setHours(0, 0, 0, 0);
+
+      if (start_date_ <= todaysDate) {
+        Swal.fire({
+          type: "error",
+          title: "Invalid Date",
+          text: "Start date must be 3 days later than today for the approval!!",
+        });
+        console.log("testing again for 3 days thing");
+        return false;
+      }
+
       Swal.queue([
         {
           title: "Proccessing ...  ",

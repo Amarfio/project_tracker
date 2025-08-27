@@ -141,6 +141,7 @@ if (isset($_GET['project_id'])) {
                 "start_date" => $row['start_date'],
                 "end_date" => $row['end_date'],
                 "approved_date" => $row['approved_date'],
+                "back_dated" => $row['backed_dated'],
                 "date_of_completion"=> checkForCompletionDate($conn, $row['project_id']),
                 "tasks" => get_all_tasks($row['project_id'], $conn)
             );

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sheetApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .navbar-vertical {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 260px;
+            background-color: #fff;
+            border-right: 1px solid #e9ecef;
+        }
+        
+        .header {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            padding: 0.5rem 1rem;
+            background-color: #11cdef;
+            border-radius: 0.25rem;
+        }
+        
+        .navbar-top {
+            background: linear-gradient(90deg, #5e72e4 0%, #825ee4 100%);
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-dark .navbar-nav .nav-link {
+            color: #fff;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .media-body {
+            margin-left: 0.5rem;
+        }
+        
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+        }
+        
+        .content-container {
+            padding: 15px;
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+        
+        .new-request-btn {
+            margin-bottom: 15px;
+            margin-right: 10px;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .filter-dropdown .btn {
+            padding: 0.2rem 0.6rem;
+            font-size: 0.75rem;
+            border: 1px solid #dee2e6;
+            color: #fff;
+            background-color: #5e72e4;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-dropdown .btn:hover {
+            background-color: #485fe0;
+        }
+        
+        .filter-dropdown .dropdown-menu {
+            min-width: 120px;
+            font-size: 0.75rem;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-dropdown .dropdown-item {
+            padding: 0.3rem 0.8rem;
+            color: #495057;
+            transition: background-color 0.2s ease;
+        }
+        
+        .filter-dropdown .dropdown-item:hover {
+            background-color: #e9ecef;
+        }
+        
+        .filter-dropdown .dropdown-item.active {
+            background-color: #5e72e4;
+            color: white;
+        }
+        
+        .filter-dropdown .dropdown-item.pending {
+            color: #ffc107;
+        }
+        
+        .filter-dropdown .dropdown-item.approved {
+            color: #28a745;
+        }
+        
+        .filter-dropdown .dropdown-item.rejected {
+            color: #dc3545;
+        }
+        
+        .filter-dropdown .dropdown-item.failed {
+            color: #dc3545;
+        }
+        
+        .filter-dropdown .dropdown-item.rescheduled {
+            color: #6c757d;
+        }
+        
+        .filter-dropdown .dropdown-item.my-requests {
+            color: #17a2b8;
+        }
+        
+        .filter-dropdown .dropdown-item.my-approved {
+            color: #28a745;
+        }
+        
+        .filter-dropdown .dropdown-item.implemented {
+            color: #28a745;
+        }
+        
+        .stats-table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.75rem;
+        }
+        
+        .stats-table th,
+        .stats-table td {
+            border-right: 1px solid #e9ecef;
+            border-bottom: 1px solid #e9ecef;
+            padding: 0.4rem 0.6rem;
+            text-align: left;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        
+        .stats-table th:nth-child(1),
+        .stats-table td:nth-child(1) {
+            width: 10.7%;
+            /* Change No. */
+        }
+        
+        .stats-table th:nth-child(2),
+        .stats-table td:nth-child(2) {
+            width: 12.6%;
+            /* Request No. */
+        }
+        
+        .stats-table th:nth-child(3),
+        .stats-table td:nth-child(3) {
+            width: 14.6%;
+            /* Requestor */
+        }
+        
+        .stats-table th:nth-child(4),
+        .stats-table td:nth-child(4) {
+            width: 11.7%;
+            /* Date Submitted */
+        }
+        
+        .stats-table th:nth-child(5),
+        .stats-table td:nth-child(5) {
+            width: 7.8%;
+            /* Priority */
+        }
+        
+        .stats-table th:nth-child(6),
+        .stats-table td:nth-child(6) {
+            width: 22.3%;
+            /* Client Affected */
+        }
+        
+        .stats-table th:nth-child(7),
+        .stats-table td:nth-child(7) {
+            width: 13.6%;
+            /* Country */
+        }
+        
+        .stats-table th:nth-child(8),
+        .stats-table td:nth-child(8) {
+            width: 10.2%;
+            /* Status */
+        }
+        
+        .stats-table th:nth-child(9),
+        .stats-table td:nth-child(9) {
+            width: 6.5%;
+            /* Action */
+        }
+        
+        .stats-table.no-action th:nth-child(1),
+        .stats-table.no-action td:nth-child(1) {
+            width: 11.5%;
+        }
+        
+        .stats-table.no-action th:nth-child(2),
+        .stats-table.no-action td:nth-child(2) {
+            width: 13.5%;
+        }
+        
+        .stats-table.no-action th:nth-child(3),
+        .stats-table.no-action td:nth-child(3) {
+            width: 15.7%;
+        }
+        
+        .stats-table.no-action th:nth-child(4),
+        .stats-table.no-action td:nth-child(4) {
+            width: 12.6%;
+        }
+        
+        .stats-table.no-action th:nth-child(5),
+        .stats-table.no-action td:nth-child(5) {
+            width: 8.4%;
+        }
+        
+        .stats-table.no-action th:nth-child(6),
+        .stats-table.no-action td:nth-child(6) {
+            width: 24.0%;
+        }
+        
+        .stats-table.no-action th:nth-child(7),
+        .stats-table.no-action td:nth-child(7) {
+            width: 14.3%;
+        }
+        
+        .stats-table.no-action th:nth-child(8),
+        .stats-table.no-action td:nth-child(8) {
+            width: 10.0%;
+        }
+        
+        .stats-table th {
+            font-weight: 600;
+            background-color: #f8f9fa;
+        }
+        
+        .stats-table th:last-child,
+        .stats-table td:last-child {
+            border-right: none;
+        }
+        
+        .stats-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .stats-table thead th {
+            border-top: 1px solid #e9ecef;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .table-container {
+            margin-bottom: 1.5rem;
+            margin-top: 1rem;
+            position: relative;
+        }
+        
+        .table-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            padding: 0.6rem 0;
+        }
+        
+        .download-btn {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border-radius: 50%;
+            background-color: #5e72e4;
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .download-btn:hover {
+            background-color: #485fe0;
+        }
+        
+        .download-btn i {
+            font-size: 0.9rem;
+        }
+        
+        .navbar-nav.align-items-center {
+            margin-left: auto;
+        }
+        
+        .action-btn {
+            padding: 0.2rem;
+            border: none;
+            background: transparent;
+            color: #5e72e4;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .action-btn i {
+            font-size: 0.9rem;
+        }
+        
+        .success-modal {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .success-icon {
+            font-size: 48px;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+        
+        .success-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #28a745;
+        }
+        
+        .success-message {
+            margin-bottom: 20px;
+            color: #525f7f;
+        }
+        
+        .success-btn {
+            padding: 8px 20px;
+            background-color: #5e72e4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .request-no-link {
+            color: #5e72e4;
+            text-decoration: none;
+        }
+        
+        .request-no-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body ng-controller="ChangeRequestCtrl">
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+        <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+    </nav>
+    <div class="main-content">
+        <div class="header bg-gradient-primary pb-2 pt-3 pt-md-4">
+            <div class="container-fluid">
+                <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+                    <div class="container-fluid d-flex align-items-center justify-content-between">
+                        <ul class="navbar-nav align-items-center">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="media align-items-center">
+                                        <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true == null">
+                                            <span ng-if="user_info.gender == 'Male'">
+                                                <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle">
+                                            </span>
+                                        <span ng-if="user_info.gender == 'Female'">
+                                                <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle">
+                                            </span>
+                                        </span>
+                                        <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true != null">
+                                            <img alt="" ng-src="{{ profile_pic }}">
+                                        </span>
+                                        <div class="media-body ml-2 d-none d-lg-block">
+                                            <span class="mb-0 text-sm font-weight-bold text-uppercase">{{user_info.username}}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                                    <div class="dropdown-header noti-title">
+                                        <h6 class="text-overflow m-0">Welcome {{user_info.username}}</h6>
+                                    </div>
+                                    <a href="profile" class="dropdown-item">
+                                        <i class="ni ni-single-02"></i>
+                                        <span>My profile</span>
+                                    </a>
+                                    <a class="dropdown-item">
+                                        <i class="ni ni-settings-gear-65"></i>
+                                        <span>Settings</span>
+                                    </a>
+                                    <a class="dropdown-item">
+                                        <i class="ni ni-calendar-grid-58"></i>
+                                        <span>Activity</span>
+                                    </a>
+                                    <a class="dropdown-item">
+                                        <i class="ni ni-support-16"></i>
+                                        <span>Support</span>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" ng-click="logout()">
+                                        <i class="ni ni-user-run"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="content-container">
+            <div class="table-header">
+                <a href="./new_request" class="btn btn-primary new-request-btn">
+                    New Request
+                </a>
+            </div>
+            <div class="container-fluid table-container">
+                <div class="row">
+                    <div class="col">
+                        <div class="table-header-row">
+                            <div class="filter-dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Filter: {{filterDisplayText}}
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                                    <li><a class="dropdown-item" ng-class="{'active': currentFilter === 'all'}" ng-click="filterRequests('all')">All</a></li>
+                                    <li><a class="dropdown-item my-requests" ng-class="{'active': currentFilter === 'my_requests'}" ng-click="filterRequests('my_requests')">My Requests</a></li>
+                                    <li ng-if="isApprover"><a class="dropdown-item my-approved" ng-class="{'active': currentFilter === 'my_approved'}" ng-click="filterRequests('my_approved')">My Approved</a></li>
+                                    <li><a class="dropdown-item pending" ng-class="{'active': currentFilter === 'pending'}" ng-click="filterRequests('pending')">Pending</a></li>
+                                    <li><a class="dropdown-item approved" ng-class="{'active': currentFilter === 'approved'}" ng-click="filterRequests('approved')">Approved</a></li>
+                                    <li><a class="dropdown-item rejected" ng-class="{'active': currentFilter === 'rejected'}" ng-click="filterRequests('rejected')">Rejected</a></li>
+                                    <li><a class="dropdown-item failed" ng-class="{'active': currentFilter === 'failed'}" ng-click="filterRequests('failed')">Failed</a></li>
+                                    <li><a class="dropdown-item rescheduled" ng-class="{'active': currentFilter === 'rescheduled'}" ng-click="filterRequests('rescheduled')">Rescheduled</a></li>
+                                    <li><a class="dropdown-item implemented" ng-class="{'active': currentFilter === 'implemented'}" ng-click="filterRequests('implemented')">Implemented</a></li>
+                                </ul>
+                            </div>
+                            <button class="download-btn" id="btnExport" title="Download as Excel" ng-click="downloadExcel()">
+                                <i class="bi bi-download"></i>
+                            </button>
+                        </div>
+                        <div class="card shadow">
+                            <table class="table align-items-center table-flush stats-table" id="changeRequestTable" ng-class="{'no-action': !isApprover}">
+                                <thead class="text-primary">
+                                    <tr>
+                                        <th>Change No.</th>
+                                        <th>Request No.</th>
+                                        <th>Requestor</th>
+                                        <th>Date Submitted</th>
+                                        <th>Priority</th>
+                                        <th>Client Affected</th>
+                                        <th>Country</th>
+                                        <th>Status</th>
+                                        <th ng-if="isApprover">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="request in filteredRequests">
+                                        <td>CH{{getCurrentYearShort()}}{{request.id.toString().padStart(6, '0')}}</td>
+                                        <td><a class="request-no-link" href="change_details?requestId={{request.id}}">PROJ-{{request.project_id.toString().padStart(8, '0')}}</a></td>
+                                        <td>{{request.request_by_name}}</td>
+                                        <td>{{request.date_submitted_formatted}}</td>
+                                        <td>{{request.priority}}</td>
+                                        <td>{{request.client_name}}</td>
+                                        <td>{{request.country}}</td>
+                                        <td>
+                                            <span ng-class="{
+                                                'status-approved': request.status === 'Approved',
+                                                'status-rejected': request.status === 'Rejected',
+                                                'status-pending': request.status === 'Pending',
+                                                'status-failed': request.status === 'Failed',
+                                                'status-rescheduled': request.status === 'Rescheduled',
+                                                'status-implemented': request.status === 'Implemented'
+                                            }">
+                                                {{request.status | uppercase}}
+                                            </span>
+                                        </td>
+                                        <td ng-if="isApprover">
+                                            <a class="action-btn" href="action_page?requestId={{request.id}}">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" ng-show="showSuccessModal">
+        <div class="success-modal">
+            <div class="success-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h3 class="success-title">Request Submitted Successfully!</h3>
+            <p class="success-message">Your change request has been created with Change No: {{successChangeNo}}</p>
+            <button class="success-btn" ng-click="closeSuccessModal()">OK</button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="ngControllers/ChangeRequestCtrl.js"></script>

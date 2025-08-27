@@ -107,14 +107,21 @@
                 <a class=" nav-link  " href="dashboard_t"> <i class="ni ni-folder-17 text-primary"></i> <span class="text-primary">Tasks</span>
                 </a>
             </li>
-            <li class="nav-item  class=">
-                <a class=" nav-link  " href="chat"> <i class="ni ni-chat-round text-primary"></i> <span class="text-primary">Chat</span>
+            <li class="nav-item" ng-show="user_info.role == 'assigner'|| user_info.is_dept_head == '1' || user_info.role == 'developer' ">
+                <a class="nav-link " href="add_project">
+                    <i class="ni ni-books text-primary"></i><span class="text-primary">Create Project</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="statisticsnew">
                     <i class="ni ni-chart-bar-32 text-primary"></i>
                     <span class="text-primary">Statistics</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="change_request">
+                    <i class="ni ni-ui-04 text-primary"></i>
+                    <span class="text-primary">Change Request</span>
                 </a>
             </li>
 
@@ -130,9 +137,9 @@
             {{item.label}}
           </a>
         </li> -->
-            <li class="nav-item" ng-show="user_info.role == 'assigner'|| user_info.is_dept_head == '1' || user_info.role == 'developer' ">
-                <a class="nav-link " href="add_project">
-                    <i class="ni ni-books text-primary"></i><span class="text-primary">Create Project</span>
+
+            <li class="nav-item  class=">
+                <a class=" nav-link  " href="chat"> <i class="ni ni-chat-round text-primary"></i> <span class="text-primary">Chat</span>
                 </a>
             </li>
             <!-- <li class="nav-item"
@@ -152,10 +159,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="issues">
-                    <i class="ni ni-bullet-list-67 text-info"></i>Issues
+                <a class="nav-link" href="issues">
+                    <i class="ni ni-bullet-list-67 text-primary"></i>
+                    <span class="text-primary">Issues</span>
                 </a>
             </li>
+
             <!-- <li class="nav-item" ng-show="user_info.role == 'admin'">
         <a class="nav-link " href="/all_projects">
           <i class="ni ni-bullet-list-67 text-info"></i>All Projects

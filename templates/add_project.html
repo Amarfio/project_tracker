@@ -116,7 +116,7 @@
               <br />
               <form
                 id="add_project_form"
-                ng-submit="createProject(project_name_, version_no_,client_id, start_date_, end_date_,priority_, project_description_, hashtag_value, interested_person_, project_sponsor, project_owner_, project_owner_2)"
+                ng-submit="createProject(project_name_, version_no_,client_id, start_date_, end_date_,priority_, project_description_, hashtag_value, backDated, interested_person_, project_sponsor, project_owner_, project_owner_2)"
               >
                 <div class="form-group row">
                   <label
@@ -140,11 +140,10 @@
                 <!-- <div class="form-group row">
                                         <label for="inputPassword"
                                             class="col-sm-3 col-form-label text-primary">Version</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="inputPassword" maxlength="20"  
-                                                placeholder="Version Control" ng-model="version_no_">
-                                        </div>
-                                    </div> -->
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="inputPassword" maxlength="20" placeholder="Version Control" ng-model="version_no_">
+                                    </div>
+                                </div> -->
 
                 <div class="form-group row">
                   <label
@@ -184,6 +183,26 @@
                       >
                         {{code.code_desc}}
                       </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label
+                    for="backDated"
+                    class="col-sm-3 col-form-label text-primary"
+                    >Back dated?<span style="color: red"> *</span></label
+                  >
+                  <div class="col-sm-9">
+                    <select
+                      class="form-control"
+                      required
+                      ng-model="backDated"
+                      id="backDated"
+                    >
+                      <option value="">-- Select response --</option>
+                      <option value="1">YES</option>
+                      <option value="0">NO</option>
                     </select>
                   </div>
                 </div>

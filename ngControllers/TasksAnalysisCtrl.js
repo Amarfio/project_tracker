@@ -62,6 +62,68 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
         return (cappedDelay / 100) * 100;
     };
 
+    // Function to show metric information in a modal
+    $scope.showMetricInfo = function(metricType) {
+        const metricInfo = {
+            departmentTaskOverview: {
+                title: 'Department Task Overview',
+                description: 'Displays the average task cycle time for each department, showing how long tasks take from approval to completion.',
+                calculation: 'Average task cycle time is calculated as the average number of days between project approval and task completion (or last update) for completed tasks.',
+                interpretation: 'Lower cycle times indicate faster task completion within the department.'
+            },
+            departmentEfficiencyScores: {
+                title: 'Department Efficiency Scores',
+                description: 'Shows the efficiency of task completion across departments, measured by tasks completed on or before their deadlines.',
+                calculation: 'Efficiency score = (Number of tasks completed on or before deadline / Total tasks) × 100.',
+                interpretation: 'Higher scores indicate better adherence to task deadlines.'
+            },
+            underperformingIndividuals: {
+                title: 'Underperforming Individuals',
+                description: 'Lists individuals with overdue tasks, including their department, number of overdue tasks, average delay, and completion rate.',
+                calculation: 'Overdue tasks are those completed after their deadline. Average delay is the mean days past deadline for overdue tasks. Completion rate = (Completed tasks / Total tasks) × 100.',
+                interpretation: 'Identifies individuals needing support to improve task completion timeliness.'
+            },
+            performanceTrends: {
+                title: 'Performance Trends Over Time',
+                description: 'Tracks department completion rates over time, showing monthly task completion performance.',
+                calculation: 'Monthly completion rate = (Completed tasks in the month / Total tasks in the month) × 100.',
+                interpretation: 'Trends show how department performance evolves, with higher rates indicating improved performance.'
+            }
+        };
+
+        const info = metricInfo[metricType];
+
+        Swal.fire({
+            title: `<strong>${info.title}</strong>`,
+            icon: 'info',
+            html: `
+                <div class="text-left">
+                    <p class="mb-3">${info.description}</p>
+                    <p class="mb-2"><strong>How it's calculated:</strong></p>
+                    <p class="mb-3">${info.calculation}</p>
+                    <p class="mb-2"><strong>How to interpret:</strong></p>
+                    <p>${info.interpretation}</p>
+                </div>
+            `,
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: 'Got it!',
+            confirmButtonColor: '#208AAE',
+            customClass: {
+                popup: 'metric-info-popup',
+                title: 'metric-info-title'
+            },
+            background: '#ffffff',
+            backdrop: `
+                rgba(32,138,174,0.1)
+                url("/images/nyan-cat.gif")
+                left top
+                no-repeat
+            `
+        });
+    };
+
     // Initialize charts for department performance
     $scope.initCharts = function(data) {
         if (!$scope.isDepartmentPerformance || !data || !data.departments) return;

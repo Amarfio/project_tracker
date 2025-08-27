@@ -1,13 +1,11 @@
-sheetApp.controller("StatisticsnewCtrl", function($scope, $http, $location, $timeout) {
-    // Initialize scope variables
-    $scope.user_info = {
-        username: "Guest",
-        role: "developer",
-        gender: "Male",
-        dept_id: 1
-    };
-    $scope.profile_pic_true = null;
-    $scope.profile_pic = null;
+sheetApp.controller("StatisticsnewCtrl", function($scope, $http, $location, $timeout, $localStorage, check_auth, myConfig) {
+    // Verify authentication and load user info from localStorage
+    check_auth.verify_auth($localStorage.user_info);
+    $scope.user_info = $localStorage.user_info.data;
+
+    // Profile photo handling
+    $scope.profile_pic_true = $localStorage.profile_pic;
+    $scope.profile_pic = myConfig.file_url + $scope.profile_pic_true;
 
     // Date range variables
     $scope.fromDate = localStorage.getItem('fromDate') ? new Date(localStorage.getItem('fromDate')) : new Date(new Date().getFullYear(), 0, 1);
@@ -121,16 +119,16 @@ sheetApp.controller("StatisticsnewCtrl", function($scope, $http, $location, $tim
         });
     };
 
-    // Logout function (placeholder)
+    // Logout function
     $scope.logout = function() {
-        alert("Logout clicked (implement later)");
+        check_auth.logout($scope.user_info.user_id);
     };
 
     // Initialize controller
     $scope.init = function() {
         if ($scope.user_info.profile_pic) {
             $scope.profile_pic_true = true;
-            $scope.profile_pic = $scope.user_info.profile_pic;
+            $scope.profile_pic = myConfig.file_url + $scope.user_info.profile_pic;
         } else {
             $scope.profile_pic_true = null;
         }

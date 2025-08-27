@@ -23,10 +23,18 @@ $mail = new PHPMailer();
 // $mail->Port = 587;
 // $mail->SMTPSecure = "tls";
 
+// $mail->isSMTP();
+// $mail->Host = "mail.unionsg.com";
+// $mail->SMTPAuth = true;
+// $mail->Username = "hr@unionsg.com";
+// $mail->Password = "(qLwOdQ3F3cm";
+// $mail->Port = 587;
+// $mail->SMTPSecure = "tls";
+
 $mail->isSMTP();
-$mail->Host = "server.unionsg.com";
+$mail->Host = "mail.unionsg.com";
 $mail->SMTPAuth = true;
-$mail->Username = "mail.unionsg.com";
-$mail->Password = "(qLwOdQ3F3cm";
+$mail->Username = "support24x7@unionsg.com";
+$mail->Password = "xz1i8Hmnoj!D";
 $mail->Port = 587;
 $mail->SMTPSecure = "tls";

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sheetApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        /* Existing styles remain unchanged */
+        
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-color: #f8fafc;
+        }
+        
+        .navbar-vertical {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 260px;
+            background-color: #fff;
+            border-right: 1px solid #e9ecef;
+        }
+        
+        .header {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem !important;
+        }
+        
+        .navbar-top {
+            background: linear-gradient(90deg, #5e72e4 0%, #825ee4 100%);
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-dark .navbar-nav .nav-link {
+            color: #fff;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+        }
+        
+        .content-container {
+            padding: 25px;
+        }
+        
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #5e72e4;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .form-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        .full-width-section {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #525f7f;
+        }
+        
+        .section-title {
+            grid-column: span 3;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #5e72e4;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .full-width-section .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #5e72e4;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .info-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #212529;
+            padding: 8px 12px;
+            background-color: #f9fbfe;
+            border-radius: 5px;
+            border-left: 3px solid #5e72e4;
+        }
+        
+        .status-duration-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .duration-input {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d8e2ef;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background-color: #f9fbfe;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #5e72e4;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(94, 114, 228, 0.1);
+            background-color: #fff;
+        }
+        
+        .form-control:disabled {
+            background-color: #e9ecef;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .status-select {
+            width: 70%;
+        }
+        
+        .time-input {
+            width: 100px;
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .approval-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            table-layout: auto;
+        }
+        
+        .approval-table th {
+            background-color: #5e72e4;
+            color: white;
+            padding: 14px 20px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .approval-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: top;
+            font-size: 0.9rem;
+        }
+        
+        .approval-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .approval-table th:nth-child(1),
+        .approval-table td:nth-child(1) {
+            width: 20%;
+        }
+        
+        .approval-table th:nth-child(2),
+        .approval-table td:nth-child(2) {
+            width: 20%;
+        }
+        
+        .approval-table th:nth-child(3),
+        .approval-table td:nth-child(3) {
+            width: 20%;
+        }
+        
+        .approval-table th:nth-child(4),
+        .approval-table td:nth-child(4) {
+            width: 30%;
+        }
+        
+        .approval-table th:nth-child(5),
+        .approval-table td:nth-child(5) {
+            width: 10%;
+        }
+        
+        .approval-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .form-control-static {
+            font-size: 0.95rem;
+            color: #212529;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: #5e72e4;
+            color: white;
+            border: 1px solid #5e72e4;
+        }
+        
+        .btn-primary:hover {
+            background-color: #485fe0;
+        }
+        
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: #525f7f;
+            border: 1px solid #d8e2ef;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .user-profile {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-name {
+            margin-right: 10px;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        @media (max-width: 768px) {
+            .approval-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body ng-controller="ChangeRequestCtrl">
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+        <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+    </nav>
+
+    <div class="main-content">
+        <div class="header bg-gradient-primary pb-2 pt-3 pt-md-4">
+            <div class="container-fluid">
+                <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+                    <div class="container-fluid d-flex align-items-center justify-content-between">
+                        <div class="user-profile">
+                            <span class="user-name">{{user_info.username}}</span>
+                            <div class="avatar avatar-sm rounded-circle">
+                                <span ng-if="user_info.gender == 'Male'">
+                                    <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle">
+                                </span>
+                                <span ng-if="user_info.gender == 'Female'">
+                                    <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <div class="content-container">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Change Request Details</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-section">
+                        <div class="section-title">Basic Information</div>
+
+                        <div class="form-group">
+                            <label>Type of Change</label>
+                            <div class="info-value">{{selectedRequest.type || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reason for Emergency</label>
+                            <div class="info-value">{{selectedRequest.emergency_reason || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Date Raised</label>
+                            <div class="info-value">{{selectedRequest.date_raised_formatted || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Global / Customer Name</label>
+                            <div class="info-value">{{selectedRequest.client_name || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Country</label>
+                            <div class="info-value">{{selectedRequest.country || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Request No</label>
+                            <div class="info-value">{{selectedRequest.project_id ? ('PROJ-' + (selectedRequest.project_id.toString().padStart(8, '0'))) : 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Request By</label>
+                            <div class="info-value">{{selectedRequest.request_by_name || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <div class="info-value">{{selectedRequest.priority || 'N/A'}}</div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">Change Details</div>
+
+                        <div class="form-group">
+                            <label>Change Name</label>
+                            <div class="info-value">{{selectedRequest.title || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Description of Change</label>
+                            <div class="info-value">{{selectedRequest.description || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Implementation Date Required</label>
+                            <div class="info-value">{{selectedRequest.implementation_date_formatted || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Implementation Start Time</label>
+                            <div class="info-value">{{selectedRequest.start_time || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Implementation End Time</label>
+                            <div class="info-value">{{selectedRequest.end_time || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Implementer</label>
+                            <div class="info-value">{{selectedRequest.implementer_name || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Reason for Change</label>
+                            <div class="info-value">{{selectedRequest.change_reason || 'N/A'}}</div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">Impact Assessment</div>
+
+                        <div class="form-group" style="grid-column: span 3;">
+                            <label>Change Impact Assessment</label>
+                            <div class="info-value">{{selectedRequest.impact_assessment || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Service/Application</label>
+                            <div class="info-value">{{selectedRequest.service_application || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Affected Artifacts</label>
+                            <div class="info-value">{{selectedRequest.affected_artifacts || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Components</label>
+                            <div class="info-value">{{selectedRequest.scope || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 3;">
+                            <label>Implementation Plan</label>
+                            <div class="info-value">{{selectedRequest.implementation_plan || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Budget</label>
+                            <div class="info-value">{{selectedRequest.budget || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Risk</label>
+                            <div class="info-value">{{selectedRequest.risk || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Back out Plan</label>
+                            <div class="info-value">{{selectedRequest.backout_plan || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Resources Required</label>
+                            <div class="info-value">{{selectedRequest.resources_required || 'N/A'}}</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Other Comments</label>
+                            <div class="info-value">{{selectedRequest.comments || 'N/A'}}</div>
+                        </div>
+                    </div>
+
+                    <div class="full-width-section">
+                        <div class="section-title">Approval Details</div>
+
+                        <table class="approval-table">
+                            <thead>
+                                <tr>
+                                    <th>Approved By</th>
+                                    <th>Name</th>
+                                    <th>Date</th>
+                                    <th>Comments</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Department Head</td>
+                                    <td>{{approval.deptHead.comments ? approval.deptHead.name : 'N/A'}}</td>
+                                    <td>{{approval.deptHead.comments ? (approval.deptHead.date | date:'MMMM d, yyyy') : 'N/A'}}</td>
+                                    <td>{{approval.deptHead.comments || 'N/A'}}</td>
+                                    <td>
+                                        <span class="approval-status status-pending" ng-if="!approval.deptHead.comments">Pending</span>
+                                        <span class="approval-status status-approved" ng-if="approval.deptHead.comments && approval.deptHead.approved">Approved</span>
+                                        <span class="approval-status status-rejected" ng-if="approval.deptHead.comments && !approval.deptHead.approved">Rejected</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Quality Assurance</td>
+                                    <td>{{approval.qa.comments ? approval.qa.name : 'N/A'}}</td>
+                                    <td>{{approval.qa.comments ? (approval.qa.date | date:'MMMM d, yyyy') : 'N/A'}}</td>
+                                    <td>{{approval.qa.comments || 'N/A'}}</td>
+                                    <td>
+                                        <span class="approval-status status-pending" ng-if="!approval.qa.comments">Pending</span>
+                                        <span class="approval-status status-approved" ng-if="approval.qa.comments && approval.qa.approved">Approved</span>
+                                        <span class="approval-status status-rejected" ng-if="approval.qa.comments && !approval.qa.approved">Rejected</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CEO/Senior Manager</td>
+                                    <td>{{approval.ceo.comments ? approval.ceo.name : 'N/A'}}</td>
+                                    <td>{{approval.ceo.comments ? (approval.ceo.date | date:'MMMM d, yyyy') : 'N/A'}}</td>
+                                    <td>{{approval.ceo.comments || 'N/A'}}</td>
+                                    <td>
+                                        <span class="approval-status status-pending" ng-if="!approval.ceo.comments">Pending</span>
+                                        <span class="approval-status status-approved" ng-if="approval.ceo.comments && approval.ceo.approved">Approved</span>
+                                        <span class="approval-status status-rejected" ng-if="approval.ceo.comments && !approval.ceo.approved">Rejected</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="full-width-section">
+                        <div class="section-title">Implementation Status and Duration</div>
+                        <div class="status-duration-row">
+                            <div class="form-group">
+                                <label>Implementation Status</label>
+                                <select class="form-control status-select" ng-model="selectedRequest.implementation_status" ng-options="status for status in referenceData.implementation_statuses" ng-required="true" ng-disabled="isImplementationSaved || !allApprovalsComplete">
+                                    <option value="" disabled selected>Select Status</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Duration</label>
+                                <div class="duration-input">
+                                    <input type="time" class="form-control time-input" ng-model="selectedRequest.implementation_start" ng-disabled="isImplementationSaved || !allApprovalsComplete">
+                                    <span>-</span>
+                                    <input type="time" class="form-control time-input" ng-model="selectedRequest.implementation_end" ng-disabled="isImplementationSaved || !allApprovalsComplete">
+                                </div>
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Implementation Notes</label>
+                                <textarea class="form-control" ng-model="selectedRequest.implementation_notes" placeholder="Enter implementation notes" ng-disabled="isImplementationSaved || !allApprovalsComplete"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" ng-click="goBack()">Back</button>
+                        <button class="btn btn-primary" ng-click="saveChanges()" ng-disabled="isImplementationSaved || !allApprovalsComplete">Save</button>
+                        <button class="btn btn-primary" ng-click="downloadPDF()">Download PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="path/to/your/changerequestctrl.js"></script>
+</body>
+
+</html>

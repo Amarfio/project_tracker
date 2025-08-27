@@ -36,6 +36,7 @@ if(
     $client_id = mysqli_real_escape_string($conn, $data->client_id);
     $interested_person = mysqli_real_escape_string($conn, $data->interested_person);
     $project_sponsor = mysqli_real_escape_string($conn, $data->project_sponsor);
+    $isBackDated = mysqli_real_escape_string($conn, $data->backDated);
 
     $priority = mysqli_real_escape_string($conn, $data->priority);
     // $ip_address = mysqli_real_escape_string($conn, $data->ip_address);
@@ -78,7 +79,7 @@ if(
     // }
 
 
-    $query = "INSERT INTO `projects` (`project_id`, `version_no`, `name`, `description`, `hash_tag`,`client`, `attach`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`,`priority`, `created_at`, `owner`, `s_owner`, `sponsor`, `i_person`) VALUES (NULL, '$version_no', '$name', '$description', '$hash_tag', '$client_id', '$file_name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date','$priority', NOW(),'$owner', '$owner_2', '$project_sponsor', '$interested_person' )";
+    $query = "INSERT INTO `projects` (`project_id`, `version_no`, `name`, `description`, `hash_tag`,`client`, `attach`, `dept_id`, `posted_by`, `ip_address`, `location`, `start_date`, `end_date`,`priority`, `created_at`, `owner`, `s_owner`, `sponsor`, `i_person`, `is_back_dated`) VALUES (NULL, '$version_no', '$name', '$description', '$hash_tag', '$client_id', '$file_name', '$dept_id', '$user_id', '$ip_address', '$location', '$start_date', '$end_date','$priority', NOW(),'$owner', '$owner_2', '$project_sponsor', '$interested_person', '$isBackDated' )";
     $result = mysqli_query($conn, $query);
 
     if ($result == 1) {

@@ -1,0 +1,66 @@
+2025-08-03 16:45:02 - update_approval input: {"request_id":8,"approver_id":"117","approval_level":"dept_head","status":"rejected","comments":"i"}
+2025-08-03 16:45:02 - Updating approval: request_id=8, approval_level=dept_head, status=rejected, new_status=Approved, comments=i
+2025-08-03 16:45:02 - SQL Query: UPDATE change_requests SET 
+                    dept_head_id = ?,
+                    dept_head_approval = ?,
+                    dept_head_date = NOW(),
+                    dept_head_comments = ?,
+                    status = ?
+                    WHERE id = ?
+2025-08-03 16:45:02 - Approval updated successfully for request_id=8
+2025-08-03 16:45:02 - Subsequent approvals reset for request_id=8, approval_level=dept_head
+2025-08-03 16:56:50 - update_approval input: {"request_id":9,"approver_id":"141","approval_level":"dept_head","status":"rejected","comments":"djd"}
+2025-08-03 16:56:50 - Current status for request_id=9: Draft
+2025-08-03 16:56:50 - Updating approval: request_id=9, approval_level=dept_head, status=rejected, new_status=Approved, approver_id=141, comments=djd
+2025-08-03 16:56:50 - SQL Query: UPDATE change_requests SET 
+                        dept_head_id = ?,
+                        dept_head_approval = ?,
+                        dept_head_date = NOW(),
+                        dept_head_comments = ?,
+                        status = ?
+                        WHERE id = ? with params: approver_id=141, status=rejected, comments=djd, new_status=Approved, request_id=9
+2025-08-03 16:56:50 - Error: Execute failed: No data supplied for parameters in prepared statement
+2025-08-03 17:03:52 - update_approval input: {"request_id":9,"approver_id":"120","approval_level":"dept_head","status":"rejected","comments":"hj"}
+2025-08-03 17:03:52 - Current status for request_id=9: Draft
+2025-08-03 17:03:52 - Updating approval: request_id=9, approval_level=dept_head, status=rejected, new_status=Approved, approver_id=120, comments=hj
+2025-08-03 17:03:52 - SQL Query: UPDATE change_requests SET 
+                        dept_head_id = ?,
+                        dept_head_approval = ?,
+                        dept_head_date = NOW(),
+                        dept_head_comments = ?,
+                        status = ?
+                        WHERE id = ? AND status != 'Rejected' with params: approver_id=120, status=rejected, comments=hj, new_status=Approved, request_id=9
+2025-08-03 17:03:52 - Error: Execute failed: No data supplied for parameters in prepared statement
+2025-08-03 17:04:30 - update_approval input: {"request_id":9,"approver_id":"120","approval_level":"dept_head","status":"rejected","comments":"hj"}
+2025-08-03 17:04:30 - Current status for request_id=9: Draft
+2025-08-03 17:04:30 - Updating approval: request_id=9, approval_level=dept_head, status=rejected, new_status=Approved, approver_id=120, comments=hj
+2025-08-03 17:04:30 - SQL Query: UPDATE change_requests SET 
+                        dept_head_id = ?,
+                        dept_head_approval = ?,
+                        dept_head_date = NOW(),
+                        dept_head_comments = ?,
+                        status = ?
+                        WHERE id = ? AND status != 'Rejected' with params: approver_id=120, status=rejected, comments=hj, new_status=Approved, request_id=9
+2025-08-03 17:04:30 - Error: Execute failed: No data supplied for parameters in prepared statement
+2025-08-03 17:05:22 - update_approval input: {"request_id":9,"approver_id":"120","approval_level":"dept_head","status":"rejected","comments":"hj"}
+2025-08-03 17:05:22 - Updating approval: request_id=9, approval_level=dept_head, status=rejected, new_status=Approved, comments=hj
+2025-08-03 17:05:22 - SQL Query: UPDATE change_requests SET 
+                    dept_head_id = ?,
+                    dept_head_approval = ?,
+                    dept_head_date = NOW(),
+                    dept_head_comments = ?,
+                    status = ?
+                    WHERE id = ?
+2025-08-03 17:05:22 - Approval updated successfully for request_id=9
+2025-08-03 17:05:22 - Subsequent approvals reset for request_id=9, approval_level=dept_head
+2025-08-03 17:20:45 - update_approval input: {"request_id":10,"approver_id":"133","approval_level":"dept_head","status":"rejected","comments":"j"}
+2025-08-03 17:20:45 - Updating approval: request_id=10, approval_level=dept_head, status=rejected, new_status=Approved, comments=j
+2025-08-03 17:20:45 - SQL Query: UPDATE change_requests SET 
+                    dept_head_id = ?,
+                    dept_head_approval = ?,
+                    dept_head_date = NOW(),
+                    dept_head_comments = ?,
+                    status = ?
+                    WHERE id = ?
+2025-08-03 17:20:45 - Approval updated successfully for request_id=10
+2025-08-03 17:20:45 - Subsequent approvals reset for request_id=10, approval_level=dept_head

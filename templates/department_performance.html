@@ -10,6 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="TasksAnalysisCtrl.js"></script>
     <style>
          :root {
@@ -71,6 +72,9 @@
             color: var(--teal-primary);
             margin-bottom: 12px;
             letter-spacing: -0.2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .summary-list {
@@ -268,6 +272,19 @@
             margin: 2.5rem 0 1.8rem 0;
             letter-spacing: -0.2px;
         }
+        
+        .info-icon {
+            color: var(--teal-primary);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            margin-left: 8px;
+        }
+        
+        .info-icon:hover {
+            color: var(--teal-light);
+            transform: scale(1.1);
+        }
     </style>
 </head>
 
@@ -294,7 +311,9 @@
             <!-- Top Left: Summary -->
             <div class="col-md-6">
                 <div class="card-custom">
-                    <h5>Department Task Overview</h5>
+                    <h5>Department Task Overview
+                        <i class="fas fa-info-circle info-icon" ng-click="showMetricInfo('departmentTaskOverview')"></i>
+                    </h5>
                     <div class="summary-list" ng-if="departments.departments">
                         <div class="summary-list-header-container">
                             <span class="summary-list-header-btn department">Department</span>
@@ -313,7 +332,9 @@
             <!-- Top Right: Efficiency Score -->
             <div class="col-md-6">
                 <div class="card-custom">
-                    <h5>Department Efficiency Scores</h5>
+                    <h5>Department Efficiency Scores
+                        <i class="fas fa-info-circle info-icon" ng-click="showMetricInfo('departmentEfficiencyScores')"></i>
+                    </h5>
                     <div style="flex-grow: 1;"><canvas id="efficiencyChart"></canvas></div>
                 </div>
             </div>
@@ -325,7 +346,9 @@
             <!-- Bottom Left: Underperforming Individuals -->
             <div class="col-md-6">
                 <div class="card-custom">
-                    <h5>Underperforming Individuals</h5>
+                    <h5>Underperforming Individuals
+                        <i class="fas fa-info-circle info-icon" ng-click="showMetricInfo('underperformingIndividuals')"></i>
+                    </h5>
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -355,7 +378,9 @@
             <!-- Bottom Right: Performance Trends -->
             <div class="col-md-6">
                 <div class="card-custom">
-                    <h5>Performance Trends Over Time</h5>
+                    <h5>Performance Trends Over Time
+                        <i class="fas fa-info-circle info-icon" ng-click="showMetricInfo('performanceTrends')"></i>
+                    </h5>
                     <div style="flex-grow: 1;"><canvas id="trendChart"></canvas></div>
                 </div>
             </div>

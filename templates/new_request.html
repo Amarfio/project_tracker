@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sheetApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-color: #f5f7fb;
+        }
+        
+        .navbar-vertical {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 260px;
+            background-color: #fff;
+            border-right: 1px solid #e9ecef;
+        }
+        
+        .header {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem !important;
+        }
+        
+        .navbar-top {
+            background: linear-gradient(90deg, #5e72e4 0%, #825ee4 100%);
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-dark .navbar-nav .nav-link {
+            color: #fff;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .media-body {
+            margin-left: 0.5rem;
+        }
+        
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+        }
+        
+        .content-container {
+            padding: 20px;
+        }
+        
+        .form-container {
+            background: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #5e72e4;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 15px;
+        }
+        
+        .form-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #525f7f;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d8e2ef;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background-color: #f9fbfe;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #5e72e4;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(94, 114, 228, 0.1);
+            background-color: #fff;
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23525f7f' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .btn-primary {
+            background-color: #5e72e4;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #485fe0;
+        }
+        
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: #525f7f;
+            border-color: #d8e2ef;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: #f5365c;
+        }
+        
+        .user-profile {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-name {
+            margin-right: 10px;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .section-title {
+            grid-column: span 3;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #5e72e4;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .success-modal {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .success-icon {
+            font-size: 48px;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+        
+        .success-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #28a745;
+        }
+        
+        .success-message {
+            margin-bottom: 20px;
+            color: #525f7f;
+        }
+        
+        .success-btn {
+            padding: 8px 20px;
+            background-color: #5e72e4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #5e72e4;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #d8e2ef;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .autocomplete-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #525f7f;
+        }
+        
+        .autocomplete-item:hover {
+            background-color: #f9fbfe;
+        }
+        
+        .implementer-reason-row {
+            display: flex;
+            grid-column: span 3;
+            gap: 20px;
+        }
+        
+        .implementer-field {
+            flex: 0 0 32%;
+        }
+        
+        .reason-field {
+            flex: 0 0 68%;
+        }
+    </style>
+</head>
+
+<body ng-controller="ChangeRequestCtrl">
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+        <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+    </nav>
+
+    <div class="main-content">
+        <div class="header bg-gradient-primary pb-2 pt-3 pt-md-4">
+            <div class="container-fluid">
+                <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+                    <div class="container-fluid d-flex align-items-center justify-content-between">
+                        <div class="user-profile">
+                            <span class="user-name">{{user_info.username}}</span>
+                            <div class="avatar avatar-sm rounded-circle">
+                                <span ng-if="user_info.gender == 'Male'">
+                                    <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle">
+                                </span>
+                                <span ng-if="user_info.gender == 'Female'">
+                                    <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <div class="content-container">
+            <div class="form-container">
+                <h2 class="form-title">New Change Request</h2>
+
+                <form name="newRequestForm" ng-submit="submitRequest()">
+                    <div class="form-section">
+                        <div class="section-title">Basic Information</div>
+
+                        <div class="form-group">
+                            <label class="required-field">Type of change</label>
+                            <select class="form-control" ng-model="newRequest.type" required>
+                                <option value="">Select type</option>
+                                <option ng-repeat="type in referenceData.types" value="{{type}}">{{type}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reason for the emergency</label>
+                            <input type="text" class="form-control" ng-model="newRequest.emergencyReason" ng-disabled="newRequest.type !== 'Emergency'">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Date Raised</label>
+                            <input type="date" class="form-control" ng-model="newRequest.dateRaised" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Global / Customer Name</label>
+                            <select class="form-control" ng-model="newRequest.clientAffected" ng-change="selectClient()" ng-options="client.id as client.name for client in clients" required>
+                                <option value="">Select customer</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Country</label>
+                            <input type="text" class="form-control" ng-model="newRequest.country" readonly required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Request By</label>
+                            <select class="form-control" ng-model="newRequest.requestBy" required>
+                                <option value="">Select requester</option>
+                                <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Priority</label>
+                            <select class="form-control" ng-model="newRequest.priority" required>
+                                <option value="">Select priority</option>
+                                <option ng-repeat="priority in referenceData.priorities" value="{{priority}}">{{priority}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Project ID</label>
+                            <input type="text" class="form-control" ng-model="newRequest.projectIdFormatted" required ng-keyup="filterProjects($event)" placeholder="Enter Project ID (e.g., PROJ-00000001)">
+                            <div class="autocomplete-dropdown" ng-show="showProjectSuggestions">
+                                <div class="autocomplete-item" ng-repeat="project in filteredProjects" ng-click="selectProject(project)">
+                                    {{project.formatted_id}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">Change Details</div>
+
+                        <div class="form-group">
+                            <label class="required-field">Change Name</label>
+                            <input type="text" class="form-control" ng-model="newRequest.title" required>
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="required-field">Description of Change</label>
+                            <textarea class="form-control" ng-model="newRequest.description" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Implementation date required</label>
+                            <input type="date" class="form-control" ng-model="newRequest.implementationDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Implementation start time</label>
+                            <input type="time" class="form-control" ng-model="newRequest.startTime">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Implementation end time</label>
+                            <input type="time" class="form-control" ng-model="newRequest.endTime">
+                        </div>
+
+                        <div class="implementer-reason-row">
+                            <div class="form-group implementer-field">
+                                <label class="required-field">Implementer</label>
+                                <select class="form-control" ng-model="newRequest.implementer" required>
+                                    <option value="">Select implementer</option>
+                                    <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group reason-field">
+                                <label class="required-field">Reason for Change</label>
+                                <textarea class="form-control" ng-model="newRequest.changeReason" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">Impact Assessment</div>
+
+                        <div class="form-group" style="grid-column: span 3;">
+                            <label class="required-field">Change Impact Assessment</label>
+                            <textarea class="form-control" ng-model="newRequest.impactAssessment" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Service/Application</label>
+                            <select class="form-control" ng-model="newRequest.serviceApplication" required>
+                                <option value="">Select service</option>
+                                <option ng-repeat="service in referenceData.services" value="{{service}}">{{service}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Affected Artifacts</label>
+                            <select class="form-control" ng-model="newRequest.affectedArtifacts" required>
+                                <option value="">Select artifacts</option>
+                                <option ng-repeat="artifact in referenceData.artifacts" value="{{artifact}}">{{artifact}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Components</label>
+                            <input type="text" class="form-control" ng-model="newRequest.scope" required>
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 3;">
+                            <label class="required-field">Implementation Plan</label>
+                            <textarea class="form-control" ng-model="newRequest.implementationPlan" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Budget</label>
+                            <input type="text" class="form-control" ng-model="newRequest.budget">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Risk</label>
+                            <select class="form-control" ng-model="newRequest.risk">
+                                <option value="">Select risk level</option>
+                                <option ng-repeat="risk in referenceData.risk_levels" value="{{risk}}">{{risk}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Back out Plan</label>
+                            <textarea class="form-control" ng-model="newRequest.backoutPlan" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Resources Required</label>
+                            <input type="text" class="form-control" ng-model="newRequest.resourcesRequired">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Other Comments</label>
+                            <input type="text" class="form-control" ng-model="newRequest.comments">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href='change_request'">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary" ng-disabled="isSubmitting">
+                            <span ng-if="!isSubmitting">Submit Request</span>
+                            <span ng-if="isSubmitting">Submitting...</span>
+                            <div class="loading-spinner" ng-if="isSubmitting"></div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" ng-show="showSuccessModal">
+        <div class="success-modal">
+            <div class="success-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h3 class="success-title">Request Submitted Successfully!</h3>
+            <p class="success-message">Your change request has been created with Project ID: {{successProjectId}} and Change No: {{successChangeNo}}</p>
+            <button class="success-btn" ng-click="closeSuccessModal()">OK</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</body>
+
+</html>

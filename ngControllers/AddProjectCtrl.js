@@ -221,6 +221,7 @@ sheetApp.controller(
       priority_,
       project_description_,
       hashtag_value,
+      backDated,
       interested_person_,
       project_sponsor,
       project_owner_,
@@ -256,6 +257,13 @@ sheetApp.controller(
         return false;
       }
 
+      //check if the project is back dated
+      // console.log("the start date value ", start_date_);
+      // // return false;
+      // if(start_date_> ){
+
+      // }
+
       if ($scope.checkForHashTag(hashtag_value) === false) {
         Swal.fire({
           type: "error",
@@ -285,6 +293,7 @@ sheetApp.controller(
           hash_tag: hashtag_value,
           interested_person: interested_person_,
           project_sponsor: project_sponsor,
+          backDated,
         };
       } else {
         data = {
@@ -304,6 +313,7 @@ sheetApp.controller(
           hash_tag: hashtag_value,
           interested_person: interested_person_,
           project_sponsor: project_sponsor,
+          backDated,
         };
       }
 
@@ -389,6 +399,38 @@ sheetApp.controller(
         );
       };
 
+      //create today's date
+      // var todaysDate = new Date();
+      // // console.log(todaysDate + " today's date this ");
+      // // return false;
+
+      // Get today's date (without time part)
+      let todaysDate = new Date();
+      todaysDate.setHours(0, 0, 0, 0); // Reset time to midnight
+
+      // Example start date string
+      // let start_date_ = "2025-08-20"; // YYYY-MM-DD format
+
+      // Convert start_date_ to Date object
+      let startDate = new Date(start_date_);
+      startDate.setHours(0, 0, 0, 0);
+
+      if (backDated == 0) {
+        if (start_date_ <= todaysDate) {
+          console.log(
+            "Start date must be 3 or more days later than today for approval!!"
+          );
+          Swal.fire({
+            type: "error",
+            title: "Invalid date",
+            text: "Start date must be 3 days later than today for approval!!",
+          });
+
+          return false;
+        }
+      }
+
+      // return false;
       if (end_date_ < start_date_) {
         console.log("date can not be less");
         Swal.fire({

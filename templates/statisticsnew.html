@@ -253,35 +253,25 @@
         color: #ffffff;
         border: 1px solid #333333;
         padding: 0.375rem 0.75rem;
-        /* Slightly larger for comfort */
         font-size: 0.9rem;
-        /* Matches date-display */
         font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         font-weight: 500;
-        /* Medium weight for clarity */
         line-height: 1.5;
         border-radius: 0.5rem;
-        /* More rounded edges */
         margin: 0;
         text-transform: uppercase;
-        /* Bold button text */
         cursor: pointer;
         display: inline-block;
         text-align: center;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-        /* Subtle depth */
         transition: all 0.2s ease;
-        /* Smooth hover effects */
     }
     
     .btn-apply:hover {
         background-color: #1a1a1a;
-        /* Near-black hover */
         border-color: #1a1a1a;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        /* Enhanced shadow */
         transform: scale(1.05);
-        /* Slight zoom */
     }
     /* New styles for clickable cards */
     
@@ -301,16 +291,18 @@
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
-<!-- Load flatpickr JS before Angular scripts -->
+<!-- Load required scripts -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
     <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
 </nav>
 
-<div class="main-content">
+<div class="main-content" id="main-content" ng-controller="StatisticsnewCtrl">
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-6">
         <div class="container-fluid">
             <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
@@ -512,284 +504,121 @@
 </div>
 
 <script>
-    sheetApp.controller("StatisticsnewCtrl", function($scope, $http, $location, $timeout) {
-        $scope.user_info = {
-            username: "Guest",
-            role: "developer",
-            gender: "Male",
-            dept_id: 1
-        };
-        $scope.profile_pic_true = null;
-        $scope.profile_pic = null;
-
-        $scope.fromDate = localStorage.getItem('fromDate') ? new Date(localStorage.getItem('fromDate')) : new Date(new Date().getFullYear(), 0, 1);
-        $scope.toDate = localStorage.getItem('toDate') ? new Date(localStorage.getItem('toDate')) : new Date();
-
-        $scope.updateCardDescriptions = function() {
-            $scope.stat_cards = [{
-                id: 1,
-                description: `Total Projects`,
-                value: 0,
-                icon: "ni ni-chart-bar-32"
-            }, {
-                id: 2,
-                description: `Completed Projects`,
-                value: 0,
-                icon: "ni ni-check-bold"
-            }, {
-                id: 5,
-                description: `Total Tasks`,
-                value: 0,
-                icon: "ni ni-chart-bar-32"
-            }, {
-                id: 6,
-                description: `Completed Tasks`,
-                value: 0,
-                icon: "ni ni-check-bold"
-            }];
-        };
-
-        $scope.formatDateForAPI = function(date) {
-            return date ? new Date(date).toISOString().split('T')[0] : '';
-        };
-
-        $scope.fetchStatistics = function() {
-            if (!$scope.fromDate || !$scope.toDate) {
-                console.error('Please select both from and to dates');
-                return;
-            }
-
-            localStorage.setItem('fromDate', $scope.fromDate);
-            localStorage.setItem('toDate', $scope.toDate);
-
-            var fromDateStr = $scope.formatDateForAPI($scope.fromDate);
-            var toDateStr = $scope.formatDateForAPI($scope.toDate);
-
-            console.log('Fetching statistics for date range:', fromDateStr, 'to', toDateStr);
-            $http.get('apiSheet/get_statistics.php', {
-                params: {
-                    start_date: fromDateStr,
-                    end_date: toDateStr
-                }
-            }).then(function(response) {
-                console.log('Statistics Response:', response.data);
-                if (response.data.success) {
-                    $scope.tasks = response.data.table_data;
-                    $scope.stat_cards = $scope.stat_cards.map(function(card, index) {
-                        return {
-                            id: card.id,
-                            description: card.description,
-                            value: response.data.card_data[index].value,
-                            icon: card.icon
-                        };
-                    });
-                    $timeout(function() {
-                        $scope.$apply();
-                    });
-                } else {
-                    console.error('Error fetching statistics:', response.data.message);
-                    $scope.tasks = [];
-                    $scope.stat_cards.forEach(function(card) {
-                        card.value = 0;
-                    });
-                }
-            }, function(error) {
-                console.error('HTTP error:', error);
-                $scope.tasks = [];
-                $scope.stat_cards.forEach(function(card) {
-                    card.value = 0;
-                });
-            });
-        };
-
-        $scope.viewTaskDetails = function(department, metric) {
-            console.log('Navigating to task details:', {
-                department: department,
-                metric: metric,
-                start_date: $scope.formatDateForAPI($scope.fromDate),
-                end_date: $scope.formatDateForAPI($scope.toDate)
-            });
-            $location.path('/task_details').search({
-                department: department,
-                start_date: $scope.formatDateForAPI($scope.fromDate),
-                end_date: $scope.formatDateForAPI($scope.toDate),
-                metric: metric
-            });
-        };
-
-        $scope.navigateToAnalysis = function(analysisType) {
-            var path = analysisType === 'department_performance' ? '/department_performance' : '/tasks-analysis';
-            $location.path(path).search({
-                type: analysisType,
-                start_date: $scope.formatDateForAPI($scope.fromDate),
-                end_date: $scope.formatDateForAPI($scope.toDate)
-            });
-        };
-
-        $scope.logout = function() {
-            alert("Logout clicked (implement later)");
-        };
-
-        $scope.init = function() {
-            if ($scope.user_info.profile_pic) {
-                $scope.profile_pic_true = true;
-                $scope.profile_pic = $scope.user_info.profile_pic;
-            } else {
-                $scope.profile_pic_true = null;
-            }
-
-            $scope.updateCardDescriptions();
-            $timeout(function() {
-                $scope.fetchStatistics();
-            }, 0);
-        };
-
-        $scope.init();
-    });
-
-    sheetApp.directive('flatpickr', ['$timeout', '$document', function($timeout, $document) {
-        return {
-            restrict: 'A',
-            require: 'ngModel',
-            scope: {
-                minDate: '=?',
-                maxDate: '=?'
-            },
-            link: function(scope, element, attrs, ngModel) {
-                var options = {
-                    dateFormat: attrs.dateFormat || "Y-m-d",
-                    defaultDate: ngModel.$viewValue,
-                    allowInput: true, // Allow manual date input
-                    clickOpens: true, // Open calendar on click
-                    static: true, // Position calendar relative to input
-                    monthSelectorType: 'static', // Don't scroll months
-                    minDate: attrs.minDate ? new Date(attrs.minDate) : null,
-                    maxDate: attrs.maxDate ? new Date(attrs.maxDate) : null,
-                    onReady: function(selectedDates, dateStr, instance) {
-                        // Highlight today's date
-                        instance.calendarContainer.querySelector('.today').classList.add('highlight-today');
-                    },
-                    onChange: function(selectedDates, dateStr, instance) {
-                        $timeout(function() {
-                            ngModel.$setViewValue(dateStr);
-                            if (attrs.ngChange) {
-                                scope.$eval(attrs.ngChange);
-                            }
-                        });
-                    },
-                    onClose: function(selectedDates, dateStr, instance) {
-                        // Validate the date when picker closes
-                        if (!selectedDates[0]) return;
-
-                        if (attrs.minDate && new Date(dateStr) < new Date(attrs.minDate)) {
-                            instance.setDate(attrs.minDate);
-                        }
-                        if (attrs.maxDate && new Date(dateStr) > new Date(attrs.maxDate)) {
-                            instance.setDate(attrs.maxDate);
-                        }
-                    }
-                };
-
-                var fp = flatpickr(element[0], options);
-
-                // Update when model changes
-                ngModel.$render = function() {
-                    if (ngModel.$viewValue) {
-                        fp.setDate(ngModel.$viewValue);
-                    }
-                };
-
-                // Watch for min/max date changes
-                if (attrs.minDate) {
-                    scope.$watch('minDate', function(newVal) {
-                        if (newVal) {
-                            options.minDate = new Date(newVal);
-                            fp.set('minDate', options.minDate);
-                            // If current date is before new min, set to min
-                            if (fp.selectedDates[0] && fp.selectedDates[0] < options.minDate) {
-                                fp.setDate(options.minDate);
-                            }
-                        }
-                    });
-                }
-
-                if (attrs.maxDate) {
-                    scope.$watch('maxDate', function(newVal) {
-                        if (newVal) {
-                            options.maxDate = new Date(newVal);
-                            fp.set('maxDate', options.maxDate);
-                            // If current date is after new max, set to max
-                            if (fp.selectedDates[0] && fp.selectedDates[0] > options.maxDate) {
-                                fp.setDate(options.maxDate);
-                            }
-                        }
-                    });
-                }
-
-                // Clean up
-                scope.$on('$destroy', function() {
-                    if (fp) {
-                        fp.destroy();
-                    }
-                });
-
-                // Add some CSS for the highlight
-                var style = document.createElement('style');
-                style.textContent = `
-                .highlight-today {
-                    font-weight: bold;
-                    border: 2px solid #5e72e4 !important;
-                }
-                .flatpickr-day.inRange {
-                    background: rgba(94, 114, 228, 0.1);
-                    border-color: rgba(94, 114, 228, 0.1);
-                }
-                .flatpickr-day.selected {
-                    background: #5e72e4;
-                    border-color: #5e72e4;
-                }
-            `;
-                document.head.appendChild(style);
-            }
-        };
-    }]);
-
     $(document).ready(function() {
         $("#btnExport").click(function(e) {
-            var fromDate = angular.element(document.getElementById('main-content')).scope().fromDate;
-            var toDate = angular.element(document.getElementById('main-content')).scope().toDate;
+            e.preventDefault();
+            console.log('Download button clicked');
 
-            var fromDisplay = fromDate ? new Date(fromDate).toLocaleDateString() : 'Start Date';
-            var toDisplay = toDate ? new Date(toDate).toLocaleDateString() : 'End Date';
+            // Get Angular scope
+            var scope = angular.element(document.getElementById('main-content')).scope();
 
-            var title = '<tr><th colspan="7" style="font-size:18px;background:#5e72e4;color:white;">' +
-                'Project Statistics - ' + fromDisplay + ' to ' + toDisplay + '</th></tr>';
+            // Use $timeout to ensure Angular has rendered the table data
+            scope.$applyAsync(function() {
+                // Get date range from Angular scope
+                var fromDate = scope.fromDate;
+                var toDate = scope.toDate;
+                var fromDisplay = fromDate ? new Date(fromDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                }) : 'Start_Date';
+                var toDisplay = toDate ? new Date(toDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                }) : 'End_Date';
 
-            var tab_text = "<table border='2px'>" + title + "<tr bgcolor='#87AFC6'>";
-            var j = 0;
-            var tab = document.getElementById('statusTableTasks');
+                // Get the table element
+                var tab = document.getElementById('statusTableTasks');
 
-            for (j = 0; j < tab.rows.length; j++) {
-                tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
-            }
+                // Check if table has data
+                if (tab.rows.length <= 1) { // Only headers, no data rows
+                    console.warn('Table is empty, nothing to export');
+                    alert('No data available to export. Please fetch statistics first.');
+                    return;
+                }
 
-            tab_text = tab_text + "</table>";
-            tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");
-            tab_text = tab_text.replace(/<img[^>]*>/gi, "");
-            tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, "");
+                // Create a styled HTML table for export
+                var htmlTable = document.createElement('table');
+                htmlTable.setAttribute('border', '1');
+                htmlTable.setAttribute('style', 'border-collapse: collapse; width: 100%; font-family: Inter, sans-serif;');
 
-            var ua = window.navigator.userAgent;
-            var msie = ua.indexOf("MSIE ");
+                // Add title row
+                var titleRow = htmlTable.insertRow();
+                var titleCell = titleRow.insertCell();
+                titleCell.colSpan = 7;
+                titleCell.innerHTML = '<div style="font-size:18px; font-weight:bold; background:#5e72e4; color:white; padding:10px; text-align:center;">Project Statistics - ' + fromDisplay + ' to ' + toDisplay + '</div>';
 
-            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
-                txtArea1.document.open("txt/html", "replace");
-                txtArea1.document.write(tab_text);
-                txtArea1.document.close();
-                txtArea1.focus();
-                sa = txtArea1.document.execCommand("SaveAs", true, "Statistics.xls");
-            } else {
-                sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
-            }
+                // Add header row
+                var headerRow = htmlTable.insertRow();
+                headerRow.style.backgroundColor = '#87AFC6';
+                headerRow.style.fontWeight = 'bold';
+
+                var originalHeaders = tab.rows[0].cells;
+                for (var i = 0; i < originalHeaders.length; i++) {
+                    var cell = headerRow.insertCell();
+                    cell.innerHTML = originalHeaders[i].textContent;
+                    cell.style.padding = '8px';
+                    cell.style.textAlign = 'center';
+                    cell.style.border = '1px solid #ddd';
+                }
+
+                // Add data rows
+                for (var j = 1; j < tab.rows.length; j++) {
+                    var newRow = htmlTable.insertRow();
+                    newRow.style.border = '1px solid #ddd';
+
+                    for (var k = 0; k < tab.rows[j].cells.length; k++) {
+                        var cell = newRow.insertCell();
+                        cell.innerHTML = tab.rows[j].cells[k].textContent;
+                        cell.style.padding = '8px';
+                        cell.style.border = '1px solid #ddd';
+
+                        // Center align all cells except the first column (Department)
+                        if (k !== 0) {
+                            cell.style.textAlign = 'center';
+                        }
+                    }
+                }
+
+                // Convert the styled HTML table to worksheet
+                var ws = XLSX.utils.table_to_sheet(htmlTable);
+
+                // Set column widths (approximate based on your CSS)
+                var colWidths = [{
+                        wch: 15
+                    }, // Department
+                    {
+                        wch: 20
+                    }, // Pending Completion
+                    {
+                        wch: 10
+                    }, // Tasks
+                    {
+                        wch: 15
+                    }, // Completed Task
+                    {
+                        wch: 22
+                    }, // Oldest Outstanding In Days
+                    {
+                        wch: 25
+                    }, // Number of Tasks Exceeded
+                    {
+                        wch: 22
+                    } // Average Days to Complete
+                ];
+
+                ws['!cols'] = colWidths;
+
+                // Create workbook and add the worksheet
+                var wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Project Statistics");
+
+                // Generate Excel file
+                XLSX.writeFile(wb, 'Project_Statistics_' + fromDisplay.replace(/\s/g, '_') + '_to_' + toDisplay.replace(/\s/g, '_') + '.xlsx');
+
+                console.log('Styled table exported successfully');
+            });
         });
     });
 </script>

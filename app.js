@@ -156,6 +156,22 @@ sheetApp.config([
                 templateUrl: "./templates/comparison.html",
                 controller: "ComparisonCtrl",
             })
+            .when("/change_request", {
+                templateUrl: "./templates/change_request.html",
+                controller: "ChangeRequestCtrl",
+            })
+            .when("/new_request", {
+                templateUrl: "./templates/new_request.html",
+                controller: "ChangeRequestCtrl",
+            })
+            .when("/action_page", {
+                templateUrl: "./templates/action_page.html",
+                controller: "ChangeRequestCtrl",
+            })
+            .when("/change_details", {
+                templateUrl: "./templates/change_details.html",
+                controller: "ChangeRequestCtrl",
+            })
             .when("/logout", {
                 templateUrl: "./templates/logout.html",
                 controller: "LogoutCtrl",

@@ -224,8 +224,11 @@ try {
             // Create a new change request
             $data = json_decode(file_get_contents('php://input'), true);
             
+            // Log incoming data for debugging
+            error_log('create_request input: ' . json_encode($data));
+            
             // Validate required fields
-            $required = ['project_id', 'type', 'client_affected', 'country', 'request_by', 'priority', 
+            $required = ['type', 'client_affected', 'country', 'request_by', 'priority', 
                          'title', 'description', 'implementation_date', 'change_reason',
                          'impact_assessment', 'service_application', 'affected_artifacts',
                          'scope', 'implementation_plan', 'backout_plan', 'submitted_by', 'implementer'];
@@ -236,9 +239,20 @@ try {
                 }
             }
             
+            // Validate project_id or ticket_id (one must be provided, not both)
+            if (!isset($data['project_id']) && !isset($data['ticket_id'])) {
+                throw new Exception('Either Project ID or Ticket ID must be provided');
+            }
+            if (isset($data['project_id']) && isset($data['ticket_id'])) {
+                throw new Exception('Cannot provide both Project ID and Ticket ID');
+            }
+            
             // Validate numeric fields
-            if (!is_numeric($data['project_id']) || $data['project_id'] <= 0) {
+            if (isset($data['project_id']) && (!is_numeric($data['project_id']) || $data['project_id'] <= 0)) {
                 throw new Exception('Invalid Project ID');
+            }
+            if (isset($data['ticket_id']) && (!is_numeric($data['ticket_id']) || $data['ticket_id'] <= 0)) {
+                throw new Exception('Invalid Ticket ID');
             }
             if (!is_numeric($data['request_by']) || $data['request_by'] <= 0) {
                 throw new Exception('Invalid Request By ID');
@@ -250,20 +264,66 @@ try {
                 throw new Exception('Invalid Implementer ID');
             }
             
-            // Verify project exists
-            $sql = "SELECT project_id FROM projects WHERE project_id = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param('i', $data['project_id']);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            // Verify project_id if provided
+            if (isset($data['project_id'])) {
+                $sql = "SELECT project_id FROM projects WHERE project_id = ?";
+                $stmt = $conn->prepare($sql);
+                if (!$stmt) {
+                    throw new Exception('Prepare failed for project_id: ' . $conn->error);
+                }
+                $stmt->bind_param('i', $data['project_id']);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                
+                if ($result->num_rows === 0) {
+                    throw new Exception('Invalid Project ID');
+                }
+            }
             
-            if ($result->num_rows === 0) {
-                throw new Exception('Invalid Project ID');
+            // Verify ticket_id if provided
+            if (isset($data['ticket_id'])) {
+                // Fetch tickets from external API
+                $ch = curl_init('https://issues.unionsg.com/js/getTickets.php');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $response = curl_exec($ch);
+                
+                if ($response === false) {
+                    curl_close($ch);
+                    throw new Exception('Failed to fetch tickets from external API: ' . curl_error($ch));
+                }
+                
+                $tickets = json_decode($response, true);
+                curl_close($ch);
+                
+                if (!is_array($tickets)) {
+                    throw new Exception('Invalid ticket data received from external API');
+                }
+                
+                // Check if ticket_id exists in API response
+                $formatted_ticket_id = 'IN' . str_pad($data['ticket_id'], 8, '0', STR_PAD_LEFT);
+                $ticket_exists = false;
+                foreach ($tickets as $ticket) {
+                    if ($ticket['Ticket_Id'] === $formatted_ticket_id) {
+                        $ticket_exists = true;
+                        break;
+                    }
+                }
+                
+                if (!$ticket_exists) {
+                    error_log('Invalid Ticket ID: ' . $data['ticket_id'] . ' (formatted as ' . $formatted_ticket_id . ')');
+                    throw new Exception('Invalid Ticket ID');
+                }
+                
+                // Convert ticket_id to integer for storage
+                $data['ticket_id'] = (int)$data['ticket_id'];
             }
             
             // Verify request_by user exists
             $sql = "SELECT id FROM users WHERE id = ? AND is_active = 1";
             $stmt = $conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception('Prepare failed for request_by: ' . $conn->error);
+            }
             $stmt->bind_param('i', $data['request_by']);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -275,6 +335,9 @@ try {
             // Verify submitted_by user exists
             $sql = "SELECT id FROM users WHERE id = ? AND is_active = 1";
             $stmt = $conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception('Prepare failed for submitted_by: ' . $conn->error);
+            }
             $stmt->bind_param('i', $data['submitted_by']);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -286,6 +349,9 @@ try {
             // Verify implementer user exists
             $sql = "SELECT id FROM users WHERE id = ? AND is_active = 1";
             $stmt = $conn->prepare($sql);
+            if (!$stmt) {
+                throw new Exception('Prepare failed for implementer: ' . $conn->error);
+            }
             $stmt->bind_param('i', $data['implementer']);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -304,6 +370,8 @@ try {
             $risk = !empty($data['risk']) ? $data['risk'] : null;
             $resources_required = !empty($data['resources_required']) ? $data['resources_required'] : null;
             $comments = !empty($data['comments']) ? $data['comments'] : null;
+            $project_id = isset($data['project_id']) ? $data['project_id'] : null;
+            $ticket_id = isset($data['ticket_id']) ? $data['ticket_id'] : null;
             
             // Generate change_no
             $year_short = date('y');
@@ -313,22 +381,23 @@ try {
             $status = 'Pending';
             
             $sql = "INSERT INTO change_requests (
-                    project_id, change_no, type, emergency_reason, date_raised, 
+                    project_id, ticket_id, change_no, type, emergency_reason, date_raised, 
                     client_affected, country, request_by, priority, title, 
                     description, implementation_date, start_time, end_time, 
                     change_reason, impact_assessment, service_application, 
                     affected_artifacts, scope, implementation_plan, budget, 
                     risk, backout_plan, resources_required, comments, 
                     submitted_by, implementer, status
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             
             $stmt = $conn->prepare($sql);
             if (!$stmt) {
-                throw new Exception('Prepare failed: ' . $conn->error);
+                throw new Exception('Prepare failed for insert: ' . $conn->error);
             }
             
-            $stmt->bind_param('issssssisssssssssssssssssiis',    
-                $data['project_id'], 
+            $stmt->bind_param('iissssssisssssssssssssssssiis',    
+                $project_id, 
+                $ticket_id,
                 $change_no, 
                 $data['type'], 
                 $emergency_reason, 
@@ -349,7 +418,7 @@ try {
                 $data['scope'], 
                 $data['implementation_plan'], 
                 $budget,
-                $data['risk'],
+                $risk,
                 $data['backout_plan'], 
                 $resources_required, 
                 $comments,
@@ -369,7 +438,8 @@ try {
                 'request_id' => $request_id,
                 'request_by' => $data['request_by'],
                 'change_no' => $change_no,
-                'project_id' => $data['project_id'],
+                'project_id' => $data['project_id'] ?? null,
+                'ticket_id' => $data['ticket_id'] ?? null,
                 'title' => $data['title']
             ];
             $ch = curl_init('http://localhost/project_tracker_test/apiSheet/sendApprovalEmails.php');
@@ -387,7 +457,8 @@ try {
                     'success' => true,
                     'message' => 'Change request created successfully, but email sending failed: cURL error - ' . $curl_error,
                     'request_id' => $request_id,
-                    'project_id' => $data['project_id'],
+                    'project_id' => $project_id,
+                    'ticket_id' => $ticket_id,
                     'change_no' => $change_no
                 ]);
                 break;
@@ -402,7 +473,8 @@ try {
                     'success' => true,
                     'message' => 'Change request created successfully, but email sending failed: Invalid response from email service',
                     'request_id' => $request_id,
-                    'project_id' => $data['project_id'],
+                    'project_id' => $project_id,
+                    'ticket_id' => $ticket_id,
                     'change_no' => $change_no
                 ]);
                 break;
@@ -414,7 +486,8 @@ try {
                     'success' => true,
                     'message' => 'Change request created successfully, but some emails failed: ' . ($email_response_data['message'] ?? 'Unknown error'),
                     'request_id' => $request_id,
-                    'project_id' => $data['project_id'],
+                    'project_id' => $project_id,
+                    'ticket_id' => $ticket_id,
                     'change_no' => $change_no
                 ]);
                 break;
@@ -424,125 +497,149 @@ try {
                 'success' => true,
                 'message' => 'Change request created successfully',
                 'request_id' => $request_id,
-                'project_id' => $data['project_id'],
+                'project_id' => $project_id,
+                'ticket_id' => $ticket_id,
                 'change_no' => $change_no
             ]);
             break;
 
-        case 'update_approval':
-            // Update approval status for a change request
-            $data = json_decode(file_get_contents('php://input'), true);
-            
-            // Validate required fields
-            $required = ['request_id', 'approver_id', 'approval_level', 'status'];
-            foreach ($required as $field) {
-                if (empty($data[$field])) {
-                    throw new Exception("Required field missing: $field");
-                }
-            }
-            
-            $request_id = intval($data['request_id']);
-            $approver_id = intval($data['approver_id']);
-            $approval_level = $data['approval_level'];
-            $status = $data['status'];
-            $comments = isset($data['comments']) ? $data['comments'] : null;
-            
-            // Validate inputs
-            if (!in_array($approval_level, ['dept_head', 'qa', 'ceo'])) {
-                throw new Exception('Invalid approval level');
-            }
-            if (!in_array($status, ['approved', 'rejected'])) {
-                throw new Exception('Status must be either "approved" or "rejected"');
-            }
-            
-            // Check if the user has already approved at another level
-            $check_sql = "SELECT dept_head_id, qa_id, ceo_id FROM change_requests WHERE id = ?";
-            $check_stmt = $conn->prepare($check_sql);
-            if (!$check_stmt) {
-                throw new Exception('Prepare failed: ' . $conn->error);
-            }
-            $check_stmt->bind_param('i', $request_id);
-            $check_stmt->execute();
-            $result = $check_stmt->get_result();
-            $row = $result->fetch_assoc();
-            
-            if ($approval_level !== 'dept_head' && $row['dept_head_id'] == $approver_id) {
-                throw new Exception('User has already approved or rejected as Department Head');
-            }
-            if ($approval_level !== 'qa' && $row['qa_id'] == $approver_id) {
-                throw new Exception('User has already approved or rejected as Quality Assurance');
-            }
-            if ($approval_level !== 'ceo' && $row['ceo_id'] == $approver_id) {
-                throw new Exception('User has already approved or rejected as CEO');
-            }
-            
-            // Check approval workflow
-            if ($approval_level === 'qa') {
-                if ($row['dept_head_approval'] !== 'approved') {
-                    throw new Exception('Department head must approve before QA');
-                }
-            } 
-            elseif ($approval_level === 'ceo') {
-                if ($row['qa_approval'] !== 'approved') {
-                    throw new Exception('QA must approve before CEO');
-                }
-            }
-            
-            // Determine the new system status
-            if ($status === 'rejected') {
-                $system_status = 'Rejected';
-            } 
-            elseif ($approval_level === 'ceo' && $status === 'approved') {
-                $system_status = 'Approved';
-            }
-            else {
-                // For intermediate approvals (dept_head or qa approval)
-                $system_status = 'Pending';
-            }
-            
-            // Build the update query
-            $column_prefix = $approval_level . '_';
-            $sql = "UPDATE change_requests SET 
-                    {$column_prefix}id = ?,
-                    {$column_prefix}approval = ?,
-                    {$column_prefix}date = NOW(),
-                    {$column_prefix}comments = ?,
-                    status = ?
-                    WHERE id = ?";
+            case 'update_approval':
+                // Update approval status for a change request
+                $data = json_decode(file_get_contents('php://input'), true);
                 
-            $stmt = $conn->prepare($sql);
-            if (!$stmt) {
-                throw new Exception('Prepare failed: ' . $conn->error);
-            }
-            
-            $stmt->bind_param('isssi', 
-                $approver_id,
-                $status,
-                $comments,
-                $system_status,
-                $request_id
-            );
-            
-            if (!$stmt->execute()) {
-                throw new Exception('Execute failed: ' . $stmt->error);
-            }
-            
-            // Verify the update
-            $verify_sql = "SELECT status FROM change_requests WHERE id = ?";
-            $verify_stmt = $conn->prepare($verify_sql);
-            $verify_stmt->bind_param('i', $request_id);
-            $verify_stmt->execute();
-            $verify_result = $verify_stmt->get_result();
-            $updated_status = $verify_result->fetch_assoc()['status'];
-            
-            echo json_encode([
-                'success' => true,
-                'message' => 'Approval status updated successfully',
-                'updated_status' => $updated_status,
-                'approval_level' => $approval_level,
-                'action' => $status
-            ]);
-            break;
+                // Log incoming data for debugging
+                error_log('update_approval input: ' . json_encode($data));
+                
+                // Validate required fields
+                $required = ['request_id', 'approver_id', 'approval_level', 'status'];
+                foreach ($required as $field) {
+                    if (empty($data[$field])) {
+                        throw new Exception("Required field missing: $field");
+                    }
+                }
+                
+                $request_id = intval($data['request_id']);
+                $approver_id = intval($data['approver_id']);
+                $approval_level = $data['approval_level'];
+                $status = $data['status'];
+                $comments = isset($data['comments']) ? $data['comments'] : null;
+                
+                // Validate inputs
+                if (!in_array($approval_level, ['dept_head', 'qa', 'ceo'])) {
+                    throw new Exception('Invalid approval level');
+                }
+                if (!in_array($status, ['approved', 'rejected'])) {
+                    throw new Exception('Status must be either "approved" or "rejected"');
+                }
+                
+                // Check if the user has already approved at another level and fetch current status
+                $check_sql = "SELECT dept_head_id, qa_id, ceo_id, dept_head_approval, qa_approval, ceo_approval, status 
+                              FROM change_requests WHERE id = ?";
+                $check_stmt = $conn->prepare($check_sql);
+                if (!$check_stmt) {
+                    throw new Exception('Prepare failed: ' . $conn->error);
+                }
+                $check_stmt->bind_param('i', $request_id);
+                $check_stmt->execute();
+                $result = $check_stmt->get_result();
+                
+                if ($result->num_rows === 0) {
+                    throw new Exception('Change request not found');
+                }
+                
+                $row = $result->fetch_assoc();
+                
+                // Prevent user from approving multiple levels
+                if ($approval_level !== 'dept_head' && $row['dept_head_id'] == $approver_id && $row['dept_head_approval'] !== null) {
+                    throw new Exception('User has already approved or rejected as Department Head');
+                }
+                if ($approval_level !== 'qa' && $row['qa_id'] == $approver_id && $row['qa_approval'] !== null) {
+                    throw new Exception('User has already approved or rejected as Quality Assurance');
+                }
+                if ($approval_level !== 'ceo' && $row['ceo_id'] == $approver_id && $row['ceo_approval'] !== null) {
+                    throw new Exception('User has already approved or rejected as CEO');
+                }
+                
+                // Check if the current level has already been approved or rejected by another user
+                $column_prefix = $approval_level . '_';
+                if ($row[$column_prefix . 'id'] !== null && $row[$column_prefix . 'id'] != $approver_id && $row[$column_prefix . 'approval'] !== null) {
+                    throw new Exception("The $approval_level level has already been " . $row[$column_prefix . 'approval'] . " by another user");
+                }
+                
+                // Determine the new system status
+                $system_status = isset($row['status']) && $row['status'] !== null ? $row['status'] : 'Pending';
+                if ($status === 'rejected') {
+                    $system_status = 'Rejected';
+                } else {
+                    // Fetch the latest approval statuses after the update
+                    $temp_approvals = [
+                        'dept_head' => $row['dept_head_approval'],
+                        'qa' => $row['qa_approval'],
+                        'ceo' => $row['ceo_approval']
+                    ];
+                    $temp_approvals[$approval_level] = $status; // Simulate the update for this level
+                    
+                    if ($temp_approvals['dept_head'] === 'approved' && 
+                        $temp_approvals['qa'] === 'approved' && 
+                        $temp_approvals['ceo'] === 'approved') {
+                        $system_status = 'Approved';
+                    } else {
+                        $system_status = 'Pending';
+                    }
+                }
+                
+                // Build the update query
+                $sql = "UPDATE change_requests SET 
+                        {$column_prefix}id = ?,
+                        {$column_prefix}approval = ?,
+                        {$column_prefix}date = NOW(),
+                        {$column_prefix}comments = ?,
+                        status = ?
+                        WHERE id = ?";
+                
+                $stmt = $conn->prepare($sql);
+                if (!$stmt) {
+                    throw new Exception('Prepare failed: ' . $conn->error);
+                }
+                
+                $stmt->bind_param('isssi', 
+                    $approver_id,
+                    $status,
+                    $comments,
+                    $system_status,
+                    $request_id
+                );
+                
+                if (!$stmt->execute()) {
+                    throw new Exception('Execute failed: ' . $stmt->error);
+                }
+                
+                // Verify the update
+                $verify_sql = "SELECT {$column_prefix}id, {$column_prefix}approval, {$column_prefix}date, 
+                               {$column_prefix}comments, status 
+                               FROM change_requests WHERE id = ?";
+                $verify_stmt = $conn->prepare($verify_sql);
+                if (!$verify_stmt) {
+                    throw new Exception('Prepare failed: ' . $conn->error);
+                }
+                $verify_stmt->bind_param('i', $request_id);
+                $verify_stmt->execute();
+                $verify_result = $verify_stmt->get_result();
+                $updated_data = $verify_result->fetch_assoc();
+                
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Approval status updated successfully',
+                    'data' => [
+                        'approval_level' => $approval_level,
+                        'approver_id' => $updated_data[$column_prefix . 'id'],
+                        'approval_status' => $updated_data[$column_prefix . 'approval'],
+                        'approval_date' => $updated_data[$column_prefix . 'date'],
+                        'comments' => $updated_data[$column_prefix . 'comments'],
+                        'system_status' => $updated_data['status']
+                    ]
+                ]);
+                break;
 
         case 'update_implementation':
             // Update implementation status
@@ -694,6 +791,38 @@ try {
             ]);
             break;
 
+        case 'get_tickets':
+            // Get all tickets from external API
+            $ch = curl_init('https://issues.unionsg.com/js/getTickets.php');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            
+            if ($response === false) {
+                curl_close($ch);
+                throw new Exception('Failed to fetch tickets from external API: ' . curl_error($ch));
+            }
+            
+            $tickets = json_decode($response, true);
+            curl_close($ch);
+            
+            if (!is_array($tickets)) {
+                throw new Exception('Invalid ticket data received from external API');
+            }
+            
+            $formatted_tickets = array_map(function($ticket) {
+                $numeric_id = (int)preg_replace('/^IN/', '', $ticket['Ticket_Id']);
+                return [
+                    'id' => $numeric_id,
+                    'formatted_id' => $ticket['Ticket_Id']
+                ];
+            }, $tickets);
+            
+            echo json_encode([
+                'success' => true,
+                'data' => $formatted_tickets
+            ]);
+            break;
+
         default:
             throw new Exception('Invalid action specified');
     }
@@ -773,13 +902,12 @@ function getArtifacts() {
     return $artifacts;
 }
 
-// Helper function to get countries from database - modified to only return our 4 countries
+// Helper function to get countries
 function getCountries() {
     global $conn;
     
     $country_ids = [65, 87, 154, 97]; // Ghana, Kenya, Sierra Leone, Liberia
     
-    // Prepare the SQL with placeholders
     $placeholders = implode(',', array_fill(0, count($country_ids), '?'));
     $sql = "SELECT id, name FROM countries WHERE id IN ($placeholders) ORDER BY name";
     
@@ -788,7 +916,6 @@ function getCountries() {
         return [];
     }
     
-    // Bind parameters
     $types = str_repeat('i', count($country_ids));
     $stmt->bind_param($types, ...$country_ids);
     $stmt->execute();

@@ -11,8 +11,9 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
     $scope.users = [];
     $scope.countries = [];
     $scope.projects = [];
-    $scope.filteredProjects = [];
-    $scope.showProjectSuggestions = false;
+    $scope.tickets = [];
+    $scope.filteredProjectsAndTickets = [];
+    $scope.showProjectOrTicketSuggestions = false;
     $scope.requests = [];
     $scope.filteredRequests = [];
     $scope.currentFilter = 'all';
@@ -30,8 +31,11 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
         requestBy: null,
         implementer: null,
         projectId: null,
-        projectIdFormatted: ''
+        ticketId: null,
+        projectOrTicketIdFormatted: ''
     };
+    $scope.showClientLogsButton = false;
+    const allowedUserIds = [125, 138, 144, 145, 147, 153, 196];
 
     // Helper function to format date to YYYY-MM-DD
     $scope.formatDateForInput = function(date) {
@@ -121,6 +125,8 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
         $scope.newRequest.requestBy = $scope.user_info.user_id;
         $scope.newRequest.implementer = $scope.user_info.user_id;
         console.log('newRequest initialized:', $scope.newRequest);
+        $scope.showClientLogsButton = allowedUserIds.includes(parseInt($scope.user_info.user_id));
+        console.log('showClientLogsButton set to:', $scope.showClientLogsButton);
     }
 
     // Check if the logged-in user is eligible to approve at a specific level
@@ -148,7 +154,6 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
             return false;
         }
 
-        // Existing eligibility checks
         if (approvalLevel === 'dept_head') {
             return $scope.user_info.is_dept_head == 1 && $scope.user_info.can_approve == 1;
         }
@@ -289,7 +294,7 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
             });
     };
 
-    // Update loadClients to fetch from the new API
+    // Load clients
     $scope.loadClients = function() {
         $http.get('https://issues.unionsg.com/js/getClients.php')
             .then(function(response) {
@@ -335,7 +340,7 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
         }
     };
 
-    // Load projects for autocomplete
+    // Load projects
     $scope.loadProjects = function() {
         $http.get('apiSheet/change_request.php?action=get_projects')
             .then(function(response) {
@@ -343,9 +348,11 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
                     $scope.projects = response.data.data.map(function(project) {
                         return {
                             id: parseInt(project.id),
-                            formatted_id: 'PROJ-' + String(project.id).padStart(8, '0')
+                            formatted_id: 'PROJ-' + String(project.id).padStart(8, '0'),
+                            type: 'project'
                         };
                     });
+                    console.log('Projects loaded:', $scope.projects);
                 } else {
                     console.error('Failed to load projects:', response.data.message);
                 }
@@ -353,6 +360,69 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
             .catch(function(error) {
                 console.error('Error loading projects:', error);
             });
+    };
+
+    // Load tickets
+    $scope.loadTickets = function() {
+        $http.get('apiSheet/change_request.php?action=get_tickets')
+            .then(function(response) {
+                if (response.data.success) {
+                    $scope.tickets = response.data.data.map(function(ticket) {
+                        let numericId = ticket.id;
+                        if (typeof ticket.id === 'string' && ticket.id.startsWith('IN')) {
+                            numericId = parseInt(ticket.id.replace('IN', ''), 10);
+                        }
+
+                        return {
+                            id: numericId,
+                            formatted_id: ticket.formatted_id,
+                            type: 'ticket'
+                        };
+                    });
+                    console.log('Tickets loaded:', $scope.tickets);
+                } else {
+                    console.error('Failed to load tickets:', response.data.message);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error loading tickets:', error);
+            });
+    };
+
+    // Filter projects and tickets based on input
+    $scope.filterProjectsAndTickets = function(event) {
+        var input = $scope.newRequest.projectOrTicketIdFormatted || '';
+        if (input.length >= 3) {
+            $scope.filteredProjectsAndTickets = [];
+            var filteredProjects = $scope.projects.filter(function(project) {
+                return project.formatted_id.toLowerCase().includes(input.toLowerCase());
+            });
+            var filteredTickets = $scope.tickets.filter(function(ticket) {
+                return ticket.formatted_id.toLowerCase().includes(input.toLowerCase());
+            });
+            $scope.filteredProjectsAndTickets = [...filteredProjects, ...filteredTickets].sort(function(a, b) {
+                return a.formatted_id.localeCompare(b.formatted_id);
+            });
+            $scope.showProjectOrTicketSuggestions = $scope.filteredProjectsAndTickets.length > 0;
+        } else {
+            $scope.showProjectOrTicketSuggestions = false;
+            $scope.filteredProjectsAndTickets = [];
+        }
+    };
+
+    // Select project or ticket from autocomplete
+    $scope.selectProjectOrTicket = function(item) {
+        if (item.type === 'project') {
+            $scope.newRequest.projectId = item.id;
+            $scope.newRequest.ticketId = null;
+        } else if (item.type === 'ticket') {
+            $scope.newRequest.ticketId = item.id;
+            $scope.newRequest.projectId = null;
+        }
+        $scope.newRequest.projectOrTicketIdFormatted = item.formatted_id;
+        $scope.showProjectOrTicketSuggestions = false;
+        $scope.filteredProjectsAndTickets = [];
+        console.log('Selected item:', item);
     };
 
     // Load change requests
@@ -381,10 +451,8 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
                 .then(function(response) {
                     if (response.data.success) {
                         $scope.selectedRequest = response.data.data;
-                        // Ensure time fields are in HH:mm:ss format for <input type="time">
                         $scope.selectedRequest.implementation_start = $scope.selectedRequest.implementation_start || null;
                         $scope.selectedRequest.implementation_end = $scope.selectedRequest.implementation_end || null;
-                        // Parse for validation purposes
                         const startTime = $scope.parseDatabaseTime($scope.selectedRequest.implementation_start);
                         const endTime = $scope.parseDatabaseTime($scope.selectedRequest.implementation_end);
                         $scope.selectedRequest.implementation_start_hours = startTime.hours;
@@ -393,7 +461,6 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
                         $scope.selectedRequest.implementation_end_hours = endTime.hours;
                         $scope.selectedRequest.implementation_end_minutes = endTime.minutes;
                         $scope.selectedRequest.implementation_end_period = endTime.period;
-                        // Set isImplementationSaved based on valid implementation_status
                         $scope.isImplementationSaved = $scope.selectedRequest.implementation_status && ['Successful', 'Failed', 'Rescheduled'].includes($scope.selectedRequest.implementation_status);
                         $scope.approval.deptHead = {
                             name: $scope.selectedRequest.approval_status.dept_head.comments ? ($scope.selectedRequest.approval_status.dept_head.name || '') : '',
@@ -497,28 +564,6 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
         return new Date().getFullYear().toString().slice(-2);
     };
 
-    // Filter projects based on input
-    $scope.filterProjects = function(event) {
-        var input = $scope.newRequest.projectIdFormatted || '';
-        if (input.length >= 3) {
-            $scope.filteredProjects = $scope.projects.filter(function(project) {
-                return project.formatted_id.toLowerCase().includes(input.toLowerCase());
-            });
-            $scope.showProjectSuggestions = $scope.filteredProjects.length > 0;
-        } else {
-            $scope.showProjectSuggestions = false;
-            $scope.filteredProjects = [];
-        }
-    };
-
-    // Select project from autocomplete
-    $scope.selectProject = function(project) {
-        $scope.newRequest.projectId = project.id;
-        $scope.newRequest.projectIdFormatted = project.formatted_id;
-        $scope.showProjectSuggestions = false;
-        $scope.filteredProjects = [];
-    };
-
     // Submit the change request
     $scope.submitRequest = function() {
         if (!$scope.newRequestForm.$valid) {
@@ -526,13 +571,27 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
             return;
         }
 
-        if (!$scope.newRequest.projectId || isNaN($scope.newRequest.projectId)) {
+        if (!$scope.newRequest.projectId && !$scope.newRequest.ticketId) {
+            alert('Please select a valid Project ID or Ticket ID from the list.');
+            return;
+        }
+
+        if ($scope.newRequest.projectId && $scope.newRequest.ticketId) {
+            alert('Cannot select both a Project ID and a Ticket ID. Please choose one.');
+            return;
+        }
+
+        if ($scope.newRequest.projectId && !$scope.projects.some(function(project) {
+                return project.id === $scope.newRequest.projectId;
+            })) {
             alert('Invalid Project ID. Please select a valid project ID from the list.');
             return;
         }
 
-        if (!$scope.projects.some(function(project) { return project.id === $scope.newRequest.projectId; })) {
-            alert('Invalid Project ID. Please select a valid project ID from the list.');
+        if ($scope.newRequest.ticketId && !$scope.tickets.some(function(ticket) {
+                return ticket.id === $scope.newRequest.ticketId;
+            })) {
+            alert('Invalid Ticket ID. Please select a valid ticket ID from the list.');
             return;
         }
 
@@ -596,7 +655,8 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
         requestData.submitted_by = parseInt($scope.user_info.user_id);
 
         var mappedData = {
-            project_id: requestData.projectId,
+            project_id: $scope.newRequest.projectId || null,
+            ticket_id: $scope.newRequest.ticketId || null,
             type: requestData.type,
             emergency_reason: requestData.emergencyReason || null,
             date_raised: requestData.dateRaised,
@@ -635,7 +695,10 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
             .then(function(response) {
                 $scope.isSubmitting = false;
                 if (response.data.success) {
-                    $scope.successProjectId = 'PROJ-' + String(response.data.project_id).padStart(8, '0');
+                    $scope.successProjectOrTicketId = $scope.newRequest.projectId ?
+                        'PROJ-' + String(response.data.project_id).padStart(8, '0') :
+                        'IN' + String(response.data.ticket_id).padStart(8, '0');
+                    $scope.successProjectOrTicketLabel = $scope.newRequest.projectId ? 'Project ID' : 'Ticket ID';
                     $scope.successChangeNo = response.data.change_no;
                     $scope.showSuccessModal = true;
                     $scope.newRequest = {
@@ -643,12 +706,12 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
                         requestBy: $scope.user_info.user_id,
                         implementer: $scope.user_info.user_id,
                         projectId: null,
-                        projectIdFormatted: ''
+                        ticketId: null,
+                        projectOrTicketIdFormatted: ''
                     };
                     $scope.newRequestForm.$setPristine();
                     $scope.newRequestForm.$setUntouched();
                     $scope.loadRequests();
-                    // Check for email sending issues
                     if (response.data.message.includes('but some emails failed')) {
                         console.warn('Email sending issue:', response.data.message);
                         alert('Request submitted successfully, but some approval emails failed to send. Please contact support.');
@@ -666,36 +729,27 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
 
     // Approve request
     $scope.approveRequest = function() {
-        var approvalLevel = '';
-        var approverId = null;
-        var comments = '';
+        if (!$scope.selectedRequest.id) {
+            alert('No request selected.');
+            return;
+        }
 
-        if (!$scope.selectedRequest.approval_status.dept_head.approved && !$scope.selectedRequest.approval_status.dept_head.comments) {
-            approvalLevel = 'dept_head';
-            if (!$scope.isUserEligible('dept_head')) {
-                alert('You are not authorized to approve as Department Head or you have already approved at another level.');
-                return;
-            }
-            approverId = $scope.user_info.user_id;
-            comments = $scope.approval.deptHead.comments || '';
-        } else if ($scope.selectedRequest.approval_status.dept_head.approved && !$scope.selectedRequest.approval_status.qa.comments) {
-            approvalLevel = 'qa';
-            if (!$scope.isUserEligible('qa')) {
-                alert('You are not authorized to approve as Quality Assurance or you have already approved at another level.');
-                return;
-            }
-            approverId = $scope.user_info.user_id;
-            comments = $scope.approval.qa.comments || '';
-        } else if ($scope.selectedRequest.approval_status.qa.approved && !$scope.selectedRequest.approval_status.ceo.comments) {
+        var approvalLevel = '';
+        var comments = '';
+        var approverId = $scope.user_info.user_id;
+
+        // Determine the approval level the user is eligible for
+        if ($scope.isUserEligible('ceo') && !$scope.selectedRequest.approval_status.ceo.comments) {
             approvalLevel = 'ceo';
-            if (!$scope.isUserEligible('ceo')) {
-                alert('You are not authorized to approve as CEO/Senior Manager or you have already approved at another level.');
-                return;
-            }
-            approverId = $scope.user_info.user_id;
             comments = $scope.approval.ceo.comments || '';
+        } else if ($scope.isUserEligible('qa') && !$scope.selectedRequest.approval_status.qa.comments) {
+            approvalLevel = 'qa';
+            comments = $scope.approval.qa.comments || '';
+        } else if ($scope.isUserEligible('dept_head') && !$scope.selectedRequest.approval_status.dept_head.comments) {
+            approvalLevel = 'dept_head';
+            comments = $scope.approval.deptHead.comments || '';
         } else {
-            alert('No further approvals required or already approved/rejected.');
+            alert('You are not authorized to approve at any level or all eligible levels have already been approved/rejected.');
             return;
         }
 
@@ -724,9 +778,27 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
             .then(function(response) {
                 if (response.data.success) {
                     alert('Approval saved successfully.');
-                    $scope.loadRequestDetails();
-                    $scope.loadRequests();
+                    // Update the approval object for the specific level
+                    var levelKey = approvalLevel === 'dept_head' ? 'deptHead' : approvalLevel;
+                    $scope.approval[levelKey] = {
+                        name: $scope.user_info.first_name + ' ' + $scope.user_info.last_name,
+                        date: new Date(),
+                        dateFormatted: $scope.formatDateForInput(new Date()),
+                        comments: comments || '',
+                        approved: true
+                    };
+                    // Update selectedRequest.approval_status
+                    $scope.selectedRequest.approval_status[approvalLevel] = {
+                        approved: true,
+                        name: $scope.user_info.first_name + ' ' + $scope.user_info.last_name,
+                        date: new Date().toISOString(),
+                        comments: comments || ''
+                    };
                     $scope.checkAllApprovalsComplete();
+                    $scope.loadRequests();
+                    $timeout(function() {
+                        $scope.$apply();
+                    });
                 } else {
                     alert('Failed to save approval: ' + response.data.message);
                 }
@@ -739,36 +811,27 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
 
     // Reject request
     $scope.rejectRequest = function() {
-        var approvalLevel = '';
-        var approverId = null;
-        var comments = '';
+        if (!$scope.selectedRequest.id) {
+            alert('No request selected.');
+            return;
+        }
 
-        if (!$scope.selectedRequest.approval_status.dept_head.approved && !$scope.selectedRequest.approval_status.dept_head.comments) {
-            approvalLevel = 'dept_head';
-            if (!$scope.isUserEligible('dept_head')) {
-                alert('You are not authorized to reject as Department Head or you have already approved at another level.');
-                return;
-            }
-            approverId = $scope.user_info.user_id;
-            comments = $scope.approval.deptHead.comments || '';
-        } else if ($scope.selectedRequest.approval_status.dept_head.approved && !$scope.selectedRequest.approval_status.qa.comments) {
-            approvalLevel = 'qa';
-            if (!$scope.isUserEligible('qa')) {
-                alert('You are not authorized to reject as Quality Assurance or you have already approved at another level.');
-                return;
-            }
-            approverId = $scope.user_info.user_id;
-            comments = $scope.approval.qa.comments || '';
-        } else if ($scope.selectedRequest.approval_status.qa.approved && !$scope.selectedRequest.approval_status.ceo.comments) {
+        var approvalLevel = '';
+        var comments = '';
+        var approverId = $scope.user_info.user_id;
+
+        // Determine the approval level the user is eligible for
+        if ($scope.isUserEligible('ceo') && !$scope.selectedRequest.approval_status.ceo.comments) {
             approvalLevel = 'ceo';
-            if (!$scope.isUserEligible('ceo')) {
-                alert('You are not authorized to reject as CEO/Senior Manager or you have already approved at another level.');
-                return;
-            }
-            approverId = $scope.user_info.user_id;
             comments = $scope.approval.ceo.comments || '';
+        } else if ($scope.isUserEligible('qa') && !$scope.selectedRequest.approval_status.qa.comments) {
+            approvalLevel = 'qa';
+            comments = $scope.approval.qa.comments || '';
+        } else if ($scope.isUserEligible('dept_head') && !$scope.selectedRequest.approval_status.dept_head.comments) {
+            approvalLevel = 'dept_head';
+            comments = $scope.approval.deptHead.comments || '';
         } else {
-            alert('No further approvals required or already approved/rejected.');
+            alert('You are not authorized to reject at any level or all eligible levels have already been approved/rejected.');
             return;
         }
 
@@ -797,9 +860,27 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
             .then(function(response) {
                 if (response.data.success) {
                     alert('Rejection saved successfully.');
-                    $scope.loadRequestDetails();
-                    $scope.loadRequests();
+                    // Update the approval object for the specific level
+                    var levelKey = approvalLevel === 'dept_head' ? 'deptHead' : approvalLevel;
+                    $scope.approval[levelKey] = {
+                        name: $scope.user_info.first_name + ' ' + $scope.user_info.last_name,
+                        date: new Date(),
+                        dateFormatted: $scope.formatDateForInput(new Date()),
+                        comments: comments || '',
+                        approved: false
+                    };
+                    // Update selectedRequest.approval_status
+                    $scope.selectedRequest.approval_status[approvalLevel] = {
+                        approved: false,
+                        name: $scope.user_info.first_name + ' ' + $scope.user_info.last_name,
+                        date: new Date().toISOString(),
+                        comments: comments || ''
+                    };
                     $scope.checkAllApprovalsComplete();
+                    $scope.loadRequests();
+                    $timeout(function() {
+                        $scope.$apply();
+                    });
                 } else {
                     alert('Failed to save rejection: ' + response.data.message);
                 }
@@ -873,12 +954,10 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
             .then(function(response) {
                 if (response.data.success) {
                     alert('Implementation status updated successfully.');
-                    // Update UI with returned values
                     $scope.selectedRequest.implementation_status = response.data.data.implementation_status;
                     $scope.selectedRequest.implementation_start = response.data.data.implementation_start || null;
                     $scope.selectedRequest.implementation_end = response.data.data.implementation_end || null;
                     $scope.selectedRequest.implementation_notes = response.data.data.implementation_notes || null;
-                    // Re-parse for validation
                     const startTime = $scope.parseDatabaseTime($scope.selectedRequest.implementation_start);
                     const endTime = $scope.parseDatabaseTime($scope.selectedRequest.implementation_end);
                     $scope.selectedRequest.implementation_start_hours = startTime.hours;
@@ -887,7 +966,6 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
                     $scope.selectedRequest.implementation_end_hours = endTime.hours;
                     $scope.selectedRequest.implementation_end_minutes = endTime.minutes;
                     $scope.selectedRequest.implementation_end_period = endTime.period;
-                    // Set isImplementationSaved based on valid status
                     $scope.isImplementationSaved = ['Successful', 'Failed', 'Rescheduled'].includes($scope.selectedRequest.implementation_status);
                     $scope.loadRequests();
                 } else {
@@ -900,351 +978,279 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
             });
     };
 
-    // Download PDF - Professional layout with autoTable
+    // Download PDF
     $scope.downloadPDF = function() {
-        try {
-            if (!$scope.selectedRequest.id) {
-                alert('No request selected to download.');
-                return;
+        if (!$scope.selectedRequest.id) {
+            alert('No request selected to download.');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 10;
+        const maxWidth = pageWidth - 2 * margin;
+        const columnWidth = (maxWidth - 5) / 2;
+        let y = margin;
+
+        function checkPageBreak(additionalHeight) {
+            if (y + additionalHeight > pageHeight - margin) {
+                doc.addPage();
+                y = margin + 20;
+                return true;
             }
+            return false;
+        }
 
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4'
-            });
+        function addHeader() {
+            doc.setFontSize(20);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(40, 40, 40);
+            doc.text('Change Request Report', pageWidth / 2, 15, { align: "center" });
 
-            // Define styling constants
-            const primaryColor = '#5e72e4';
-            const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
-            const margin = 10;
-            const maxWidth = pageWidth - 2 * margin;
-
-            // Add header to every page
-            doc.setFont('helvetica', 'normal');
             doc.setFontSize(10);
+            doc.setFont("helvetica", "italic");
             doc.setTextColor(100);
-            doc.text('[Company Logo]', margin, 15); // Placeholder for logo
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(16);
-            doc.setTextColor(primaryColor);
-            doc.text(`Change Request: ${$scope.selectedRequest.change_no || 'CH' + $scope.getCurrentYearShort() + ($scope.selectedRequest.id ? $scope.selectedRequest.id.toString().padStart(6, '0') : 'N/A')}`, margin, 25);
-            doc.setLineWidth(0.5);
-            doc.setDrawColor(primaryColor);
-            doc.line(margin, 30, pageWidth - margin, 30);
+            doc.text('Generated on: ' + new Date().toLocaleString(), pageWidth - margin, 15, { align: "right" });
 
-            // Add footer to every page
-            const totalPages = doc.internal.getNumberOfPages();
-            for (let i = 1; i <= totalPages; i++) {
+            y = 30;
+        }
+
+        function addFooter() {
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
                 doc.setPage(i);
-                doc.setFontSize(8);
-                doc.setTextColor(100);
-                doc.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 20, pageHeight - 10);
-                doc.text(`Generated on: ${new Date().toLocaleDateString()}`, margin, pageHeight - 10);
+                doc.setFontSize(9);
+                doc.setTextColor(150);
+                doc.text('Confidential - Internal Use Only', margin, pageHeight - 8);
+                doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin, pageHeight - 8, { align: "right" });
             }
-
-            // Helper function to add a section title
-            function addSectionTitle(title) {
-                doc.setFontSize(14);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(primaryColor);
-                doc.text(title, margin, doc.autoTable.previous.finalY + 10);
-                doc.setLineWidth(0.3);
-                doc.line(margin, doc.autoTable.previous.finalY + 12, pageWidth - margin, doc.autoTable.previous.finalY + 12);
-            }
-
-            // Basic Information Section
-            doc.autoTable({
-                startY: 35,
-                head: [
-                    ['Field', 'Value']
-                ],
-                body: [
-                    ['Type of Change', $scope.selectedRequest.type || 'N/A'],
-                    ['Reason for Emergency', $scope.selectedRequest.emergency_reason || 'N/A'],
-                    ['Date Raised', $scope.selectedRequest.date_raised_formatted || 'N/A'],
-                    ['Global / Customer Name', $scope.selectedRequest.client_name || 'N/A'],
-                    ['Country', $scope.selectedRequest.country || 'N/A'],
-                    ['Request No', $scope.selectedRequest.project_id ? 'PROJ-' + $scope.selectedRequest.project_id.toString().padStart(8, '0') : 'N/A'],
-                    ['Request By', $scope.selectedRequest.request_by_name || 'N/A'],
-                    ['Priority', $scope.selectedRequest.priority || 'N/A']
-                ],
-                styles: {
-                    font: 'Inter',
-                    fontSize: 10,
-                    cellPadding: 3,
-                    overflow: 'linebreak',
-                    valign: 'middle'
-                },
-                headStyles: {
-                    fillColor: primaryColor,
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold'
-                },
-                columnStyles: {
-                    0: { cellWidth: 60 },
-                    1: { cellWidth: maxWidth - 60 }
-                },
-                margin: { top: 35, left: margin, right: margin },
-                didDrawPage: function(data) {
-                    // Reset header for subsequent pages
-                    doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(10);
-                    doc.setTextColor(100);
-                    doc.text('[Company Logo]', margin, 15); // Placeholder for logo
-                    doc.setFont('helvetica', 'bold');
-                    doc.setFontSize(16);
-                    doc.setTextColor(primaryColor);
-                    doc.text(`Change Request: ${$scope.selectedRequest.change_no || 'CH' + $scope.getCurrentYearShort() + ($scope.selectedRequest.id ? $scope.selectedRequest.id.toString().padStart(6, '0') : 'N/A')}`, margin, 25);
-                    doc.setLineWidth(0.5);
-                    doc.line(margin, 30, pageWidth - margin, 30);
-                }
-            });
-
-            // Change Details Section
-            addSectionTitle('Change Details');
-            doc.autoTable({
-                startY: doc.autoTable.previous.finalY + 15,
-                head: [
-                    ['Field', 'Value']
-                ],
-                body: [
-                    ['Change Name', $scope.selectedRequest.title || 'N/A'],
-                    ['Description of Change', $scope.selectedRequest.description || 'N/A'],
-                    ['Implementation Date Required', $scope.selectedRequest.implementation_date_formatted || 'N/A'],
-                    ['Implementation Start Time', $scope.selectedRequest.start_time || 'N/A'],
-                    ['Implementation End Time', $scope.selectedRequest.end_time || 'N/A'],
-                    ['Implementer', $scope.selectedRequest.implementer_name || 'N/A'],
-                    ['Reason for Change', $scope.selectedRequest.change_reason || 'N/A']
-                ],
-                styles: {
-                    font: 'Inter',
-                    fontSize: 10,
-                    cellPadding: 3,
-                    overflow: 'linebreak',
-                    valign: 'middle'
-                },
-                headStyles: {
-                    fillColor: primaryColor,
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold'
-                },
-                columnStyles: {
-                    0: { cellWidth: 60 },
-                    1: { cellWidth: maxWidth - 60 }
-                },
-                margin: { left: margin, right: margin }
-            });
-
-            // Impact Assessment Section
-            addSectionTitle('Impact Assessment');
-            doc.autoTable({
-                startY: doc.autoTable.previous.finalY + 15,
-                head: [
-                    ['Field', 'Value']
-                ],
-                body: [
-                    ['Change Impact Assessment', $scope.selectedRequest.impact_assessment || 'N/A'],
-                    ['Service/Application', $scope.selectedRequest.service_application || 'N/A'],
-                    ['Affected Artifacts', $scope.selectedRequest.affected_artifacts || 'N/A'],
-                    ['Components', $scope.selectedRequest.scope || 'N/A'],
-                    ['Implementation Plan', $scope.selectedRequest.implementation_plan || 'N/A'],
-                    ['Budget', $scope.selectedRequest.budget || 'N/A'],
-                    ['Risk', $scope.selectedRequest.risk || 'N/A'],
-                    ['Back out Plan', $scope.selectedRequest.backout_plan || 'N/A'],
-                    ['Resources Required', $scope.selectedRequest.resources_required || 'N/A'],
-                    ['Other Comments', $scope.selectedRequest.comments || 'N/A']
-                ],
-                styles: {
-                    font: 'Inter',
-                    fontSize: 10,
-                    cellPadding: 3,
-                    overflow: 'linebreak',
-                    valign: 'middle'
-                },
-                headStyles: {
-                    fillColor: primaryColor,
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold'
-                },
-                columnStyles: {
-                    0: { cellWidth: 60 },
-                    1: { cellWidth: maxWidth - 60 }
-                },
-                margin: { left: margin, right: margin }
-            });
-
-            // Approval Details Section
-            addSectionTitle('Approval Details');
-            doc.autoTable({
-                startY: doc.autoTable.previous.finalY + 15,
-                head: [
-                    ['Approved By', 'Name', 'Date', 'Comments', 'Status']
-                ],
-                body: [
-                    [
-                        'Department Head',
-                        $scope.approval.deptHead.comments ? ($scope.approval.deptHead.name || 'N/A') : 'N/A',
-                        $scope.approval.deptHead.comments ? ($scope.approval.deptHead.dateFormatted || 'N/A') : 'N/A',
-                        $scope.approval.deptHead.comments || 'N/A',
-                        $scope.approval.deptHead.comments ? ($scope.approval.deptHead.approved ? 'Approved' : 'Rejected') : 'Pending'
-                    ],
-                    [
-                        'Quality Assurance',
-                        $scope.approval.qa.comments ? ($scope.approval.qa.name || 'N/A') : 'N/A',
-                        $scope.approval.qa.comments ? ($scope.approval.qa.dateFormatted || 'N/A') : 'N/A',
-                        $scope.approval.qa.comments || 'N/A',
-                        $scope.approval.qa.comments ? ($scope.approval.qa.approved ? 'Approved' : 'Rejected') : 'Pending'
-                    ],
-                    [
-                        'CEO/Senior Manager',
-                        $scope.approval.ceo.comments ? ($scope.approval.ceo.name || 'N/A') : 'N/A',
-                        $scope.approval.ceo.comments ? ($scope.approval.ceo.dateFormatted || 'N/A') : 'N/A',
-                        $scope.approval.ceo.comments || 'N/A',
-                        $scope.approval.ceo.comments ? ($scope.approval.ceo.approved ? 'Approved' : 'Rejected') : 'Pending'
-                    ]
-                ],
-                styles: {
-                    font: 'Inter',
-                    fontSize: 10,
-                    cellPadding: 3,
-                    overflow: 'linebreak',
-                    valign: 'middle'
-                },
-                headStyles: {
-                    fillColor: primaryColor,
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold'
-                },
-                columnStyles: {
-                    0: { cellWidth: 40 },
-                    1: { cellWidth: 40 },
-                    2: { cellWidth: 30 },
-                    3: { cellWidth: 50 },
-                    4: { cellWidth: 30 }
-                },
-                margin: { left: margin, right: margin }
-            });
-
-            // Implementation Status and Duration Section
-            addSectionTitle('Implementation Status and Duration');
-            doc.autoTable({
-                startY: doc.autoTable.previous.finalY + 15,
-                head: [
-                    ['Field', 'Value']
-                ],
-                body: [
-                    ['Implementation Status', $scope.selectedRequest.implementation_status || 'N/A'],
-                    ['Duration Start', $scope.selectedRequest.implementation_start || 'N/A'],
-                    ['Duration End', $scope.selectedRequest.implementation_end || 'N/A'],
-                    ['Implementation Notes', $scope.selectedRequest.implementation_notes || 'N/A']
-                ],
-                styles: {
-                    font: 'Inter',
-                    fontSize: 10,
-                    cellPadding: 3,
-                    overflow: 'linebreak',
-                    valign: 'middle'
-                },
-                headStyles: {
-                    fillColor: primaryColor,
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold'
-                },
-                columnStyles: {
-                    0: { cellWidth: 60 },
-                    1: { cellWidth: maxWidth - 60 }
-                },
-                margin: { left: margin, right: margin }
-            });
-
-            // Save the PDF
-            const fileName = `Change_Request_${$scope.selectedRequest.change_no || 'CH' + $scope.getCurrentYearShort() + ($scope.selectedRequest.id ? $scope.selectedRequest.id.toString().padStart(6, '0') : 'Details')}.pdf`;
-            doc.save(fileName);
-
-            console.log('PDF generated successfully:', fileName);
-        } catch (error) {
-            console.error('Error generating PDF:', error);
-            alert('An error occurred while generating the PDF: ' + error.message + '. Please check the console for details or contact support.');
         }
-    };
 
-    // Download table as Excel - Fixed version
-    $scope.downloadExcel = function() {
-        try {
-            console.log('Starting Excel download process...');
+        function addSectionTitle(title) {
+            checkPageBreak(12);
+            doc.setFillColor(94, 114, 228);
+            doc.rect(margin, y, pageWidth - 2 * margin, 8, 'F');
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(255, 255, 255);
+            doc.text(title, margin + 2, y + 6);
+            y += 14;
+        }
 
-            // Check if there's data to export
-            if (!$scope.filteredRequests || $scope.filteredRequests.length === 0) {
-                alert('No data available to export.');
-                return;
+        function addField(label, value, column = 0) {
+            if (!value || value === 'N/A') return 0;
+            const x = margin + (column * (columnWidth + 5));
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(50, 50, 50);
+            doc.text(label + ':', x, y);
+
+            doc.setFont("helvetica", "normal");
+            const splitText = doc.splitTextToSize(value, columnWidth - 6);
+            const textHeight = splitText.length * 5;
+            checkPageBreak(textHeight + 12);
+
+            doc.setFillColor(245, 246, 250);
+            doc.roundedRect(x, y + 2, columnWidth, textHeight + 8, 2, 2, 'F');
+            doc.text(splitText, x + 3, y + 8);
+
+            return textHeight + 12;
+        }
+
+        addHeader();
+
+        addSectionTitle('Basic Information');
+        const basicFields = [
+            { label: 'Type of Change', value: $scope.selectedRequest.type },
+            { label: 'Reason for Emergency', value: $scope.selectedRequest.emergency_reason },
+            { label: 'Date Raised', value: $scope.selectedRequest.date_raised_formatted },
+            { label: 'Global / Customer Name', value: $scope.selectedRequest.client_name },
+            { label: 'Country', value: $scope.selectedRequest.country },
+            {
+                label: 'Request No',
+                value: $scope.selectedRequest.project_id ?
+                    'PROJ-' + String($scope.selectedRequest.project_id).padStart(8, '0') : $scope.selectedRequest.ticket_id ?
+                    'IN' + String($scope.selectedRequest.ticket_id).padStart(8, '0') : 'N/A'
+            },
+            { label: 'Request By', value: $scope.selectedRequest.request_by_name },
+            { label: 'Priority', value: $scope.selectedRequest.priority }
+        ];
+        let maxHeight = 0;
+        for (let i = 0; i < basicFields.length; i++) {
+            const column = i % 2;
+            if (column === 0 && i > 0) {
+                y += maxHeight;
+                maxHeight = 0;
             }
+            const height = addField(basicFields[i].label, basicFields[i].value, column);
+            maxHeight = Math.max(maxHeight, height);
+        }
+        y += maxHeight;
 
-            // Define table headers
-            const headers = [
-                'Change No.',
-                'Request No.',
-                'Requestor',
-                'Date Submitted',
-                'Priority',
-                'Client Affected',
-                'Country',
-                'Status'
-            ];
-
-            // Prepare data from filteredRequests
-            const data = $scope.filteredRequests.map(function(request) {
-                return [
-                    'CH' + $scope.getCurrentYearShort() + (request.id ? request.id.toString().padStart(6, '0') : ''),
-                    request.project_id ? 'PROJ-' + request.project_id.toString().padStart(8, '0') : '',
-                    request.request_by_name || '',
-                    request.date_submitted_formatted || '',
-                    request.priority || '',
-                    request.client_name || '',
-                    request.country || '',
-                    request.status || ''
-                ];
-            });
-
-            // Create workbook
-            const wb = XLSX.utils.book_new();
-
-            // Create worksheet with headers
-            const wsData = [headers].concat(data);
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-            // Add worksheet to workbook
-            XLSX.utils.book_append_sheet(wb, ws, 'Change Requests');
-
-            // Generate Excel file
-            const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-
-            // Create blob and download
-            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            const fileName = 'Change_Requests_' + new Date().toISOString().slice(0, 10) + '.xlsx';
-
-            // Create download link
-            const link = document.createElement('a');
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url);
-                link.setAttribute('download', fileName);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
+        addSectionTitle('Change Details');
+        const changeFields = [
+            { label: 'Change Name', value: $scope.selectedRequest.title },
+            { label: 'Implementation Date Required', value: $scope.selectedRequest.implementation_date_formatted },
+            { label: 'Implementation Start Time', value: $scope.selectedRequest.start_time },
+            { label: 'Implementation End Time', value: $scope.selectedRequest.end_time },
+            { label: 'Implementer', value: $scope.selectedRequest.implementer_name },
+            { label: 'Reason for Change', value: $scope.selectedRequest.change_reason },
+            { label: 'Description of Change', value: $scope.selectedRequest.description, fullWidth: true }
+        ];
+        maxHeight = 0;
+        for (let i = 0; i < changeFields.length; i++) {
+            if (changeFields[i].fullWidth) {
+                y += maxHeight;
+                maxHeight = 0;
+                const height = addField(changeFields[i].label, changeFields[i].value, 0);
+                y += height;
             } else {
-                alert('Your browser does not support automatic downloads. Please try a different browser.');
+                const column = i % 2;
+                if (column === 0 && i > 0) {
+                    y += maxHeight;
+                    maxHeight = 0;
+                }
+                const height = addField(changeFields[i].label, changeFields[i].value, column);
+                maxHeight = Math.max(maxHeight, height);
             }
-
-            console.log('Excel file downloaded successfully');
-        } catch (error) {
-            console.error('Error generating Excel file:', error);
-            alert('An error occurred while generating the Excel file. Please try again or contact support.');
         }
+        y += maxHeight;
+
+        addSectionTitle('Impact Assessment');
+        const impactFields = [
+            { label: 'Service/Application', value: $scope.selectedRequest.service_application },
+            { label: 'Affected Artifacts', value: $scope.selectedRequest.affected_artifacts },
+            { label: 'Scope', value: $scope.selectedRequest.scope },
+            { label: 'Budget', value: $scope.selectedRequest.budget },
+            { label: 'Risk', value: $scope.selectedRequest.risk },
+            { label: 'Resources Required', value: $scope.selectedRequest.resources_required },
+            { label: 'Other Comments', value: $scope.selectedRequest.comments },
+            { label: 'Change Impact Assessment', value: $scope.selectedRequest.impact_assessment, fullWidth: true },
+            { label: 'Implementation Plan', value: $scope.selectedRequest.implementation_plan, fullWidth: true },
+            { label: 'Back out Plan', value: $scope.selectedRequest.backout_plan, fullWidth: true }
+        ];
+        maxHeight = 0;
+        for (let i = 0; i < impactFields.length; i++) {
+            if (impactFields[i].fullWidth) {
+                y += maxHeight;
+                maxHeight = 0;
+                const height = addField(impactFields[i].label, impactFields[i].value, 0);
+                y += height;
+            } else {
+                const column = i % 2;
+                if (column === 0 && i > 0) {
+                    y += maxHeight;
+                    maxHeight = 0;
+                }
+                const height = addField(impactFields[i].label, impactFields[i].value, column);
+                maxHeight = Math.max(maxHeight, height);
+            }
+        }
+        y += maxHeight;
+
+        addSectionTitle('Approval Details');
+        const headers = ['Approved By', 'Name', 'Date', 'Comments', 'Status'];
+        const colWidths = [40, 40, 30, 50, 30];
+        const rowHeight = 10;
+        const cellPadding = 2;
+
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(255, 255, 255);
+        doc.setFillColor(94, 114, 228);
+        checkPageBreak(rowHeight);
+        headers.forEach((header, i) => {
+            doc.roundedRect(margin + colWidths.slice(0, i).reduce((a, b) => a + b, 0), y, colWidths[i], rowHeight, 2, 2, 'F');
+            doc.text(header, margin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + cellPadding, y + rowHeight - cellPadding);
+        });
+        y += rowHeight;
+
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(0, 0, 0);
+        const approvals = [{
+                role: 'Department Head',
+                name: $scope.approval.deptHead.comments ? ($scope.approval.deptHead.name || 'N/A') : 'N/A',
+                date: $scope.approval.deptHead.comments ? ($scope.approval.deptHead.dateFormatted || 'N/A') : 'N/A',
+                comments: $scope.approval.deptHead.comments || 'N/A',
+                status: $scope.approval.deptHead.comments ? ($scope.approval.deptHead.approved ? 'Approved' : 'Rejected') : 'Pending'
+            },
+            {
+                role: 'Quality Assurance',
+                name: $scope.approval.qa.comments ? ($scope.approval.qa.name || 'N/A') : 'N/A',
+                date: $scope.approval.qa.comments ? ($scope.approval.qa.dateFormatted || 'N/A') : 'N/A',
+                comments: $scope.approval.qa.comments || 'N/A',
+                status: $scope.approval.qa.comments ? ($scope.approval.qa.approved ? 'Approved' : 'Rejected') : 'Pending'
+            },
+            {
+                role: 'CEO/Senior Manager',
+                name: $scope.approval.ceo.comments ? ($scope.approval.ceo.name || 'N/A') : 'N/A',
+                date: $scope.approval.ceo.comments ? ($scope.approval.ceo.dateFormatted || 'N/A') : 'N/A',
+                comments: $scope.approval.ceo.comments || 'N/A',
+                status: $scope.approval.ceo.comments ? ($scope.approval.ceo.approved ? 'Approved' : 'Rejected') : 'Pending'
+            }
+        ];
+
+        approvals.forEach((row, index) => {
+            checkPageBreak(rowHeight);
+            const rowData = [row.role, row.name, row.date, row.comments, row.status];
+            const isEven = index % 2 === 0;
+            rowData.forEach((cell, i) => {
+                const splitText = doc.splitTextToSize(cell, colWidths[i] - 2 * cellPadding);
+                if (i === 4) {
+                    if (row.status === 'Approved') {
+                        doc.setFillColor(212, 237, 218);
+                    } else if (row.status === 'Rejected') {
+                        doc.setFillColor(248, 215, 218);
+                    } else if (row.status === 'Pending') {
+                        doc.setFillColor(255, 243, 205);
+                    }
+                } else {
+                    doc.setFillColor(isEven ? 255 : 245, isEven ? 245 : 245, isEven ? 255 : 245);
+                }
+                doc.roundedRect(margin + colWidths.slice(0, i).reduce((a, b) => a + b, 0), y, colWidths[i], rowHeight, 2, 2, 'F');
+                doc.text(splitText, margin + colWidths.slice(0, i).reduce((a, b) => a + b, 0) + cellPadding, y + rowHeight - cellPadding);
+            });
+            y += rowHeight;
+        });
+
+        y += 10;
+
+        addSectionTitle('Implementation Status and Duration');
+        const implFields = [
+            { label: 'Implementation Status', value: $scope.selectedRequest.implementation_status },
+            { label: 'Duration Start', value: $scope.selectedRequest.implementation_start },
+            { label: 'Duration End', value: $scope.selectedRequest.implementation_end },
+            { label: 'Implementation Notes', value: $scope.selectedRequest.implementation_notes, fullWidth: true }
+        ];
+        maxHeight = 0;
+        for (let i = 0; i < implFields.length; i++) {
+            if (implFields[i].fullWidth) {
+                y += maxHeight;
+                maxHeight = 0;
+                const height = addField(implFields[i].label, implFields[i].value, 0);
+                y += height;
+            } else {
+                const column = i % 2;
+                if (column === 0 && i > 0) {
+                    y += maxHeight;
+                    maxHeight = 0;
+                }
+                const height = addField(implFields[i].label, implFields[i].value, column);
+                maxHeight = Math.max(maxHeight, height);
+            }
+        }
+        y += maxHeight;
+
+        addFooter();
+        const changeNo = $scope.selectedRequest.change_no ? String($scope.selectedRequest.change_no).replace(/[^a-zA-Z0-9]/g, '_') : 'Details';
+        doc.save(`Change_Request_${changeNo}.pdf`);
     };
 
     // Go back to change request page
@@ -1265,6 +1271,7 @@ angular.module('sheetApp').controller('ChangeRequestCtrl', ['$scope', '$http', '
         $scope.loadClients();
         $scope.loadUsers();
         $scope.loadProjects();
+        $scope.loadTickets();
         $scope.loadRequests();
         $scope.loadRequestDetails();
     };

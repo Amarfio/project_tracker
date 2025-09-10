@@ -313,6 +313,15 @@
             color: #fff;
         }
         
+        .request-no-link {
+            color: #5e72e4;
+            text-decoration: none;
+        }
+        
+        .request-no-link:hover {
+            text-decoration: underline;
+        }
+        
         @media (max-width: 768px) {
             .approval-table {
                 display: block;
@@ -385,7 +394,17 @@
 
                         <div class="form-group">
                             <label>Request No</label>
-                            <div class="info-value">{{selectedRequest.project_id ? ('PROJ-' + (selectedRequest.project_id.toString().padStart(8, '0'))) : 'N/A'}}</div>
+                            <div class="info-value">
+                                <span ng-if="selectedRequest.project_id">
+                                    <a class="request-no-link" href="project/{{selectedRequest.project_id}}">PROJ-{{selectedRequest.project_id.toString().padStart(8, '0')}}</a>
+                                </span>
+                                <span ng-if="selectedRequest.ticket_id && !selectedRequest.project_id">
+                                    IN{{selectedRequest.ticket_id.toString().padStart(8, '0')}}
+                                </span>
+                                <span ng-if="!selectedRequest.project_id && !selectedRequest.ticket_id">
+                                    N/A
+                                </span>
+                            </div>
                         </div>
 
                         <div class="form-group">

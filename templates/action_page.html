@@ -327,6 +327,15 @@
             visibility: visible;
             opacity: 1;
         }
+        
+        .request-no-link {
+            color: #5e72e4;
+            text-decoration: none;
+        }
+        
+        .request-no-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -393,7 +402,17 @@
 
                         <div class="form-group">
                             <label>Request No</label>
-                            <div class="info-value">{{selectedRequest.project_id ? ('PROJ-' + (selectedRequest.project_id.toString().padStart(8, '0'))) : 'N/A'}}</div>
+                            <div class="info-value">
+                                <span ng-if="selectedRequest.project_id">
+                                    <a class="request-no-link" href="project/{{selectedRequest.project_id}}">PROJ-{{selectedRequest.project_id.toString().padStart(8, '0')}}</a>
+                                </span>
+                                <span ng-if="selectedRequest.ticket_id && !selectedRequest.project_id">
+                                    IN{{selectedRequest.ticket_id.toString().padStart(8, '0')}}
+                                </span>
+                                <span ng-if="!selectedRequest.project_id && !selectedRequest.ticket_id">
+                                    N/A
+                                </span>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -518,7 +537,17 @@
                         </div>
                         <div class="info-item">
                             <div class="info-label">Request Number</div>
-                            <div class="info-value">{{selectedRequest.project_id ? ('PROJ-' + (selectedRequest.project_id.toString().padStart(8, '0'))) : 'N/A'}}</div>
+                            <div class="info-value">
+                                <span ng-if="selectedRequest.project_id">
+                                    <a class="request-no-link" href="project/{{selectedRequest.project_id}}">PROJ-{{selectedRequest.project_id.toString().padStart(8, '0')}}</a>
+                                </span>
+                                <span ng-if="selectedRequest.ticket_id && !selectedRequest.project_id">
+                                    IN{{selectedRequest.ticket_id.toString().padStart(8, '0')}}
+                                </span>
+                                <span ng-if="!selectedRequest.project_id && !selectedRequest.ticket_id">
+                                    N/A
+                                </span>
+                            </div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Requestor</div>
@@ -576,7 +605,7 @@
                             </tr>
 
                             <!-- Quality Assurance Approval -->
-                            <tr ng-class="{'disabled': !selectedRequest.approval_status.dept_head.approved || selectedRequest.approval_status.qa.approved || selectedRequest.approval_status.qa.name || !isUserEligible('qa')}">
+                            <tr ng-class="{'disabled': selectedRequest.approval_status.qa.approved || selectedRequest.approval_status.qa.name || !isUserEligible('qa')}">
                                 <td>
                                     Quality Assurance
                                     <span class="tooltip" ng-if="!isUserEligible('qa') && selectedRequest.approval_status.qa.name !== (user_info.first_name + ' ' + user_info.last_name)">
@@ -591,7 +620,7 @@
                                     <input type="text" class="form-control" ng-model="approval.qa.dateFormatted" readonly>
                                 </td>
                                 <td>
-                                    <textarea class="form-control comments-box" ng-model="approval.qa.comments" ng-disabled="!selectedRequest.approval_status.dept_head.approved || selectedRequest.approval_status.qa.approved || selectedRequest.approval_status.qa.name || !isUserEligible('qa')"></textarea>
+                                    <textarea class="form-control comments-box" ng-model="approval.qa.comments" ng-disabled="selectedRequest.approval_status.qa.approved || selectedRequest.approval_status.qa.name || !isUserEligible('qa')"></textarea>
                                 </td>
                                 <td>
                                     <span class="approval-status status-pending" ng-if="!selectedRequest.approval_status.qa.approved && !selectedRequest.approval_status.qa.name">Pending</span>
@@ -601,7 +630,7 @@
                             </tr>
 
                             <!-- CEO/Senior Manager Approval -->
-                            <tr ng-class="{'disabled': !selectedRequest.approval_status.qa.approved || selectedRequest.approval_status.ceo.approved || selectedRequest.approval_status.ceo.name || !isUserEligible('ceo')}">
+                            <tr ng-class="{'disabled': selectedRequest.approval_status.ceo.approved || selectedRequest.approval_status.ceo.name || !isUserEligible('ceo')}">
                                 <td>
                                     CEO/Senior Manager
                                     <span class="tooltip" ng-if="!isUserEligible('ceo') && selectedRequest.approval_status.ceo.name !== (user_info.first_name + ' ' + user_info.last_name)">
@@ -616,7 +645,7 @@
                                     <input type="text" class="form-control" ng-model="approval.ceo.dateFormatted" readonly>
                                 </td>
                                 <td>
-                                    <textarea class="form-control comments-box" ng-model="approval.ceo.comments" ng-disabled="!selectedRequest.approval_status.qa.approved || selectedRequest.approval_status.ceo.approved || selectedRequest.approval_status.ceo.name || !isUserEligible('ceo')"></textarea>
+                                    <textarea class="form-control comments-box" ng-model="approval.ceo.comments" ng-disabled="selectedRequest.approval_status.ceo.approved || selectedRequest.approval_status.ceo.name || !isUserEligible('ceo')"></textarea>
                                 </td>
                                 <td>
                                     <span class="approval-status status-pending" ng-if="!selectedRequest.approval_status.ceo.approved && !selectedRequest.approval_status.ceo.name">Pending</span>

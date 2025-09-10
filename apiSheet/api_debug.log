@@ -267401,3 +267401,2148 @@ ND ?
 [2025-08-19 17:41:54] User data fetched: user_name=Emmanuel Mireku, efficiency=0, completed_tasks=1, total_tasks=1, completion_rate=100, avg_completion_time=24 hours, projects_completed=1, total_projects=1, productivity_rate=0, overall_growth=60
 [2025-08-26 14:12:35] Request received: user_id=216, start_date=2025-02-01, end_date=2025-08-27
 [2025-08-26 14:12:35] User data fetched: user_name=Theophilus Appah, efficiency=7.14, completed_tasks=14, total_tasks=14, completion_rate=100, avg_completion_time=42.29 hours, projects_completed=1, total_projects=3, productivity_rate=7.14, overall_growth=49.52
+[2025-08-27 09:05:42] Request received: type=individual_tasks, start_date=2025-01-01, end_date=2025-08-20
+[2025-08-27 09:05:42] Executing individual_tasks query: 
+            SELECT 
+                u.id,
+                CONCAT(u.f_name, ' ', u.l_name) AS user,
+                cd_dept.`desc` AS department,
+                cd_role.`desc` AS role,
+                u.email,
+                COUNT(t.task_id) AS task_count,
+                SUM(CASE WHEN t.status = 61 THEN 1 ELSE 0 END) AS completed_task_count
+            FROM 
+                users u
+            LEFT JOIN 
+                code_desc cd_dept ON u.dept = cd_dept.id AND cd_dept.init = 'dpt'
+            LEFT JOIN 
+                code_desc cd_role ON u.role = cd_role.id AND cd_role.init = 'rol'
+            INNER JOIN 
+                tasks t ON t.assigned_to = u.id 
+            INNER JOIN 
+                projects p ON t.project_id = p.project_id 
+                AND p.approved_date BETWEEN ? AND ?
+            WHERE 
+                u.is_active = 1
+            GROUP BY 
+                u.id, u.f_name, u.l_name, cd_dept.`desc`, cd_role.`desc`, u.email with params: [2025-01-01, 2025-08-20 23:59:59]
+[2025-08-27 09:05:42] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [111,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [111,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [111,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [111,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [111,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [111,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [119,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [119,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [119,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [119,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [119,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [119,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [120,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [120,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [120,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [120,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [120,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [120,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [131,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [131,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [131,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [131,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [131,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [131,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [132,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [132,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [132,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [132,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [132,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [132,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [133,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [133,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [133,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [133,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [133,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [133,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [149,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [149,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [149,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [149,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [149,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [149,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [150,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [150,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [150,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [150,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [150,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [150,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [152,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [152,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [152,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [152,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:42] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [152,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [152,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [161,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [161,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [161,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [161,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [161,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [161,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [163,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [163,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [163,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [163,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [163,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [163,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [166,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [166,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [166,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [166,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [166,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [166,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [169,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [169,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [169,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [169,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [169,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [169,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [179,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [179,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [179,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [179,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [179,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [179,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [186,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [186,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [186,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [186,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [186,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [186,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [187,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [187,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [187,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [187,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [187,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [187,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [188,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [188,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [188,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [188,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [188,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [188,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [189,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [189,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [189,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [189,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [189,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [189,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [191,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [191,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [191,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [191,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [191,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [191,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [194,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [194,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [194,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [194,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [194,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [194,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [197,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [197,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [197,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [197,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [197,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [197,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [199,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [199,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [199,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [199,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [199,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [199,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [200,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [200,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [200,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [200,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [200,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [200,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [201,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [201,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [201,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [201,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [201,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [201,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [202,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [202,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [202,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [202,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [202,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [202,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [203,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [203,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [203,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [203,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [203,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [203,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [204,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [204,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [204,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [204,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [204,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [204,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [205,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [205,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [205,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [205,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [205,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [205,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [211,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [211,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [211,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [211,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [211,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [211,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [213,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [213,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [213,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [213,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [213,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [213,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [215,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [215,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [215,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [215,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [215,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [215,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [216,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [216,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [216,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [216,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [216,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [216,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [217,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [217,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [217,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [217,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [217,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [217,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [218,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [218,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [218,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [218,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [218,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [218,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [220,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [220,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [220,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [220,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [220,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [220,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [221,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [221,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [221,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [221,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [221,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [221,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [222,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [222,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [222,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [222,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [222,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [222,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [223,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [223,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [223,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [223,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [223,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [223,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [224,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [224,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [224,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [224,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [224,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [224,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [225,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [225,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [225,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [225,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [225,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [225,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total: 
+        SELECT COUNT(*) as total_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [227,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_efficient: 
+        SELECT COUNT(*) as efficient_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [227,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_completed: 
+        SELECT COUNT(*) as completed_tasks
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [227,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_avg_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [227,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_projects_completed: 
+        SELECT COUNT(DISTINCT p.project_id) as projects_completed
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.completed_date IS NOT NULL
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [227,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Executing sql_total_projects: 
+        SELECT COUNT(DISTINCT p.project_id) as total_projects
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        WHERE t.assigned_to = ?
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [227,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:43] Individual tasks data fetched: 41 rows
+[2025-08-27 09:05:43] Response sent: success=true, data_count=41
+[2025-08-27 09:05:44] Request received: type=department_performance, start_date=2025-01-01, end_date=2025-08-20
+[2025-08-27 09:05:44] Executing department_performance query: 
+            SELECT 
+                cd_dept.id AS dept_id,
+                cd_dept.`desc` AS department,
+                COUNT(t.task_id) AS total_tasks,
+                SUM(CASE WHEN t.status = 61 THEN 1 ELSE 0 END) AS completed_tasks,
+                AVG(
+                    CASE 
+                        WHEN t.status = 61 AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+                        THEN DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)
+                        ELSE NULL
+                    END
+                ) AS avg_task_cycle_time
+            FROM 
+                users u
+            LEFT JOIN 
+                code_desc cd_dept ON u.dept = cd_dept.id AND cd_dept.init = 'dpt'
+            INNER JOIN 
+                tasks t ON t.assigned_to = u.id 
+            INNER JOIN 
+                projects p ON t.project_id = p.project_id 
+                AND p.approved_date BETWEEN ? AND ?
+            WHERE 
+                u.is_active = 1
+            GROUP BY 
+                cd_dept.id, cd_dept.`desc`
+            HAVING 
+                total_tasks > 0 with params: [2025-01-01, 2025-08-20 23:59:59]
+[2025-08-27 09:05:44] Executing sql_avg_cycle_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_task_cycle_time
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        JOIN users u ON t.assigned_to = u.id
+        WHERE u.dept = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [105,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:44] Executing sql_avg_cycle_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_task_cycle_time
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        JOIN users u ON t.assigned_to = u.id
+        WHERE u.dept = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [106,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:44] Executing sql_avg_cycle_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_task_cycle_time
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        JOIN users u ON t.assigned_to = u.id
+        WHERE u.dept = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [109,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:44] Executing sql_avg_cycle_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_task_cycle_time
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        JOIN users u ON t.assigned_to = u.id
+        WHERE u.dept = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [110,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:44] Executing sql_avg_cycle_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_task_cycle_time
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        JOIN users u ON t.assigned_to = u.id
+        WHERE u.dept = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [112,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:44] Executing sql_avg_cycle_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_task_cycle_time
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        JOIN users u ON t.assigned_to = u.id
+        WHERE u.dept = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [129,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:44] Executing sql_avg_cycle_time: 
+        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_task_cycle_time
+        FROM tasks t
+        JOIN projects p ON t.project_id = p.project_id
+        JOIN users u ON t.assigned_to = u.id
+        WHERE u.dept = ?
+        AND t.status = 61
+        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND p.approved_date BETWEEN ? AND ?
+     with params: [130,"2025-01-01","2025-08-20 23:59:59"]
+[2025-08-27 09:05:44] Departments fetched: 7
+[2025-08-27 09:05:44] Executing underperforming query: 
+            SELECT 
+                u.id,
+                CONCAT(u.f_name, ' ', u.l_name) AS user,
+                cd_dept.`desc` AS department,
+                COUNT(t.task_id) AS total_tasks,
+                SUM(CASE WHEN t.status = 61 THEN 1 ELSE 0 END) AS completed_tasks,
+                SUM(CASE WHEN t.status = 61 AND COALESCE(t.updated_at, t.end_date) > t.end_date THEN 1 ELSE 0 END) AS overdue_tasks,
+                AVG(
+                    CASE 
+                        WHEN t.status = 61 AND COALESCE(t.updated_at, t.end_date) > t.end_date
+                        THEN DATEDIFF(COALESCE(t.updated_at, t.end_date), t.end_date)
+                        ELSE NULL
+                    END
+                ) AS avg_delay_days
+            FROM 
+                users u
+            LEFT JOIN 
+                code_desc cd_dept ON u.dept = cd_dept.id AND cd_dept.init = 'dpt'
+            INNER JOIN 
+                tasks t ON t.assigned_to = u.id 
+            INNER JOIN 
+                projects p ON t.project_id = p.project_id 
+                AND p.approved_date BETWEEN ? AND ?
+            WHERE 
+                u.is_active = 1
+            GROUP BY 
+                u.id, cd_dept.`desc`
+            HAVING 
+                overdue_tasks > 0
+            ORDER BY 
+                cd_dept.`desc`, overdue_tasks DESC, avg_delay_days DESC with params: [2025-01-01, 2025-08-20 23:59:59]
+[2025-08-27 09:05:44] Underperforming individuals fetched: 7
+[2025-08-27 09:05:44] Executing trends query: 
+            SELECT 
+                DATE_FORMAT(p.approved_date, '%Y-%m') AS month,
+                cd_dept.`desc` AS department,
+                COUNT(t.task_id) AS total_tasks,
+                SUM(CASE WHEN t.status = 61 THEN 1 ELSE 0 END) AS completed_tasks
+            FROM 
+                tasks t
+            JOIN projects p ON t.project_id = p.project_id
+            JOIN users u ON t.assigned_to = u.id
+            LEFT JOIN code_desc cd_dept ON u.dept = cd_dept.id AND cd_dept.init = 'dpt'
+            WHERE p.approved_date BETWEEN ? AND ?
+            GROUP BY DATE_FORMAT(p.approved_date, '%Y-%m'), cd_dept.`desc`
+            ORDER BY month, cd_dept.`desc` with params: [2025-01-01, 2025-08-20 23:59:59]
+[2025-08-27 09:05:44] Trends fetched: months=5
+[2025-08-27 09:05:44] Department performance data fetched: depts=7, underperforming=7, trend_months=5
+[2025-08-27 09:05:44] Response sent: success=true, data_count=3

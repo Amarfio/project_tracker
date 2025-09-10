@@ -172,6 +172,10 @@ sheetApp.config([
                 templateUrl: "./templates/change_details.html",
                 controller: "ChangeRequestCtrl",
             })
+            .when("/client_logs", {
+                templateUrl: "./templates/client_logs.html",
+                controller: "ClientLogsCtrl",
+            })
             .when("/logout", {
                 templateUrl: "./templates/logout.html",
                 controller: "LogoutCtrl",

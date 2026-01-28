@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sheetApp">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pipeline Details</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        
+        .navbar-vertical {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 260px;
+            background-color: #fff;
+            border-right: 1px solid #e9ecef;
+            transition: transform 0.3s ease;
+        }
+        
+        .header {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            padding: 0.5rem 1rem;
+            background-color: #11cdef;
+            border-radius: 0.25rem;
+        }
+        
+        .navbar-top {
+            background: linear-gradient(90deg, #5e72e4 0%, #825ee4 100%);
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-dark .navbar-nav .nav-link {
+            color: #fff;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .media-body {
+            margin-left: 0.5rem;
+        }
+        
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            transition: margin-left 0.3s ease, width 0.3s ease;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content-container {
+            padding: 15px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-body {
+            padding: 1.5rem 2rem;
+            background-color: #fff;
+            margin-top: 0.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 40px;
+        }
+        
+        .form-body .row {
+            margin: 0 -15px;
+            flex: 1;
+        }
+        
+        .col-md-6 {
+            padding: 0 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-control,
+        .form-select {
+            font-size: 0.85rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            padding: 0.65rem 0.75rem;
+            background-color: #f9fafb;
+            width: 100%;
+            box-sizing: border-box;
+            height: 38px;
+        }
+        
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #5e72e4;
+            box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.2);
+            background-color: #fff;
+        }
+        
+        .form-control:disabled,
+        .form-select:disabled {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            height: 120px;
+            font-size: 0.85rem;
+        }
+        
+        .form-footer {
+            padding: 1rem 0;
+            background-color: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+        
+        .form-footer .btn {
+            flex-grow: 1;
+            text-align: center;
+            height: 42px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .btn-save,
+        .btn-edit,
+        .btn-close-pipeline,
+        .btn-suspend {
+            background-color: #5e72e4;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+        }
+        
+        .btn-save:hover,
+        .btn-edit:hover,
+        .btn-close-pipeline:hover,
+        .btn-suspend:hover {
+            background-color: #485fe0;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-save:disabled,
+        .btn-edit:disabled,
+        .btn-close-pipeline:disabled,
+        .btn-suspend:disabled {
+            background-color: #a3bffa;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-save:disabled {
+            background-color: #a3bffa;
+        }
+        
+        .spinning {
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .btn-back {
+            background-color: #f9fafb;
+            color: black;
+            font-weight: 600;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-back:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .participant-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            min-height: 100px;
+            align-items: flex-start;
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .participant-tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e2e8f0;
+            color: #2d3748;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.25rem;
+            margin: 0.2rem;
+        }
+        
+        .participant-tag-remove {
+            margin-left: 0.4rem;
+            cursor: pointer;
+            color: #718096;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+        
+        .participant-tag-remove:hover {
+            color: #e53e3e;
+        }
+        
+        .participant-select-container {
+            margin-bottom: 0.75rem;
+        }
+        
+        .form-select.participant-select {
+            max-width: 100%;
+        }
+        
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            width: 300px;
+        }
+        
+        .custom-alert {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(90deg, #5e72e4 0%, #825ee4 100%);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-in-out;
+            opacity: 1;
+        }
+        
+        .custom-alert .alert-icon {
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+        
+        .custom-alert .alert-message {
+            flex: 1;
+        }
+        
+        .custom-alert .alert-close {
+            margin-left: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #fff;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+        
+        .custom-alert .alert-close:hover {
+            opacity: 1;
+        }
+        
+        .placeholder-content {
+            padding: 1.5rem 2rem;
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            height: 100%;
+            /* Changed from min-height to height */
+            max-height: calc(100vh - 100px);
+            /* Add max height based on viewport */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: flex-start;
+            color: #6b7280;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            /* Hide overflow on container */
+        }
+        /* Add new class for the scrollable discussions container */
+        
+        .discussions-container {
+            width: 100%;
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+            overflow-x: hidden;
+            /* Prevent horizontal scroll */
+            flex: 1;
+            /* Take remaining space */
+            padding-right: 0.5rem;
+            /* Add padding for scrollbar */
+        }
+        /* Custom scrollbar styling */
+        
+        .discussions-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .discussions-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .discussions-container::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 4px;
+        }
+        
+        .discussions-container::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+        
+        .discussion-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            gap: 1rem;
+            color: #2d3748;
+            overflow: hidden;
+            /* Prevent content overflow */
+        }
+        
+        .discussion-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            border-color: #cbd5e0;
+        }
+        
+        .discussion-icon {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.25rem;
+        }
+        
+        .discussion-body {
+            flex: 1;
+            min-width: 0;
+            /* Important for text wrapping */
+            overflow: hidden;
+            /* Contain overflow */
+        }
+        
+        .discussion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            /* Allow wrapping if needed */
+            gap: 0.5rem;
+        }
+        
+        .discussion-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+            line-height: 1.4;
+            word-wrap: break-word;
+            /* Break long words */
+            overflow-wrap: break-word;
+            /* Modern alternative */
+            hyphens: auto;
+            /* Enable hyphenation */
+        }
+        
+        .discussion-date {
+            font-size: 0.75rem;
+            color: #718096;
+            font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
+            /* Prevent date from shrinking */
+        }
+        
+        .discussion-content {
+            font-size: 0.875rem;
+            color: #4a5568;
+            line-height: 1.6;
+            margin: 0;
+            word-wrap: break-word;
+            /* Break long words */
+            overflow-wrap: break-word;
+            /* Modern alternative */
+            white-space: pre-wrap;
+            /* Preserve line breaks and wrap text */
+            hyphens: auto;
+            /* Enable hyphenation */
+            max-width: 100%;
+            /* Ensure it doesn't exceed container */
+            /* Remove the -webkit-line-clamp to show full content */
+        }
+        
+        .discussion-footer {
+            margin-top: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #718096;
+            flex-wrap: wrap;
+            /* Allow wrapping if needed */
+            gap: 0.5rem;
+        }
+        
+        .discussion-meta {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        /* Remove the arrow button completely */
+        
+        .discussion-arrow {
+            display: none;
+        }
+        /* Responsive adjustments */
+        
+        @media (max-width: 767.98px) {
+            .discussion-card {
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+            .discussion-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+            .discussion-title {
+                font-size: 0.9rem;
+            }
+            .discussion-date {
+                font-size: 0.7rem;
+            }
+            .discussion-content {
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .discussion-card {
+                padding: 0.875rem;
+                flex-direction: column;
+            }
+            .discussion-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            .discussion-title {
+                font-size: 0.85rem;
+            }
+        }
+        
+        .add-discussion-btn {
+            background-color: #5e72e4;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+            /* Prevent button from shrinking */
+        }
+        
+        .add-discussion-btn:hover {
+            background-color: #485fe0;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        /* Empty state styling */
+        
+        .no-discussions-message {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            color: #9ca3af;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+        /* Responsive adjustments */
+        
+        @media (max-width: 767.98px) {
+            .placeholder-content {
+                max-height: calc(100vh - 180px);
+                padding: 1rem;
+            }
+            .discussion-card {
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+            .discussion-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+            .discussion-title {
+                font-size: 0.9rem;
+            }
+            .discussion-date {
+                font-size: 0.7rem;
+            }
+            .discussion-content {
+                font-size: 0.8rem;
+            }
+            .discussions-container {
+                padding-right: 0.25rem;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .placeholder-content {
+                max-height: calc(100vh - 150px);
+                padding: 0.875rem;
+            }
+            .discussion-card {
+                padding: 0.875rem;
+                flex-direction: column;
+            }
+            .discussion-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            .discussion-title {
+                font-size: 0.85rem;
+            }
+            .discussion-date {
+                font-size: 0.7rem;
+            }
+            .discussion-content {
+                font-size: 0.75rem;
+            }
+        }
+        
+        .modal-content {
+            border-radius: 0.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            background-color: #f9fafb;
+            border: none;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background: linear-gradient(90deg, #5e72e4 0%, #825ee4 100%);
+            color: #fff;
+            padding: 1.25rem 1.5rem;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+            border-bottom: none;
+        }
+        
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        
+        .modal-body {
+            padding: 1.5rem 2rem;
+            background-color: #fff;
+        }
+        
+        .modal-body .form-group:first-child {
+            max-width: 200px;
+            /* Reduced width for the date input */
+        }
+        
+        .modal-body .form-group:first-child .form-control {
+            width: 100%;
+        }
+        /* Ensure the textarea stays full width */
+        
+        .modal-body .form-group:last-child {
+            width: 100%;
+        }
+        
+        .modal-footer {
+            border-top: none;
+            padding: 1rem 1.5rem;
+            background-color: #fff;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+        
+        .modal-backdrop {
+            display: none !important;
+        }
+        
+        .modal {
+            background-color: transparent !important;
+        }
+        
+        .btn-cancel {
+            background-color: #edf2f7;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.65rem 1.25rem;
+            border-radius: 0.375rem;
+            border: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        
+        .nested-row {
+            margin: 0 -7.5px;
+        }
+        
+        .nested-col {
+            padding: 0 7.5px;
+        }
+        
+        .navbar-back-btn {
+            margin-right: auto;
+            margin-left: 0.5rem;
+        }
+        
+        .btn-icon {
+            font-size: 1.1rem;
+        }
+        
+        .page-bottom-space {
+            height: 40px;
+            background-color: #f8f9fa;
+            margin-top: auto;
+        }
+        
+        .modal-dialog {
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        
+        .modal-lg {
+            min-height: 600px;
+        }
+        
+        .discussion-content-textarea {
+            min-height: 200px !important;
+            height: 200px !important;
+        }
+        
+        @media (max-width: 991.98px) {
+            .navbar-vertical {
+                transform: translateX(-260px);
+            }
+            .navbar-vertical.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .alert-container {
+                width: 90%;
+                right: 5%;
+            }
+            .placeholder-content {
+                margin-top: 1rem;
+            }
+        }
+        
+        @media (max-width: 767.98px) {
+            .header {
+                padding: 0.2rem 0 !important;
+            }
+            .header-title {
+                font-size: 1rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .form-group label {
+                font-size: 0.75rem;
+            }
+            .form-control,
+            .form-select {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.6rem;
+                height: 34px;
+            }
+            textarea.form-control {
+                min-height: 100px;
+                height: 100px;
+            }
+            .btn-save,
+            .btn-edit,
+            .btn-close-pipeline,
+            .btn-suspend,
+            .btn-cancel {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.5rem;
+            }
+            .form-body {
+                padding: 1rem;
+                margin-bottom: 30px;
+            }
+            .participant-tags {
+                min-height: 80px;
+            }
+            .alert-container {
+                width: 90%;
+                right: 5%;
+            }
+            .custom-alert {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.75rem;
+            }
+            .custom-alert .alert-icon {
+                font-size: 1rem;
+            }
+            .custom-alert .alert-close {
+                font-size: 0.9rem;
+            }
+            .placeholder-content {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+            .discussion-card {
+                padding: 0.75rem;
+            }
+            .discussion-title {
+                font-size: 0.9rem;
+            }
+            .discussion-date {
+                font-size: 0.75rem;
+            }
+            .discussion-content {
+                font-size: 0.8rem;
+            }
+            .nested-row {
+                margin: 0 -5px;
+            }
+            .nested-col {
+                padding: 0 5px;
+            }
+            .form-footer .btn {
+                flex: 1 1 100%;
+                margin-bottom: 0.5rem;
+            }
+            .page-bottom-space {
+                height: 30px;
+            }
+            .btn-back {
+                width: 36px;
+                height: 36px;
+            }
+            .add-discussion-btn {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+            .modal-lg {
+                min-height: 500px;
+            }
+            .discussion-content-textarea {
+                min-height: 150px !important;
+                height: 150px !important;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .header-title {
+                font-size: 0.9rem;
+                padding: 0.2rem 0.5rem;
+            }
+            .participant-tags {
+                min-height: 70px;
+            }
+            .custom-alert {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+            .custom-alert .alert-icon {
+                font-size: 0.9rem;
+            }
+            .custom-alert .alert-close {
+                font-size: 0.8rem;
+            }
+            .placeholder-content {
+                font-size: 0.8rem;
+            }
+            .form-footer .btn {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.4rem;
+            }
+            .form-body {
+                margin-bottom: 20px;
+            }
+            .page-bottom-space {
+                height: 20px;
+            }
+            .btn-back {
+                width: 34px;
+                height: 34px;
+            }
+            .btn-icon {
+                font-size: 1rem;
+            }
+            .add-discussion-btn {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .discussion-card {
+                padding: 0.5rem;
+            }
+            .discussion-title {
+                font-size: 0.8rem;
+            }
+            .discussion-date {
+                font-size: 0.7rem;
+            }
+            .discussion-content {
+                font-size: 0.75rem;
+            }
+            .modal-lg {
+                min-height: 450px;
+            }
+            .discussion-content-textarea {
+                min-height: 120px !important;
+                height: 120px !important;
+            }
+        }
+    </style>
+</head>
+
+<body ng-controller="PipelineCtrl">
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+        <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+    </nav>
+    <div class="main-content">
+        <div class="alert-container" id="alertContainer"></div>
+        <div class="header bg-gradient-primary pb-2 pt-3 pt-md-4">
+            <div class="container-fluid">
+                <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+                    <div class="container-fluid d-flex align-items-center">
+                        <button type="button" class="btn btn-back navbar-back-btn" ng-click="goBack()">
+                            <i class="bi bi-arrow-left btn-icon"></i>
+                        </button>
+                        <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidenav-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="ms-auto">
+                            <ul class="navbar-nav align-items-center">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <div class="media align-items-center">
+                                            <span class="avatar avatar-sm rounded-circle" ng-if="!profile_pic_true">
+                                                <span ng-if="user_info.gender == 'Male'">
+                                                    <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle" />
+                                                </span>
+                                            <span ng-if="user_info.gender == 'Female'">
+                                                    <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle" />
+                                                </span>
+                                            </span>
+                                            <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true">
+                                                <img alt="" ng-src="{{ profile_pic }}" />
+                                            </span>
+                                            <div class="media-body ml-2 d-none d-lg-block">
+                                                <span class="mb-0 text-sm font-weight-bold text-uppercase">{{user_info.username}}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                                        <div class="dropdown-header noti-title">
+                                            <h6 class="text-overflow m-0">Welcome {{user_info.username}}</h6>
+                                        </div>
+                                        <a href="profile" class="dropdown-item">
+                                            <i class="ni ni-single-02"></i>
+                                            <span>My profile</span>
+                                        </a>
+                                        <a class="dropdown-item">
+                                            <i class="ni ni-settings-gear-65"></i>
+                                            <span>Settings</span>
+                                        </a>
+                                        <a class="dropdown-item">
+                                            <i class="ni ni-calendar-grid-58"></i>
+                                            <span>Activity</span>
+                                        </a>
+                                        <a class="dropdown-item">
+                                            <i class="ni ni-support-16"></i>
+                                            <span>Support</span>
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" ng-click="logout()">
+                                            <i class="ni ni-user-run"></i>
+                                            <span>Logout</span>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="content-container">
+            <div class="form-body">
+                <form name="addPipelineForm" novalidate>
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <div class="row nested-row">
+                                <div class="col-md-6 col-6 nested-col">
+                                    <div class="form-group">
+                                        <label for="pipelineId">Pipeline ID</label>
+                                        <input type="text" class="form-control" id="pipelineId" ng-model="currentPipeline.pipeline_id" readonly placeholder="Auto-generated">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-6 nested-col">
+                                    <div class="form-group">
+                                        <label for="pipelineTitle">Pipeline Title <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="pipelineTitle" ng-model="currentPipeline.title" ng-disabled="isEditingExisting && !isEditMode" required placeholder="Enter pipeline title">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="pipelineDescription">Pipeline Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="pipelineDescription" ng-model="currentPipeline.description" ng-disabled="isEditingExisting && !isEditMode" required placeholder="Enter pipeline description"></textarea>
+                            </div>
+                            <div class="row nested-row">
+                                <div class="col-md-6 col-6 nested-col">
+                                    <div class="form-group">
+                                        <label for="sourceName">Source Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="sourceName" ng-model="currentPipeline.source_name" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-6 nested-col">
+                                    <div class="form-group">
+                                        <label for="sourceOwner">Source Owner <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="sourceOnwer" ng-model="currentPipeline.source_owner" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row nested-row">
+                                <div class="col-md-6 col-6 nested-col">
+                                    <div class="form-group">
+                                        <label for="discussionLead">Discussion Lead <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="discussionLead" ng-model="currentPipeline.lead_id" ng-disabled="isEditingExisting && !isEditMode" required>
+                                            <option value="" disabled selected>Select Lead</option>
+                                            <option ng-repeat="user in users" value="{{user.id}}">{{user.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-6 nested-col">
+                                    <div class="form-group">
+                                        <label for="createdBy">Created By</label>
+                                        <input type="text" class="form-control" id="createdBy" ng-value="getUserName(currentPipeline.created_by)" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row nested-row">
+                                <div class="col-md-6 col-6 nested-col">
+                                    <div class="form-group">
+                                        <label for="discussionDate">Discussion Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="discussionDate" ng-model="currentPipeline.discussionDate" ng-model-options="{ updateOn: 'blur', timezone: 'UTC' }" ng-disabled="isEditingExisting && !isEditMode" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-6 nested-col">
+                                    <div class="form-group">
+                                        <label for="nextDiscussionDate">Next Discussion Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="nextDiscussionDate" ng-model="currentPipeline.nextDate" ng-model-options="{ updateOn: 'blur', timezone: 'UTC' }" ng-disabled="isEditingExisting && !isEditMode" required ng-attr-min="{{minNextDate}}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row nested-row">
+                                <div class="col-md-6 col-6 nested-col">
+                                    <div class="form-group">
+                                        <label for="nextDiscussionTime">Next Discussion Time</label>
+                                        <input type="text" class="form-control" id="nextDiscussionTime" ng-model="currentPipeline.nextTime" ng-model-options="{ updateOn: 'blur' }" ng-blur="normalizeTime('currentPipeline', 'nextTime')" ng-disabled="isEditingExisting && !isEditMode" placeholder="Select time">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-6 nested-col">
+                                    <div class="form-group">
+                                        <label for="status">Status</label>
+                                        <input type="text" class="form-control" id="status" ng-model="currentPipeline.status" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="participants">Participants <span class="text-danger">*</span></label>
+                                <div class="participant-select-container">
+                                    <select class="form-select participant-select" ng-model="selectedParticipant" ng-change="addParticipant()" ng-options="user.id as user.name for user in users | filter:filterParticipants" ng-disabled="isEditingExisting && !isEditMode">
+                                        <option value="" disabled selected>Select Participant</option>
+                                    </select>
+                                </div>
+                                <div class="participant-tags">
+                                    <span class="participant-tag" ng-repeat="participant in currentPipeline.participants track by $index">
+                                        {{ getUserName(participant) }}
+                                        <i class="bi bi-x participant-tag-remove" ng-click="removeParticipant(participant)" ng-if="isEditMode || !isEditingExisting"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-footer row nested-row">
+                                <div class="col">
+                                    <button type="button" class="btn btn-edit" ng-click="enableEditMode()" ng-if="isEditingExisting && !isEditMode">
+                                        <i class="bi bi-pencil-square btn-icon"></i> Update
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-close-pipeline" ng-click="closePipeline()" ng-if="isEditingExisting && currentPipeline.status === 'active'">
+                                        <i class="bi bi-check-circle btn-icon"></i> Close Pipeline
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-suspend" ng-click="suspendPipeline()" ng-if="isEditingExisting && currentPipeline.status === 'active'">
+                                        <i class="bi bi-pause-circle btn-icon"></i> Suspend Pipeline
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-save" ng-click="savePipeline()" ng-disabled="addPipelineForm.$invalid || currentPipeline.participants.length == 0 || isSaving">
+                                        <!-- Show check icon when not saving -->
+                                        <i class="bi bi-check-lg btn-icon" ng-if="!isSaving"></i>
+                                        <!-- Show spinning arrow when saving -->
+                                        <i class="bi bi-arrow-repeat btn-icon spinning" ng-if="isSaving"></i>
+                                        <!-- Change text based on saving state -->
+                                        <span ng-if="!isSaving">Save</span>
+                                        <span ng-if="isSaving">Saving...</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <div class="placeholder-content">
+                                <button type="button" class="add-discussion-btn" data-bs-toggle="modal" data-bs-target="#discussionModal" ng-click="addDiscussion()">
+                                    <i class="bi bi-plus-lg"></i> Add Discussion
+                                </button>
+
+                                <!-- Scrollable discussions container -->
+                                <div class="discussions-container" ng-if="currentPipeline.discussions && currentPipeline.discussions.length > 0">
+                                    <div class="discussion-card" ng-repeat="discussion in currentPipeline.discussions | orderBy:'-date'">
+                                        <div class="discussion-icon">
+                                            <i class="bi bi-chat-left-text"></i>
+                                        </div>
+                                        <div class="discussion-body">
+                                            <div class="discussion-header">
+                                                <h4 class="discussion-title">{{discussion.title}}</h4>
+                                                <!-- Show only the date, no time -->
+                                                <span class="discussion-date">{{discussion.date | date:'MMM d, yyyy'}}</span>
+                                            </div>
+                                            <p class="discussion-content">{{discussion.content}}</p>
+                                            <div class="discussion-footer">
+                                                <div class="discussion-meta">
+                                                    <i class="bi bi-clock"></i>
+                                                    <span>{{discussion.date | date:'h:mm a'}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Empty state -->
+                                <div class="no-discussions-message" ng-if="!currentPipeline.discussions || currentPipeline.discussions.length === 0">
+                                    No discussions yet.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="page-bottom-space"></div>
+        </div>
+        <div class="modal fade" id="discussionModal" tabindex="-1" aria-labelledby="discussionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="discussionModalLabel">Add Discussion</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" ng-click="resetDiscussionForm()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form name="discussionForm" novalidate>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="discussionDate">Discussion Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="discussionDate" ng-model="newDiscussion.date" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- <div class="form-group">
+                                        <label for="discussionTime">Discussion Time <span class="text-danger">*</span></label>
+                                        <input type="time" class="form-control" id="discussionTime" ng-model="newDiscussion.time" required>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label for="discussionTitle">Discussion Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="discussionTitle" ng-model="newDiscussion.title" required placeholder="Enter discussion title">
+                            </div> -->
+                            <div class="form-group">
+                                <label for="discussionContent">Discussion Content <span class="text-danger">*</span></label>
+                                <textarea class="form-control discussion-content-textarea" id="discussionContent" ng-model="newDiscussion.content" required placeholder="Enter discussion content"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-save" ng-click="saveDiscussion()" ng-disabled="discussionForm.$invalid || isSavingDiscussion">
+                            <!-- Show check icon when not saving -->
+                            <i class="bi bi-check-lg btn-icon" ng-if="!isSavingDiscussion"></i>
+                            <!-- Show spinning arrow when saving -->
+                            <i class="bi bi-arrow-repeat btn-icon spinning" ng-if="isSavingDiscussion"></i>
+                            <!-- Change text based on saving state -->
+                            <span ng-if="!isSavingDiscussion">Save</span>
+                            <span ng-if="isSavingDiscussion">Saving...</span>
+                        </button>
+                        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" ng-click="resetDiscussionForm()" ng-disabled="isSavingDiscussion">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="ngControllers/PipelineCtrl.js"></script>
+</body>
+
+</html> 

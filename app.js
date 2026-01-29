@@ -97,6 +97,14 @@ sheetApp.config([
                 templateUrl: "./templates/test_detail.html",
                 controller: "TestDetailCtrl",
             })
+            .when("/pipelines", {
+                templateUrl: "./templates/pipelines.html",
+                controller: "PipelineCtrl",
+            })
+            .when("/pipeline_details", {
+                templateUrl: "./templates/pipeline_details.html",
+                controller: "PipelineCtrl",
+            })
             .when("/departments", {
                 templateUrl: "./templates/departments.html",
                 controller: "DepartmentCtrl",

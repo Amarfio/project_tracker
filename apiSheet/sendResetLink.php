@@ -49,7 +49,7 @@ if (isset($_GET['email'])) {
     // update reset number
     $set_password = md5($email . null . time());
 
-    // echo $num; die();
+// echo $num; die();
 
     if ($num > 0) {
          // update reset number
@@ -59,7 +59,7 @@ if (isset($_GET['email'])) {
         $up_result = mysqli_query($conn, $up_query);
         // echo($up_result); die();
         if ($up_result == 1) {
-            $valueLink = 'http://10.203.14.195:84/project_tracker/set_password/' . $set_password;
+            $valueLink = 'http://10.203.14.97/project_tracker/set_password/' . $set_password;
             // echo json_encode($valueLink);
             // die();
             $from = "Project Tracker (USG)";
@@ -71,7 +71,7 @@ if (isset($_GET['email'])) {
             
         //Email Settings
         $mail->isHTML(true);
-        $mail->setFrom("hr@unionsg.com", $name);
+        $mail->setFrom("support24x7@unionsg.com", $name);
         $mail->addAddress($email);
         $mail->Subject=$subject;
         $mail->Body = $txt;
@@ -83,7 +83,7 @@ if (isset($_GET['email'])) {
                 array(
                     'message' => 'Check email for password reset link',
                     'status' => 'success',
-                    'set_password' => 'http://10.203.14.195:84/project_tracker/set_password/' . $set_password
+                    'set_password' => 'http://10.203.14.97/project_tracker/set_password/' . $set_password
                 )
             );
             exit($message);

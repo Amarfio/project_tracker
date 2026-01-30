@@ -1139,7 +1139,8 @@
                                             <div class="discussion-footer">
                                                 <div class="discussion-meta">
                                                     <i class="bi bi-clock"></i>
-                                                    <span>{{discussion.date | date:'h:mm a'}}</span>
+                                                    <span ng-if="discussion.time!=null">{{discussion.time}}</span>
+                                                    <span ng-if="discussion.time==null || discussion.time==''">N/A</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1175,10 +1176,10 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <!-- <div class="form-group">
+                                    <div class="form-group">
                                         <label for="discussionTime">Discussion Time <span class="text-danger">*</span></label>
                                         <input type="time" class="form-control" id="discussionTime" ng-model="newDiscussion.time" required>
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div>
                             <!-- <div class="form-group">

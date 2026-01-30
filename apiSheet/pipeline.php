@@ -1353,7 +1353,7 @@ try {
                     throw new Exception('Pipeline ID is required');
                 }
                 
-                $sql = "SELECT id, title, date, content 
+                $sql = "SELECT id, title, date, content, time 
                         FROM discussions 
                         WHERE pipeline_id = ? 
                         ORDER BY date DESC";  // This will now sort by datetime
@@ -1431,8 +1431,10 @@ try {
                     $conn->begin_transaction();
                     
                     try {
-                        $sql = "INSERT INTO discussions (pipeline_id, title, date, content) 
-                                VALUES (?, ?, ?, ?)";
+                        $sql = "INSERT INTO discussions (pipeline_id, title, date, content, time) 
+                                VALUES (?, ?, ?, ?, ?)";
+
+                        // echo($data['time']); die();
                         
                         $stmt = $conn->prepare($sql);
                         if (!$stmt) {
@@ -1441,11 +1443,12 @@ try {
                         
                         $title = isset($data['title']) && !empty($data['title']) ? $data['title'] : 'Discussion';
                         
-                        $stmt->bind_param('isss', 
+                        $stmt->bind_param('issss', 
                             $data['pipeline_id'],
                             $title,
                             $date_value,  // Now using datetime value
-                            $data['content']
+                            $data['content'],
+                            $data['time']
                         );
                         
                         if (!$stmt->execute()) {
@@ -1477,7 +1480,8 @@ try {
                                 'pipeline_id' => $data['pipeline_id'],
                                 'title' => $title,
                                 'date' => $date_value,  // Return datetime
-                                'content' => $data['content']
+                                'content' => $data['content'],
+                                'time'=> $data['time']
                             ]
                         ]);
                     } catch (Exception $e) {

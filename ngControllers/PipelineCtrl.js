@@ -594,6 +594,7 @@ angular.module("sheetApp").controller("PipelineCtrl", [
                                 title: discussion.title,
                                 date: new Date(discussion.date),
                                 content: discussion.content,
+                                time: discussion.time
                             };
                         });
                     } else {
@@ -772,7 +773,7 @@ angular.module("sheetApp").controller("PipelineCtrl", [
         // Navigate back
         $scope.goBack = function() {
             $scope.resetForm();
-            $location.path("/pipeline");
+            $location.path("/pipelines");
         };
 
         // Compare arrays
@@ -1310,6 +1311,8 @@ angular.module("sheetApp").controller("PipelineCtrl", [
 
             // Combine date and time into datetime format
             var discussionDate = new Date($scope.newDiscussion.date);
+            
+            // console.log(discussionTime); return false;
 
             // Safely handle time
             if ($scope.newDiscussion.time && typeof $scope.newDiscussion.time === 'string') {
@@ -1320,6 +1323,8 @@ angular.module("sheetApp").controller("PipelineCtrl", [
                         discussionDate.setMinutes(parseInt(timeParts[1]) || 0);
                         discussionDate.setSeconds(0);
                     }
+
+                    console.log(discussionDate, "the discussion date!!!"); return false;
                 } catch (e) {
                     console.warn('Error parsing time, using current time:', e);
                     var now = new Date();
@@ -1337,11 +1342,13 @@ angular.module("sheetApp").controller("PipelineCtrl", [
 
             // Format as YYYY-MM-DD HH:MM:SS for backend
             var formattedDateTime = discussionDate.toISOString().slice(0, 19).replace('T', ' ');
+            var discussionTime = new Date($scope.newDiscussion.time).toISOString().split('T')[1].slice(0, 5);
 
             var data = {
                 pipeline_id: parseInt($scope.currentPipeline.id, 10),
                 title: $scope.newDiscussion.title || "Discussion",
                 date: formattedDateTime, // Send datetime with time
+                time: discussionTime,
                 content: $scope.newDiscussion.content,
             };
 

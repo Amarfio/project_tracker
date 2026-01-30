@@ -1133,6 +1133,7 @@ sheetApp.controller(
                 text: $res.message,
               });
 
+              ("#addTaskBtn").prop("disabled", false);
               // Swal.fire($res.message);
               // setTimeout(() => {
               //     // $('#client_message_error').hide();
@@ -1147,6 +1148,8 @@ sheetApp.controller(
               title: "Sorry",
               text: "Something went wrong",
             });
+
+            ("#addTaskBtn").prop("disabled", false);
           }
         );
       };

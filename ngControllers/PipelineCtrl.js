@@ -1132,6 +1132,8 @@ angular.module("sheetApp").controller("PipelineCtrl", [
                                         `Pipeline "${$scope.currentPipeline.title}" closed by ${$scope.getUserName($scope.user_info.user_id)}.`
                                     );
 
+                                    // console.log('add_project?pipeline_id='+$scope.currentPipeline.id, "the id this");
+                                    // return false;
                                     // Reload the current pipeline details instead of navigating away
                                     $scope.loadPipelineDetails($scope.currentPipeline.id);
 
@@ -1141,6 +1143,13 @@ angular.module("sheetApp").controller("PipelineCtrl", [
                                         text: "Pipeline has been closed successfully.",
                                         confirmButtonColor: "#5e72e4"
                                     });
+
+                                    
+
+                                    $timeout(()=>{
+                                        window.location.href = 'add_project?pipeline_id='+$scope.currentPipeline.id
+                                    },1000);
+                                    
                                 } else {
                                     Swal.fire({
                                         icon: "error",

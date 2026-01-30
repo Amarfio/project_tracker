@@ -112,7 +112,7 @@ if (isset($_GET['project_id'])) {
         while ($row = mysqli_fetch_assoc($result)) {
             $projects_tasks[] =  array(
                 'project_id' => $row['project_id'],
-                'priority' => $row['priority_id'],
+                // 'priority' => $row['priority_id'],
                 "version_no"   => $row['version_no'],
                 "version_name"   => $row['version_name'],
                 "name" => $row['name'],
@@ -141,7 +141,7 @@ if (isset($_GET['project_id'])) {
                 "start_date" => $row['start_date'],
                 "end_date" => $row['end_date'],
                 "approved_date" => $row['approved_date'],
-                "back_dated" => $row['backed_dated'],
+                // "back_dated" => $row['backed_dated'],
                 "date_of_completion"=> checkForCompletionDate($conn, $row['project_id']),
                 "tasks" => get_all_tasks($row['project_id'], $conn)
             );

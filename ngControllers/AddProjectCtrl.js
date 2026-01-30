@@ -92,6 +92,38 @@ sheetApp.controller(
     };
     $scope.get_all_clients();
 
+    // Load pipeline details
+    $scope.loadPipelineDetails = function(pipelineId) {
+      console.log(pipelineId, "inside pipe method")
+      $http
+          .get("apiSheet/pipeline.php?action=get_pipeline&id=" + pipelineId)
+          .then(function(response) {
+              if (response.data.success) {
+                  var pipeline = response.data.data;
+                  console.log("Original pipeline data:", pipeline);
+                  $("#project_name").val(pipeline['title']);
+                  $("#project_description").val(pipeline['description']);
+                  return false;
+                  
+              } else {
+                  $scope.showAlert("Error: " + response.data.message);
+                  $scope.isEditingExisting = false;
+                  $scope.isEditMode = true;
+                  $scope.currentPipeline = angular.copy($scope.newPipeline);
+              }
+          })
+          .catch(function(error) {
+              console.error("Error fetching pipeline details:", error);
+              $scope.showAlert("Error loading pipeline details.");
+              $scope.isEditingExisting = false;
+              $scope.isEditMode = true;
+              $scope.currentPipeline = angular.copy($scope.newPipeline);
+          });
+  };
+
+   $scope.pipelineId = $location.search().pipeline_id;
+  $scope.loadPipelineDetails($scope.pipelineId);
+
     // ATTACHMENT ICON FUNCTION
 
     $scope.attachment_file = "None";
@@ -176,7 +208,7 @@ sheetApp.controller(
             response.data,
             $scope.pDpt
           );
-          console.log($scope.project_staff);
+          console.log($scope.project_staff, "projects department");
         },
         function errorCallback(response) {
           Swal.fire({
@@ -225,7 +257,7 @@ sheetApp.controller(
       interested_person_,
       project_sponsor,
       project_owner_,
-      project_owner_2
+      // project_owner_2
     ) {
       console.log(project_name_);
       console.log(version_no_);
@@ -241,21 +273,23 @@ sheetApp.controller(
       console.log(hashtag_value);
       console.log(interested_person_);
       console.log(project_sponsor);
+      project_name_ = $("#project_name").val();
+      project_description_ = $("#project_description").val();
 
       // return false;
 
       var data = null;
 
       //check if the main owner is the same as the minor owner
-      if ($scope.project_owner_ == $scope.project_owner_2) {
-        Swal.fire({
-          type: "error",
-          title: "Invalid Owner",
-          text: "Project Owner cannot be the same as the secondary owner, if there is no secondary owner kindly leave it blank.",
-        });
+      // if ($scope.project_owner_ == $scope.project_owner_2) {
+      //   Swal.fire({
+      //     type: "error",
+      //     title: "Invalid Owner",
+      //     text: "Project Owner cannot be the same as the secondary owner, if there is no secondary owner kindly leave it blank.",
+      //   });
 
-        return false;
-      }
+      //   return false;
+      // }
 
       //check if the project is back dated
       // console.log("the start date value ", start_date_);
@@ -289,7 +323,7 @@ sheetApp.controller(
           end_date: end_date_,
           priority: priority_,
           owner: project_owner_,
-          owner_2: project_owner_2,
+          // owner_2: project_owner_2,
           hash_tag: hashtag_value,
           interested_person: interested_person_,
           project_sponsor: project_sponsor,
@@ -309,7 +343,7 @@ sheetApp.controller(
           end_date: end_date_,
           priority: priority_,
           owner: project_owner_,
-          owner_2: project_owner_2,
+          // owner_2: project_owner_2,
           hash_tag: hashtag_value,
           interested_person: interested_person_,
           project_sponsor: project_sponsor,
@@ -317,8 +351,8 @@ sheetApp.controller(
         };
       }
 
-      //   console.log(data);
-      //   return false;
+        // console.log(data);
+        // return false;
 
       Swal.queue([
         {

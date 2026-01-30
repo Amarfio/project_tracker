@@ -49,6 +49,8 @@ if (
         $resultP = mysqli_query($conn, $queryP);
     }
 
+    // echo($query);die();
+
     $result = mysqli_query($conn, $query);
 
     
@@ -109,7 +111,7 @@ if (
 
 function checkPercentageOfProject( $conn, $projectId){
     // echo("here adey"); die();
-    $query = "SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id ='$projectId' ";
+    $query = "SELECT AVG(t.completion)=100 as completion from tasks t WHERE t.project_id ='$projectId' ";
     // $query = "SELECT AVG(t.completion)=100 as completion from tasks t WHERE (t.status=59 OR t.status=61) AND t.project_id ='$projectId' ";
     // echo($query); die();
     $result = mysqli_query($conn, $query);

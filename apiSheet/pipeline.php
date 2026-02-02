@@ -395,7 +395,7 @@ try {
                                                     </div>
                                                     <!-- Action Button -->
                                                     <div style="text-align: center; margin-top: 25px;">
-                                                        <a href="http://10.203.14.195:84/project_tracker_test/pipeline_details?id=' . $pipeline_id . '" style="display: inline-block; background-color: ' . $action_color . '; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+                                                        <a href="http://10.203.14.97/project_tracker_test/pipeline_details?id=' . $pipeline_id . '" style="display: inline-block; background-color: ' . $action_color . '; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
                                                             View Pipeline Details
                                                         </a>
                                                     </div>
@@ -1013,7 +1013,7 @@ try {
                                                             <p style="margin: 0 0 12px 0; font-size: 15px; color: #2C3E50;">
                                                                 <strong>Next Steps:</strong> Please access the Project Tracker system to view complete pipeline details, add comments, and manage timeline milestones.
                                                             </p>
-                                                            <a href="http://10.203.14.195:84/project_tracker_test/pipeline_details?id=' . $new_pipeline_id . '" style="display: inline-block; background-color: #00475B; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; margin-top: 8px;">
+                                                            <a href="http://10.203.14.97/project_tracker_test/pipeline_details?id=' . $new_pipeline_id . '" style="display: inline-block; background-color: #00475B; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; margin-top: 8px;">
                                                                 View Pipeline Details
                                                             </a>
                                                         </td>

@@ -69,7 +69,7 @@ function send_email_to_taskOwner ($user_id, $comment, $task_id, $task_name, $pro
     // $txt = "A comment has been given on the task with reference REF000.$task_id, with comment as .<b>$comment</b>.
     //         <br/> 
     //         <br/>
-    //         Kindly <a href='http://10.203.14.195:84/project_tracker/task_detail/$task_id'>click here</a> to see the task and the comment given.
+    //         Kindly <a href='http://10.203.14.97/project_tracker/task_detail/$task_id'>click here</a> to see the task and the comment given.
     //         <br/>
     //         <br/>
     //         <img src='http://issues.unionsg.com/images/logo.png' class='img-circle'/>";
@@ -124,7 +124,7 @@ function send_email_to_dept_head($department_id, $comment, $task_id, $project_na
     // $txt = "A comment has been given on the task with reference REF000.$task_id, with comment as .<b>$comment</b>.
     //         <br/> 
     //         <br/>
-    //         Kindly <a href='http://192.168.1.195:84/project_tracker/task_detail/$task_id'>click here</a> to see the task.
+    //         Kindly <a href='http://192.168.1.97/project_tracker/task_detail/$task_id'>click here</a> to see the task.
     //         <br/>
     //         <br/>
     //         <img src='http://issues.unionsg.com/images/logo.png' class='img-circle'/>";

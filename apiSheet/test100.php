@@ -165,7 +165,7 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
                 Version: $version_name <br/>
                 Start Date: $start_date <br/>
                 End Date: $end_date <br/> <br/>
-                Kindly <a href='http://192.168.1.195:84/project_tracker/login'>click here</a> to login <br/>
+                Kindly <a href='http://192.168.1.97/project_tracker/login'>click here</a> to login <br/>
                 <img  src='http://issues.unionsg.com/images/logo.png' class='img-circle'/>
                 
 
@@ -560,8 +560,8 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
         
   <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
 <div align='center'>
-  <!--[if mso]><v:roundrect xmlns:v='urn:schemas-microsoft-com:vml' xmlns:w='urn:schemas-microsoft-com:office:word' href='https://10.203.14.195:84/project_tracker/login' style='height:37px; v-text-anchor:middle; width:128px;' arcsize='11%'  stroke='f' fillcolor='#930781'><w:anchorlock/><center style='color:#FFFFFF;'><![endif]-->
-    <a href='https://10.203.14.195:84/project_tracker/login' target='_blank' class='v-button' style='box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #930781; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;'>
+  <!--[if mso]><v:roundrect xmlns:v='urn:schemas-microsoft-com:vml' xmlns:w='urn:schemas-microsoft-com:office:word' href='https://10.203.14.97/project_tracker/login' style='height:37px; v-text-anchor:middle; width:128px;' arcsize='11%'  stroke='f' fillcolor='#930781'><w:anchorlock/><center style='color:#FFFFFF;'><![endif]-->
+    <a href='https://10.203.14.97/project_tracker/login' target='_blank' class='v-button' style='box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #930781; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;'>
       <span style='display:block;padding:10px 20px;line-height:120%;'>Project details</span>
     </a>
     <!--[if mso]></center></v:roundrect><![endif]-->

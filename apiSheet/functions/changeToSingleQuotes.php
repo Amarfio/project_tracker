@@ -234,8 +234,8 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
         
   <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
 <div align='center'>
-  <!--[if mso]><v:roundrect xmlns:v='urn:schemas-microsoft-com:vml' xmlns:w='urn:schemas-microsoft-com:office:word' href='https://10.203.14.195:84/project_tracker/login' style='height:48px; v-text-anchor:middle; width:422px;' arcsize='8.5%'  stroke='f' fillcolor='#3598db'><w:anchorlock/><center style='color:#FFFFFF;font-family: times new roman,times; '><![endif]-->
-    <a href='https://10.203.14.195:84/project_tracker/login' target='_blank' class='v-button' style='box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #3598db; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:88%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-family: times new roman,times; font-size: 23px;font-weight: 700; '>
+  <!--[if mso]><v:roundrect xmlns:v='urn:schemas-microsoft-com:vml' xmlns:w='urn:schemas-microsoft-com:office:word' href='https://10.203.14.97/project_tracker/login' style='height:48px; v-text-anchor:middle; width:422px;' arcsize='8.5%'  stroke='f' fillcolor='#3598db'><w:anchorlock/><center style='color:#FFFFFF;font-family: times new roman,times; '><![endif]-->
+    <a href='https://10.203.14.97/project_tracker/login' target='_blank' class='v-button' style='box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #3598db; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:88%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-family: times new roman,times; font-size: 23px;font-weight: 700; '>
       <span style='display:block;padding:10px 20px;line-height:120%;'>More details</span>
     </a>
     <!--[if mso]></center></v:roundrect><![endif]-->

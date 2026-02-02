@@ -86,7 +86,7 @@ if (
         $from = "Project Tracker App";
         $name="no-reply";
         $subject = "Change Password Link, USG Project Tracker";
-        // $txt = "<a href='http://192.168.1.195:84/project_tracker/set_password/$set_password'>reset link </a> ";
+        // $txt = "<a href='http://192.168.1.97/project_tracker/set_password/$set_password'>reset link </a> ";
         $txt = "<!DOCTYPE HTML PUBLIC '-//W3C//DTD XHTML 1.0 Transitional //EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
         <html xmlns='http://www.w3.org/1999/xhtml' xmlns:v='urn:schemas-microsoft-com:vml' xmlns:o='urn:schemas-microsoft-com:office:office'>
         
@@ -396,8 +396,8 @@ if (
         
                                       <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
                                       <div align='center'>
-                                        <!--[if mso]><v:roundrect xmlns:v='urn:schemas-microsoft-com:vml' xmlns:w='urn:schemas-microsoft-com:office:word' href='http://10.203.14.195:84/project_tracker/set_password/$set_password' style='height:46px; v-text-anchor:middle; width:235px;' arcsize='8.5%'  stroke='f' fillcolor='#236fa1'><w:anchorlock/><center style='color:#FFFFFF;font-family:'Cabin',sans-serif;'><![endif]-->
-                                        <a href='http://10.203.14.195:84/project_tracker/set_password/$set_password' target='_blank' class='v-button' style='box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #236fa1; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;'>
+                                        <!--[if mso]><v:roundrect xmlns:v='urn:schemas-microsoft-com:vml' xmlns:w='urn:schemas-microsoft-com:office:word' href='http://10.203.14.97/project_tracker/set_password/$set_password' style='height:46px; v-text-anchor:middle; width:235px;' arcsize='8.5%'  stroke='f' fillcolor='#236fa1'><w:anchorlock/><center style='color:#FFFFFF;font-family:'Cabin',sans-serif;'><![endif]-->
+                                        <a href='http://10.203.14.97/project_tracker/set_password/$set_password' target='_blank' class='v-button' style='box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #236fa1; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;'>
                                           <span style='display:block;padding:14px 44px 13px;line-height:120%;'><span style='font-size: 16px; line-height: 19.2px;'><strong><span style='line-height: 19.2px; font-size: 16px;'>RESET PASSWORD</span></strong>
                                           </span>
                                           </span>

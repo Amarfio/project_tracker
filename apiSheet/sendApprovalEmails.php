@@ -114,7 +114,7 @@ try {
     }
 
     // Prepare email content
-    $approval_link = "http://10.203.14.195:84/project_tracker/change_request?requestId=$request_id";
+    $approval_link = "http://10.203.14.97/project_tracker/change_request?requestId=$request_id";
     $subject = "Pending Approval: Change Request $change_no";
     
     // Function to generate HTML email body

@@ -97,12 +97,12 @@ function get_all_approval_users($conn, $project_id)
         // Department: $department <br/>
         // Start Date: $start_date <br/>
         // End Date: $end_date <br/> <br/>
-        // Kindly <a href='http://192.168.1.195:84/project_tracker/login'>click here</a> to login <br/>
+        // Kindly <a href='http://192.168.1.97/project_tracker/login'>click here</a> to login <br/>
         // <img  src='http://issues.unionsg.com/images/logo.png' class='img-circle'/>
         // ";
         $txt = pendingApproval($project_id, $name, $version_name, $department, $start_date, $end_date);
 
-        // $txt = "New Project has been created and is pending approval: ".  "http://192.168.1.195:84/project_tracker/login". "\r\n" ;
+        // $txt = "New Project has been created and is pending approval: ".  "http://192.168.1.97/project_tracker/login". "\r\n" ;
         // $txt = $txt . 'Project ID: PRO-0000' . $project_id . "\r\n" ;
         // $txt = $txt . 'Description: ' . $description . "\r\n" ;
         // $txt = $txt . 'Version : ' . $version_name . "\r\n" ;

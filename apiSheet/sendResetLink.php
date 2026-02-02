@@ -65,7 +65,7 @@ if (isset($_GET['email'])) {
             $from = "Project Tracker (USG)";
             $name = "no-reply";
             $subject = "UNION SYSTEMS GLOBAL";
-            // $txt = 'http://10.203.14.195:84/project_tracker/set_password/' . $set_password;
+            // $txt = 'http://10.203.14.97/project_tracker/set_password/' . $set_password;
             $txt = emailForPasswordReset($first_name, $email, $set_password);
             $headers = "From: UNION SYSTEMS GLOBAL" ;
             

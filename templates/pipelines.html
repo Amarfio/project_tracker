@@ -1074,20 +1074,24 @@
                         <tr>
                             <th>Pipeline ID</th>
                             <th>Pipeline Title</th>
-                            <th>Date</th>
+                            <!-- <th>Date</th> -->
                             <th>Lead</th>
                             <!-- <th>Source</th> -->
                             <th>Next Date</th>
+                            <th>Status</th>
+                            <th>Posted Date</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="pipeline in pipelines | filter:filterPipelines">
                             <td><a href="pipeline_details?id={{pipeline.id}}" class="pipeline-link">{{pipeline.pipeline_id}}</a></td>
                             <td>{{pipeline.title}}</td>
-                            <td>{{pipeline.discussion_date_formatted}}</td>
+                            <!-- <td>{{pipeline.discussion_date_formatted}}</td> -->
                             <td>{{pipeline.lead}}</td>
                             <!--td>{{pipeline.source_name}}</!-td-->
                             <td>{{pipeline.next_date_formatted}}</td>
+                            <td>{{ pipeline.status }}</td>
+                            <td>{{pipeline.created_date_formatted}}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -20,9 +20,10 @@ $data = json_decode(file_get_contents("php://input"));
 if (
     isset($data) && isset($data->first_name) && isset($data->last_name) && isset($data->username)   && isset($data->role_id)  && isset($data->can_approve)  && isset($data->email) && isset($data->city) && isset($data->gender) 
 ) {
-    // echo json_encode($data); jdfjodf 
+    // echo json_encode($data); die();
     $user= [];
     $user['f_name'] = mysqli_real_escape_string($conn, $data->first_name); 
+    $f_name = $user['f_name'];
     $user['l_name'] = mysqli_real_escape_string($conn, $data->last_name);
     $user['username'] = mysqli_real_escape_string($conn, $data->username);
     $user['gender'] = mysqli_real_escape_string($conn, $data->gender);
@@ -40,6 +41,7 @@ if (
   
     $user['city'] = mysqli_real_escape_string($conn, $data->city);
     $user['postal_addr'] = mysqli_real_escape_string($conn, $data->postal_addr);
+    // echo($user['postal_addr']); die();
     
     // CHECK IF data->each_request exist. 
 
@@ -47,13 +49,15 @@ if (
     $email = $user['email'];
     $is_dpt_head = $user['is_dpt_head'];
     
-    $check_user_query = "SELECT dept FROM users where users.dept = '$dept' AND is_dpt_head =1 AND is_dpt_head = $is_dpt_head ";
+    $check_user_query = "SELECT id FROM users where users.dept = '$dept' AND is_dpt_head =1";
+    // echo($check_user_query); die();
     $result_check_user_query = mysqli_query($conn, $check_user_query);
     $check_dept_head_count = mysqli_num_rows($result_check_user_query);
 
     $check_email_query = "SELECT email FROM users WHERE email = '$email'";
     $result_check_email_query = mysqli_query($conn, $check_email_query);
     $check_email_count = mysqli_num_rows($result_check_email_query);
+    // echo($check_dept_head_count); die();
     if ($check_email_count >= 1) {
          $message = json_encode(
             array(
@@ -68,18 +72,20 @@ if (
     }
 
 
-    if ($check_dept_head_count >= 1) {
-        $message = json_encode(
-            array(
-                'data' => null,
-                'message' => 'Manage already exist',
-                'status' => 'failed'
-            )
-        );
-        exit($message);
-    }else {
+    // if ($check_dept_head_count > 0) {
+    //     $message = json_encode(
+    //         array(
+    //             'data' => null,
+    //             'message' => 'Manager already exist',
+    //             'status' => 'failed'
+    //         )
+    //     );
+    //     exit($message);
+    // }else {
         
         $set_password = md5($email . null . time());
+        $user['set_password'] = $set_password;
+        // echo($set_password); die();
   
 
 
@@ -600,6 +606,8 @@ if (
         // $mail->Port = 587;
         // $mail->SMTPSecure = "tls";
 
+        $message =  createUser($conn, $user);
+
         //Email Settings
         $mail->isHTML(true);
         $mail->setFrom($email , $name);
@@ -611,9 +619,9 @@ if (
         
         // $sent = sendEmail($email, $name, $subject, $txt);
         // exit(json_encode($done));
-       $message =  createUser($conn, $user);
+       exit($message);  
+
         if ($done) {
-          exit($message);  
         }else{
 
             $message =  json_encode(
@@ -657,7 +665,7 @@ if (
            
          
         } 
-    }
+    // }
 
  else {
     $message = json_encode(
@@ -685,6 +693,7 @@ function createUser($conn, $user){
   $city= $user['city'];
   $postal_addr = $user['postal_addr'];
   $set_password = $user['set_password'];
+  // echo($set_password);
 
   $query = "INSERT INTO `users` (`id`, `f_name`, `l_name`,`username`, `dept`, `role`, `can_approve`, `position`, `is_dpt_head`, `email`, `phone`, `country`, `city`, `postal_addr`, `reset`) VALUES (NULL, '$f_name', '$l_name', '$username', '$dept', '$role', '$can_approve', NULL, '$is_dpt_head', '$email', '$phone', '$country', '$city', '$postal_addr', '$set_password')";
   // echo($query); die();
@@ -712,8 +721,8 @@ function createUser($conn, $user){
                     'set_password' => $set_password
                 )
             );
-            //  exit($message);
-             return $message;
+             exit($message);
+            //  return $message;
             
          } else {
                 $message =  json_encode(
@@ -723,7 +732,7 @@ function createUser($conn, $user){
                          'status' => 'failed'
                      )
                  );
-                  // exit($message);
-                return $message;
+                  exit($message);
+                // return $message;
              } 
 }

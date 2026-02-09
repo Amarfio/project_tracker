@@ -103,7 +103,8 @@ sheetApp.controller(
                   console.log("Original pipeline data:", pipeline);
                   $("#project_name").val(pipeline['title']);
                   $("#project_description").val(pipeline['description']);
-                  return false;
+                  $("#pipeline_id").val(pipeline['pipeline_id']);
+                  // return false;
                   
               } else {
                   $scope.showAlert("Error: " + response.data.message);
@@ -275,6 +276,7 @@ sheetApp.controller(
       console.log(project_sponsor);
       project_name_ = $("#project_name").val();
       project_description_ = $("#project_description").val();
+      pipeline_id_ = $("#pipeline_id").val();
 
       // return false;
 
@@ -327,7 +329,9 @@ sheetApp.controller(
           hash_tag: hashtag_value,
           interested_person: interested_person_,
           project_sponsor: project_sponsor,
+          pipeline_id: $scope.pipelineId,
           backDated,
+
         };
       } else {
         data = {
@@ -347,6 +351,7 @@ sheetApp.controller(
           hash_tag: hashtag_value,
           interested_person: interested_person_,
           project_sponsor: project_sponsor,
+          pipeline_id: $scope.pipelineId,
           backDated,
         };
       }

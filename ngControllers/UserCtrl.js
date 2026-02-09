@@ -125,6 +125,8 @@ sheetApp.controller('UserCtrl', function ($scope, $http, check_auth, myConfig, $
             postal_addr: postal_address_
         }
 
+        // console.log(data); return false;
+
 
         Swal.queue([{
             title: 'Creating User ...  ',

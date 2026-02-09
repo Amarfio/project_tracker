@@ -448,13 +448,13 @@ try {
             $mail->Subject = 'Pipeline ' . $action_title . ': ' . $pipeline['title'];
             $mail->Body = $emailBody;
             
-            if (!$mail->send()) {
-                error_log('Failed to send pipeline action email: ' . $mail->ErrorInfo);
-                return false;
-            } else {
-                error_log('Pipeline action email sent successfully to: ' . implode(', ', $participant_emails));
-                return true;
-            }
+            // if (!$mail->send()) {
+            //     error_log('Failed to send pipeline action email: ' . $mail->ErrorInfo);
+            //     return false;
+            // } else {
+            //     // error_log('Pipeline action email sent successfully to: ' . implode(', ', $participant_emails));
+            //     // return true;
+            // }
             
         } catch (Exception $e) {
             error_log('Error sending pipeline action email: ' . $e->getMessage());
@@ -505,7 +505,9 @@ try {
                     CONCAT(cu.f_name, ' ', cu.l_name) as created_by_name
                     FROM pipelines p
                     LEFT JOIN users u ON p.lead_id = u.id
-                    LEFT JOIN users cu ON p.created_by = cu.id";
+                    LEFT JOIN users cu ON p.created_by = cu.id
+                    WHERE p.is_active = 1";
+            
             
             $where = [];
             $params = [];
@@ -526,7 +528,7 @@ try {
                 $sql .= " WHERE " . implode(" AND ", $where);
             }
             
-            $sql .= " ORDER BY p.discussion_date DESC";
+            $sql .= " ORDER BY p.created_at DESC";
             
             $stmt = $conn->prepare($sql);
             if (!$stmt) {
@@ -544,6 +546,7 @@ try {
             while ($row = $result->fetch_assoc()) {
                 $participant_ids = array_filter(explode(',', $row['participants']));
                 $row['participants'] = $participant_ids;
+                $row['created_date_formatted'] = date('Y-m-d', strtotime($row['created_at']));
                 $row['discussion_date_formatted'] = date('Y-m-d', strtotime($row['discussion_date']));
                 $row['next_date_formatted'] = date('Y-m-d', strtotime($row['next_date']));
                 $row['lead'] = $row['lead_name'];
@@ -1047,11 +1050,11 @@ try {
                     
                     $mail->Body = $emailBody;
                     
-                    if (!$mail->send()) {
-                        error_log('Failed to send pipeline creation email: ' . $mail->ErrorInfo);
-                    } else {
-                        error_log('Pipeline creation email sent successfully to: ' . implode(', ', $participant_emails));
-                    }
+                    // if (!$mail->send()) {
+                    //     error_log('Failed to send pipeline creation email: ' . $mail->ErrorInfo);
+                    // } else {
+                    //     error_log('Pipeline creation email sent successfully to: ' . implode(', ', $participant_emails));
+                    // }
                 } catch (Exception $e) {
                     error_log('Failed to send pipeline creation email: ' . $e->getMessage());
                 }
@@ -1061,7 +1064,7 @@ try {
                     'message' => 'Pipeline: ' . $pipeline_id,
                     'pipeline_id' => $pipeline_id,
                     'id' => $new_pipeline_id
-                ]);
+                ]); 
             } catch (Exception $e) {
                 $conn->rollback();
                 $conn->query("SET @disable_triggers = NULL");

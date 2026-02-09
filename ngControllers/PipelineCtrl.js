@@ -504,13 +504,14 @@ angular.module("sheetApp").controller("PipelineCtrl", [
                             return pipeline;
                         });
                         $scope.pipelines.sort(function(a, b) {
-                            var dateA = new Date(a.discussion_date_formatted);
-                            var dateB = new Date(b.discussion_date_formatted);
+                            var dateA = new Date(a.created_date_formatted);
+                            var dateB = new Date(b.created_date_formatted);
                             if (dateA.getTime() !== dateB.getTime()) {
                                 return dateB - dateA;
                             }
                             return b.pipeline_id.localeCompare(a.pipeline_id);
                         });
+                        // console.log($scope.pipelines); return false;
                         $scope.updateMetrics();
                         $scope.initCharts();
                     } else {
@@ -1070,7 +1071,7 @@ angular.module("sheetApp").controller("PipelineCtrl", [
                                 }).then(function() {
                                     $scope.loadPipelines();
                                     $scope.resetForm();
-                                    $location.path("/pipeline");
+                                    $location.path("/pipelines");
                                     $scope.$apply();
                                 });
                             }
@@ -1136,20 +1137,73 @@ angular.module("sheetApp").controller("PipelineCtrl", [
                                     // return false;
                                     // Reload the current pipeline details instead of navigating away
                                     $scope.loadPipelineDetails($scope.currentPipeline.id);
+                                    console.log('/add_project?pipeline_id='+$scope.currentPipeline.id);
+                                    // return false;
+
+                                    // Swal.fire({
+                                    //     icon: "success",
+                                    //     title: "Closed!",
+                                    //     text: "Pipeline has been closed. Redirecting to the create project page in 5 seconds...",
+                                    //     confirmButtonColor: "#5e72e4"
+                                    // });
+
+                                    // // Swal.fire([
+                                    // //     {
+                                    // //       title: "Pipeline has been closed. Redirecting to the create project page ...  ",
+                                    // //       // showLoaderOnConfirm: true,
+                                    // //       onBeforeOpen: () => {
+                                    // //         Swal.showLoading();
+                                    // //       },
+                                    // //       showLoaderOnConfirm: true,
+                                    // //     },
+                                    // //   ]);
+
+                                    // setTimeout(function() {
+                                    //     window.location.href='add_project?pipeline_id='+$scope.currentPipeline.id;
+                                    // }, 5000);
+
+                                    let timerInterval;
+                                    let timeLeft = 5;
 
                                     Swal.fire({
                                         icon: "success",
                                         title: "Closed!",
-                                        text: "Pipeline has been closed successfully.",
-                                        confirmButtonColor: "#5e72e4"
+                                        html: `Pipeline has been closed.<br>
+                                            Redirecting to the create project page in 
+                                            <b id="countdown">5</b> seconds...`,
+                                        confirmButtonColor: "#5e72e4",
+                                        showConfirmButton: false,
+                                        timer: 5000,
+                                        timerProgressBar: true,
+                                        didOpen: () => {
+                                            const countdownEl = Swal.getHtmlContainer().querySelector('#countdown');
+
+                                            timerInterval = setInterval(() => {
+                                                timeLeft--;
+                                                if (countdownEl) {
+                                                    countdownEl.textContent = timeLeft;
+                                                }
+                                            }, 1000);
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval);
+                                        }
                                     });
 
+                                    setTimeout(function () {
+                                        window.location.href = 'add_project?pipeline_id=' + $scope.currentPipeline.id;
+                                    }, 5000);
                                     
 
-                                    $timeout(()=>{
-                                        window.location.href = 'add_project?pipeline_id='+$scope.currentPipeline.id
-                                    },1000);
                                     
+                                    // $location.path('/add_project?pipeline_id'+$scope.currentPipeline.id);
+
+                                    
+
+                                    // $timeout(()=>{
+                                    //     window.location.href = 'add_project?pipeline_id='+$scope.currentPipeline.id
+                                    // },1000);
+
                                 } else {
                                     Swal.fire({
                                         icon: "error",

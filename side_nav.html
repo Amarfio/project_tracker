@@ -95,28 +95,30 @@
       </li> -->
             <!-- class="
         ng-show="user_info.role == 'assigner' || user_info.role == 'admin' || user_info.is_dept_head == '1' -->
-            <li class="nav-item  ">
-                <a class=" nav-link active " href="dashboard_p"> <i class="ni ni-chart-bar-32 text-primary"></i> <span class="text-primary">Projects</span>
+            <li class="nav-item">
+                <a class="nav-link " href="pipelines">
+                    <i class="ni ni-books text-primary"></i><span class="text-primary">Pipelines</span>
                 </a>
             </li>
-            <li class="nav-item" ng-show="user_info.role == 'admin' || user_info.role =='assigner' || user_info.is_dept_head == 1">
-                <a class=" nav-link active " href="project_updates"> <i class="ni ni-tv-2 text-primary"></i> <span class="text-primary">Project Updates</span>
+            <li class="nav-item  ">
+                <a class=" nav-link active " href="dashboard_p"> <i class="ni ni-chart-bar-32 text-primary"></i> <span class="text-primary">Projects</span>
                 </a>
             </li>
             <li class="nav-item  class=">
                 <a class=" nav-link  " href="dashboard_t"> <i class="ni ni-folder-17 text-primary"></i> <span class="text-primary">Tasks</span>
                 </a>
             </li>
-            <li class="nav-item" ng-show="user_info.role == 'assigner'|| user_info.is_dept_head == '1' || user_info.role == 'developer' ">
+            <li class="nav-item" ng-show="user_info.role == 'admin' || user_info.role =='assigner' || user_info.is_dept_head == 1">
+                <a class=" nav-link active " href="project_updates"> <i class="ni ni-tv-2 text-primary"></i> <span class="text-primary">Project Updates</span>
+                </a>
+            </li>
+            
+            <!-- <li class="nav-item" ng-show="user_info.role == 'assigner'|| user_info.is_dept_head == '1' || user_info.role == 'developer' ">
                 <a class="nav-link " href="add_project">
                     <i class="ni ni-books text-primary"></i><span class="text-primary">Create Project</span>
                 </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link " href="pipelines">
-                    <i class="ni ni-books text-primary"></i><span class="text-primary">Pipelines</span>
-                </a>
-            </li>
+            </li> -->
+            
             <li class="nav-item">
                 <a class="nav-link" href="statisticsnew">
                     <i class="ni ni-chart-bar-32 text-primary"></i>

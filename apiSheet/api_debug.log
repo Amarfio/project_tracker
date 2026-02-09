@@ -269546,3 +269546,30 @@ ND ?
 [2025-08-27 09:05:44] Trends fetched: months=5
 [2025-08-27 09:05:44] Department performance data fetched: depts=7, underperforming=7, trend_months=5
 [2025-08-27 09:05:44] Response sent: success=true, data_count=3
+[2026-02-03 10:07:27] Request received: type=individual_tasks, start_date=2026-01-01, end_date=2026-01-29
+[2026-02-03 10:07:27] Executing individual_tasks query: 
+            SELECT 
+                u.id,
+                CONCAT(u.f_name, ' ', u.l_name) AS user,
+                cd_dept.`desc` AS department,
+                cd_role.`desc` AS role,
+                u.email,
+                COUNT(t.task_id) AS task_count,
+                SUM(CASE WHEN t.status = 61 THEN 1 ELSE 0 END) AS completed_task_count
+            FROM 
+                users u
+            LEFT JOIN 
+                code_desc cd_dept ON u.dept = cd_dept.id AND cd_dept.init = 'dpt'
+            LEFT JOIN 
+                code_desc cd_role ON u.role = cd_role.id AND cd_role.init = 'rol'
+            INNER JOIN 
+                tasks t ON t.assigned_to = u.id 
+            INNER JOIN 
+                projects p ON t.project_id = p.project_id 
+                AND p.approved_date BETWEEN ? AND ?
+            WHERE 
+                u.is_active = 1
+            GROUP BY 
+                u.id, u.f_name, u.l_name, cd_dept.`desc`, cd_role.`desc`, u.email with params: [2026-01-01, 2026-01-29 23:59:59]
+[2026-02-03 10:07:27] Individual tasks data fetched: 0 rows
+[2026-02-03 10:07:27] Response sent: success=true, data_count=0

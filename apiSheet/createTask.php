@@ -26,6 +26,17 @@ function getUsernameById($user_id)
     return $developer_email;
 }
 
+function getClientForProject($project_id){
+    global $conn;
+    $query ="SELECT client from projects where project_id = '$project_id'";
+    // echo($query); die();
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    $client = $row['client'];
+    // echo($client); die();
+    return $client;
+}
+
 
 
 
@@ -41,7 +52,7 @@ if (
     $task_name = mysqli_real_escape_string($conn, $data->task_name);
     $assigned_by = mysqli_real_escape_string($conn, $data->assigned_by);
     $assigned_to = mysqli_real_escape_string($conn, $data->assigned_to);
-    $client_id = mysqli_real_escape_string($conn, $data->client_id);
+    $client_id = getClientForProject($project_id);
     $t_start_date = mysqli_real_escape_string($conn, $data->t_start_date);
     $t_end_date = mysqli_real_escape_string($conn, $data->t_end_date);
     $p_start_date = mysqli_real_escape_string($conn, $data->p_start_date);

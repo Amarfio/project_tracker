@@ -49,6 +49,25 @@ require_once 'functions/usableFunctions.php';
     
   
     }
+
+    //get the pipeline number
+    function get_pipeline_id($pipe_id, $conn){
+        $query = "SELECT pipe.pipeline_id from pipeline pipe LEFT JOIN projects pro ON pro.pipleine_id = pipe.id where pro.pipeline_id = '$pipe_id'";
+        echo($query); die();
+        $result = mysqli_query($conn, $query);
+       $row = mysqli_fetch_array($result);
+       return $row['pipeline_id'];
+    };
+
+    //get the pipe_number
+
+    function get_pipe_number($project_id, $conn){
+        $query = "SELECT pipeline_id from projects pro where pro.project_id = '$project_id'";
+        echo($query); die();
+        $result = mysqli_query($conn, $query);
+       $row = mysqli_fetch_array($result);
+       return $row['pipeline_id'];
+    }
     
          
     
@@ -59,7 +78,7 @@ require_once 'functions/usableFunctions.php';
     
         // $query = "SELECT t.task_id, t.description, t.project_id, t.start_date, t.end_date, cl.client_id client_id, cl.name client, CONCAT(u_to.f_name, ' ', u_to.l_name) assigned_to, u_to.id assigned_to_id, CONCAT(u_by.f_name, ' ', u_by.l_name) assigned_by, CONCAT(u_ap.f_name, ' ', u_ap.l_name) approved_by, t.completion, cod_pri.id priority_id, cod_pri.desc priority, cod_sta.id status_id, cod_sta.desc status FROM tasks t LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN users u_by ON u_by.id = t.assigned_by LEFT JOIN users u_ap ON u_ap.id = t.approved_by LEFT JOIN code_desc cod_pri ON cod_pri.id = t.priority LEFT JOIN code_desc cod_sta ON cod_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id WHERE t.project_id = '$project_id' ORDER BY t.task_id DESC";
         
-        $query = "select * from vw_tasks_under_project_by_id where project_id = '$project_id' ORDER BY task_id DESC";
+        $query = "select * from vw_tasks_under_project_by_id where project_id = '$project_id' AND archived = 0 ORDER BY task_id DESC";
 
         $result = mysqli_query($conn, $query);
     
@@ -86,6 +105,8 @@ require_once 'functions/usableFunctions.php';
 
 if (isset($_GET['project_id'])) {
     $project_id = mysqli_escape_string($conn, $_GET['project_id']);
+    // $pipelin_id = get_pipe_number($conn, $project_id);
+    // echo($pipelin_id); die();
 
     // $query = "SELECT p.*, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no WHERE project_id = '$project_id '";
 
@@ -115,9 +136,9 @@ if (isset($_GET['project_id'])) {
                 // 'priority' => $row['priority_id'],
                 "version_no"   => $row['version_no'],
                 "version_name"   => $row['version_name'],
-                "name" => $row['name'],
+                // "name" => $row['name'],
                 "description" => $row['description'],
-                "client_id" => $row['client'],
+                // "client_id" => $row['client'],
                 "client_name"=> $row['client_name'],
                 "hash_tag"=> $row['hash_tag'],
                 "attach" => $row['attach'],
@@ -134,7 +155,7 @@ if (isset($_GET['project_id'])) {
                 "i_pern" => $row['i_pern'],
                 "department_id" => $row['dept_id'],
                 "department" => get_department_name($row['dept_id'], $conn), 
-                "comment" => $row['comment'],
+                // "comment" => $row['comment'],
                 "comment_by_id" => $row['comment_by_id'], 
                 "comment_by_name" => $row['comment_by_name'], 
                 "posted_by_name" => $row['posted_by_name'],

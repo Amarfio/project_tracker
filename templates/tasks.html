@@ -413,6 +413,13 @@
                     >
                     <span ng-if="project.back_dated == 0 "> {{"NO"}} </span>
                   </div>
+                  <div class="col-md-4">
+                    <span class="text-primary">Pipeline ID:</span>
+                    <span ng-if="project.pipeline_id == 0"
+                      >&nbsp;&nbsp;{{ "YES" }}</span
+                    >
+                    <span ng-if="project.pipeline_id != 0 "> {{project.pipelineId}} </span>
+                  </div>
 
                   <div class="col-md-8"></div>
                   <div class="col-md-3"></div>

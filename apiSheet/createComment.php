@@ -154,8 +154,8 @@ function send_email_to_dept_head($department_id, $comment, $task_id, $project_na
     $mail->isSMTP();
     $mail->Host = "server.unionsg.com";
     $mail->SMTPAuth=true;
-    $mail->Username="hr@unionsg.com";
-    $mail->Password="(qLwOdQ3F3cm";
+    $mail->Username="support24x7@unionsg.com";
+    $mail->Password="xz1i8Hmnoj!D";
     $mail->Port = 587;
     $mail->SMTPSecure = "tls";
 
@@ -185,6 +185,7 @@ function getOwnerOfTask($task_id, $conn){
 }
 
 if(isset($data) && isset($data->comment) && isset($data->task_id)  && isset($data->posted_by) ){
+    // echo("test"); die();
     // echo json_encode($data); 
     // echo("mandem");die();
     // echo $data; die();
@@ -203,18 +204,19 @@ if(isset($data) && isset($data->comment) && isset($data->task_id)  && isset($dat
     // json_encode($department_id); die();
 
     // check if the one send the comment is not the department and send the head of that department
-    if($is_dept_head == 0) {
-        // send_email_to_dept_head($department_id, $comment, $task_id, $conn);
-         send_email_to_dept_head($department_id, $comment, $task_id, $projectName, $taskStatus, $taskName, $conn);
+    // if($is_dept_head == 0) {
+    //     // send_email_to_dept_head($department_id, $comment, $task_id, $conn);
+    //      send_email_to_dept_head($department_id, $comment, $task_id, $projectName, $taskStatus, $taskName, $conn);
         
-    }
+    // }
 
-    if($posted_by != $taskOwnerId){
-        send_email_to_taskOwner($taskOwnerId, $comment, $task_id, $taskName, $projectName, $status, $conn);
-    }
+    // if($posted_by != $taskOwnerId){
+    //     send_email_to_taskOwner($taskOwnerId, $comment, $task_id, $taskName, $projectName, $status, $conn);
+    // }
     
     // $query = "INSERT INTO `clients` (`client_id`, `name`) VALUES (NULL, '$client')";
     $query = "INSERT INTO `comments` (`comment_id`, `comment`, `attach`, `task_id`, `posted_by`) VALUES (NULL, '$comment', '$attach', '$task_id', '$posted_by')";
+    // echo($query); die();
     $result = mysqli_query($conn, $query);
 
     //get the department head's email using the department id 

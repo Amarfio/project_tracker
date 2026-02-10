@@ -37,6 +37,43 @@ require_once 'functions/usableFunctions.php';
     
   
     }
+
+    //method to start a sequence based on the project's id number
+    function task_id_sequence_by_project_id($project_id, $conn){
+        $query = "
+        SELECT task_id 
+        FROM vw_tasks_under_project_by_id 
+        WHERE project_id = '$project_id' 
+          AND archived = 0
+        ORDER BY task_id ASC
+    ";
+
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        return false;
+    }
+
+    $x = 1; // ✅ initialize ONCE, before loop
+
+    while ($row = mysqli_fetch_assoc($result)) {
+
+        $task_id = $row['task_id'];
+
+        $updateQuery = "
+            UPDATE tasks 
+            SET p_task_id = '$x' 
+            WHERE task_id = '$task_id'
+        ";
+
+        mysqli_query($conn, $updateQuery);
+
+        $x++; // ✅ increment sequence
+    }
+
+    return true;
+ 
+    }
     
 
 
@@ -52,8 +89,8 @@ require_once 'functions/usableFunctions.php';
 
     //get the pipeline number
     function get_pipeline_id($pipe_id, $conn){
-        $query = "SELECT pipe.pipeline_id from pipeline pipe LEFT JOIN projects pro ON pro.pipleine_id = pipe.id where pro.pipeline_id = '$pipe_id'";
-        echo($query); die();
+        $query = "SELECT pipe.pipeline_id from pipelines pipe LEFT JOIN projects pro ON pro.pipeline_id=pipe.id where pro.pipeline_id='$pipe_id'";
+        // echo($query); die();
         $result = mysqli_query($conn, $query);
        $row = mysqli_fetch_array($result);
        return $row['pipeline_id'];
@@ -63,7 +100,7 @@ require_once 'functions/usableFunctions.php';
 
     function get_pipe_number($project_id, $conn){
         $query = "SELECT pipeline_id from projects pro where pro.project_id = '$project_id'";
-        echo($query); die();
+        // echo($query); die();
         $result = mysqli_query($conn, $query);
        $row = mysqli_fetch_array($result);
        return $row['pipeline_id'];
@@ -78,7 +115,7 @@ require_once 'functions/usableFunctions.php';
     
         // $query = "SELECT t.task_id, t.description, t.project_id, t.start_date, t.end_date, cl.client_id client_id, cl.name client, CONCAT(u_to.f_name, ' ', u_to.l_name) assigned_to, u_to.id assigned_to_id, CONCAT(u_by.f_name, ' ', u_by.l_name) assigned_by, CONCAT(u_ap.f_name, ' ', u_ap.l_name) approved_by, t.completion, cod_pri.id priority_id, cod_pri.desc priority, cod_sta.id status_id, cod_sta.desc status FROM tasks t LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN users u_by ON u_by.id = t.assigned_by LEFT JOIN users u_ap ON u_ap.id = t.approved_by LEFT JOIN code_desc cod_pri ON cod_pri.id = t.priority LEFT JOIN code_desc cod_sta ON cod_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id WHERE t.project_id = '$project_id' ORDER BY t.task_id DESC";
         
-        $query = "select * from vw_tasks_under_project_by_id where project_id = '$project_id' AND archived = 0 ORDER BY task_id DESC";
+        $query = "select * from vw_tasks_under_project_by_id where project_id = '$project_id' AND archived = 0 ORDER BY task_id ASC";
 
         $result = mysqli_query($conn, $query);
     
@@ -105,7 +142,9 @@ require_once 'functions/usableFunctions.php';
 
 if (isset($_GET['project_id'])) {
     $project_id = mysqli_escape_string($conn, $_GET['project_id']);
-    // $pipelin_id = get_pipe_number($conn, $project_id);
+    $pipelin_id = get_pipe_number( $project_id,$conn);
+    $pipeId = get_pipeline_id($pipelin_id, $conn);
+    task_id_sequence_by_project_id($project_id, $conn);
     // echo($pipelin_id); die();
 
     // $query = "SELECT p.*, co.id version_id, co.init version_init, co.init_desc version_code, co.desc version_name FROM projects p LEFT JOIN code_desc co ON co.id = p.version_no WHERE project_id = '$project_id '";
@@ -136,10 +175,12 @@ if (isset($_GET['project_id'])) {
                 // 'priority' => $row['priority_id'],
                 "version_no"   => $row['version_no'],
                 "version_name"   => $row['version_name'],
-                // "name" => $row['name'],
+                "name" => $row['NAME'],
                 "description" => $row['description'],
                 // "client_id" => $row['client'],
                 "client_name"=> $row['client_name'],
+                "pipeline_id"=> $pipeId,
+                "pipeline_num"=> $pipelin_id,
                 "hash_tag"=> $row['hash_tag'],
                 "attach" => $row['attach'],
                 "is_approved" => $row['is_approved'],

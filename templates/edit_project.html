@@ -85,7 +85,7 @@
                     <div class="card card-stats mb-4 mb-lg-0">
                         <div class="card-body">
 
-                            <form id="add_project_form" ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_owner_, project_description_, hash_tag, s_owner_, interested_person, client_)">
+                            <form id="add_project_form" ng-submit="UpdateProject(project_name_, version_no_, department_id_, start_date_, end_date_, project_owner_, project_description_, hash_tag, interested_person, client_)">
 
 
                                 <div class="col-sm-12">
@@ -186,19 +186,8 @@
                                                 {{user.f_name}} {{user.l_name}} </option>
                                         </select>
                                 </div>
+                                <br/>
 
-                                <div class="col-sm-12">
-                                    <label for="inputPassword" class="col-form-label text-primary">Secondary owner</label>
-                                    <select class="form-control" ng-model="s_owner_" id="sec_owner_id" ng-value="">
-                                            <option value="">{{project.sec_owner}}</option>
-                                            <option ng-value="user.user_id" ng-repeat="user in project_staff" 
-                                                ng-hide="user.user_id == '1'">
-                                                {{user.f_name}} {{user.l_name}} </option>
-                                        </select>
-                                </div>
-
-
-                                <br>
                                 <div class="col-sm-12 row">
 
                                     <!-- <label for="inputPassword" class="col-sm-6 col-form-label text-primary"></label> -->

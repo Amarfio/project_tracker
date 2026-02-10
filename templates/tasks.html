@@ -215,8 +215,8 @@
                         <a
                           class="dropdown-item text-uppercase"
                           ng-href="edit_project/{{project.project_id}}"
-                          ng-if="user_info.role == 'assigner' || user_info.role =='admin' || ( user_info.is_dept_head == '1' && user_info.department_id == project.department_id) || project.is_approved == 0"
-                        >
+                          >
+                          <!-- ng-if="user_info.role == 'assigner' || user_info.role =='admin' || ( user_info.is_dept_head == '1' && user_info.department_id == project.department_id) || project.is_approved == 0" -->
                           Edit Project
                         </a>
 
@@ -415,10 +415,11 @@
                   </div>
                   <div class="col-md-4">
                     <span class="text-primary">Pipeline ID:</span>
-                    <span ng-if="project.pipeline_id == 0"
+                    <span ng-if="project.pipeline_num == 0"
                       >&nbsp;&nbsp;{{ "YES" }}</span
                     >
-                    <span ng-if="project.pipeline_id != 0 "> {{project.pipelineId}} </span>
+                    <span ng-if="project.pipeline_num != 0 "> <a href="pipeline_details?id={{project.pipeline_num}}"
+                      >{{project.pipeline_id}}</a> </span>
                   </div>
 
                   <div class="col-md-8"></div>
@@ -608,9 +609,12 @@
             <legend></legend>
           </div>
         </div>
+
+        
       </div>
     </div>
   </div>
+  
 
   <div class="container-fluid mt--7">
     {{project.tasks.length}}
@@ -629,14 +633,50 @@
           ></span>
         </a>
       </div>
-      <!-- <div class="col-md-8">
-        <div class="input-group input-group-alternative">
-            <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fas fa-search"></i></span>
+
+      <div class="col-md-8">
+        <div class="row">
+            
+            <div class="col-xl-3">
+                <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: auto;">
             </div>
-            <input class="form-control" placeholder="Search" type="text" ng-model="tableSearchTasks" style="height: auto;">
-          </div>
-      </div> -->
+            <div class="col-xl-3">
+                <select id="taskStatus" class="form-control">
+      <option value="">-- Filter by Status --</option>
+      <option ng-repeat="stat in statuses" ng-model="status_id_" ng-value="stat.id">
+        {{stat.f_name}}</option>
+    </select>
+            </div>
+            <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner' ">
+                <select id="department_s" class="form-control">
+      <option value="0">--Filter by Department--</option>
+      <option ng-value="department.code_desc_id" ng-repeat="department in departments">{{department.code_desc}}
+      </option>
+    </select>
+            </div>
+
+            <div class="col-xl-2" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
+                <a data-toggle="modal" data-target="#modal-search">
+                    <button type="submit" class="btn btn-info" data-toggle="modal" data-toggle="#modal-search">
+                        Advanced Search
+                    </button>
+                </a>
+            </div>
+            <!-- <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
+    <select class="form-control " required ng-model="tableSearch_by_status_id">
+      <option value="">-- project Status--</option>
+      <option ng-value="status.status_id" ng-repeat="status in status_of_project">{{ status.status}}</option>
+    </select>
+  </div> -->
+            <!-- <div class="col-xl-2">
+      <button class="btn btn-info text-uppercase" ng-click="apply_filter(filter_department, filter_status)">apply</button>
+    </div> -->
+            <!-- <div class="col-xl-2" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
+    <button class="btn btn-info text-uppercase" ng-click="clear_filter()">clear</button>
+  </div> -->
+        </div>
+    </div>
+      
     </div>
 
     <div class="col">
@@ -649,17 +689,19 @@
           >
             <thead class="thead-light">
               <tr>
-                <th scope="col">Project ID</th>
+                <th scope="col" style="display:none">Project ID</th>
                 <th scope="col">Task ID</th>
                 <th scope="col">Task</th>
                 <th scope="col">Developer</th>
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Status</th>
                 <th scope="col">Department</th>
                 <th scope="col">Number of clashing tasks</th>
                 <!--th scope="col">Priority</th-->
                 <!--th scope="col">Clients</th-->
-                <th scope="col">Status</th>
-                <th scope="col">Start</th>
-                <th scope="col">End</th>
+                
+                
                 <th scope="col">( % )</th>
                 <th scope="col">Last Update Date</th>
                 <th scope="col">Last Update</th>
@@ -668,13 +710,13 @@
 
             <tbody>
               <tr ng-repeat="task in tasks | filter: tableSearchTasks">
-                <td>PROJ-0000{{ project.project_id }}</td>
+                <td style="display:none">PROJ-0000{{ project.project_id }}</td>
                 <th scope="row">
                   <div class="media align-items-center">
                     <!-- <a href="task_detail/{{task.task_id}}" >REF-0000{{task.task_id}}</a> -->
                     <!-- <a href="task_detail/{{task[0].task_id_base64Encode}}">REF0000{{task.task_id}}</a> -->
                     <a href="task_detail/{{task.task_id}}"
-                      >REF0000{{task.task_id}}</a
+                      >REF0000{{task.p_task_id}}</a
                     >
                     <!-- REF-0000{{task.task_id}}  -->
                   </div>
@@ -691,6 +733,38 @@
                   </div>
                 </td>
                 <td>{{task.assigned_to}}</td>
+                <td>{{task.start_date | date: mediumDate}}</td>
+                <td>{{task.end_date | date: mediumDate}}</td>
+
+                <td>
+                  <!-- <span class="badge badge-default" ng-if="task.status == 'unapproved'">{{ task.status }}</span> -->
+                  <span
+                    class="badge badge-warning"
+                    ng-if="task.status == 'suspended'"
+                    >{{ task.status }}</span
+                  >
+                  <span
+                    class="badge badge-warning"
+                    ng-if="task.status == 'cancelled'"
+                    >{{ task.status }}</span
+                  >
+                  <!-- <span class="badge badge-success" ng-if="task.status == 'approved'">{{ task.status }}</span> -->
+                  <span
+                    class="badge badge-default"
+                    ng-if="task.status == 'not started'"
+                    >{{ task.status }}</span
+                  >
+                  <span
+                    class="badge badge-success"
+                    ng-if="task.status == 'in progress'"
+                    >{{ task.status }}</span
+                  >
+                  <span
+                    class="badge badge-primary"
+                    ng-if="task.status == 'completed'"
+                    >{{ task.status }}</span
+                  >
+                </td>
                 <td>
                   <span ng-if="task.dpt_name == null"> {{"N/A"}} </span>
                   <span ng-if="task.dpt_name !== null">{{task.dpt_name}}</span>
@@ -722,39 +796,7 @@
                     <i class="bg-warning"></i> {{task.priority}}
                   </span>
                 </td-->
-                <!--td>{{task.client}}</td-->
-
-                <td>
-                  <!-- <span class="badge badge-default" ng-if="task.status == 'unapproved'">{{ task.status }}</span> -->
-                  <span
-                    class="badge badge-warning"
-                    ng-if="task.status == 'suspended'"
-                    >{{ task.status }}</span
-                  >
-                  <span
-                    class="badge badge-warning"
-                    ng-if="task.status == 'cancelled'"
-                    >{{ task.status }}</span
-                  >
-                  <!-- <span class="badge badge-success" ng-if="task.status == 'approved'">{{ task.status }}</span> -->
-                  <span
-                    class="badge badge-default"
-                    ng-if="task.status == 'not started'"
-                    >{{ task.status }}</span
-                  >
-                  <span
-                    class="badge badge-success"
-                    ng-if="task.status == 'in progress'"
-                    >{{ task.status }}</span
-                  >
-                  <span
-                    class="badge badge-primary"
-                    ng-if="task.status == 'completed'"
-                    >{{ task.status }}</span
-                  >
-                </td>
-                <td>{{task.start_date | date: mediumDate}}</td>
-                <td>{{task.end_date | date: mediumDate}}</td>
+                <!--td>{{task.client}}</td-->                
 
                 <td class="text-center">
                   <div class="d-flex align-items-center">
@@ -1204,8 +1246,8 @@
                         >
                           <option value="">Select Department</option>
                           <option
+                          ng-repeat="department in departments"
                             ng-value="department.code_desc_id"
-                            ng-repeat="department in departments"
                           >
                             {{department.code_desc}}
                           </option>

@@ -1008,6 +1008,21 @@ sheetApp.controller(
     };
     $scope.get_departments("dpt");
 
+    $scope.get_statuses = function(stat){
+      $http({
+        method: "GET",
+        url: myConfig.url + "/getCodeDescription.php?init=" + stat,
+      }).then(
+        function successCallback(response) {
+          $scope.statuses = response.data[0].code_desc;
+          console.log($scope.statuses);
+        },
+        function errorCallback(response) {
+          // alert("Error. Try Again!");
+        }
+      );
+    }
+
     $scope.get_all_users = function (department_id) {
       // console.log('Department_id = ' + department_id)
       $http({

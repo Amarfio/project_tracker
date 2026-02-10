@@ -14,6 +14,7 @@ require_once 'functions/checkOverdueTasks.php';
 require_once 'functions/get_IP_Location.php';
 require_once 'functions/activity_logs.php';
 require_once 'functions/deleteRejectedProjects.php';
+require_once 'functions/resequence.php';
 // require_once 'projectReport.php';
 
 $data = json_decode(file_get_contents("php://input"));
@@ -62,6 +63,8 @@ if (isset($data)) {
 
             //check and update project completed
             checkProjsCompleted($conn);
+
+            resequence_all_projects($conn);
             
             
             //check rejected projects and delete them

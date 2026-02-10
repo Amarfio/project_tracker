@@ -285,6 +285,7 @@ sheetApp.controller(
       if (comment_message == "" || comment_message == undefined) {
       } else {
         //  console.log(data);
+        //  return false;
         //$http POST function
 
         $scope.upload();

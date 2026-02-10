@@ -189,15 +189,14 @@ sheetApp.controller(
         dept_id: department_id_,
         user_id: $scope.user_id,
         hash_tag: hash_tag,
-        secondary_owner: s_owner_,
         start_date: new Date(start_date),
         end_date: new Date(end_date),
         interested_person: interested_person,
         client: client_,
       };
 
-      // console.log(data);
-      // return false;
+      console.log(data);
+      return false;
 
       Swal.queue([
         {

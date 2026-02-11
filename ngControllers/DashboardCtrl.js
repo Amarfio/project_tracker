@@ -280,7 +280,7 @@ sheetApp.controller(
 
     //             // alert("Error. Try Again!");
 
-    //         });
+    //    p     });
 
     // }
 
@@ -1043,5 +1043,11 @@ sheetApp.controller(
 
       $scope.dev_changed = 0;
     });
+
+    $("#statusSel").change(function(){
+      console.log("work is done");
+    });
+
+
   }
 );

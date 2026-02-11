@@ -1022,6 +1022,7 @@ sheetApp.controller(
         }
       );
     }
+    $scope.get_statuses("sta");
 
     $scope.get_all_users = function (department_id) {
       // console.log('Department_id = ' + department_id)
@@ -1287,5 +1288,24 @@ sheetApp.controller(
       );
       console.log("new memebers", $scope.departmentMembers);
     });
+    
+
+    $("#statusSel").change(function () {
+      var value = $(this).val();
+      console.log("new value", value.split(":")[1]);
+      var statId = value.split(":")[1];
+      var data = $scope.project.tasks;
+      $scope.tasks = $scope.filterChange(data, statId);
+      
+    });
+
+    $scope.filterChange = function(data, valueOfFilter){
+        var filtered = data.filter((task)=>{
+          return parseInt(task.status_id, 10)== parseInt(valueOfFilter, 10)})
+        return filtered;
+    }
+
+    
+    
   }
 );

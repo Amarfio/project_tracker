@@ -619,7 +619,7 @@
   <div class="container-fluid mt--7">
     {{project.tasks.length}}
     <!-- Table -->
-    <div class="row" ng-if="project.tasks.length > 0">
+    <div class="row" >
       <div class="col-md-4">
         <a
           class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
@@ -636,44 +636,24 @@
 
       <div class="col-md-8">
         <div class="row">
+      
+            <div class="col-xl-3 ml-auto text-right">
+              <select
+                          class="form-control"
+                          required
+                          ng-model="status_id_"
+                          id="statusSel"
+                        >
+                          <option value="">Select Status</option>
+                          <option
+                          ng-repeat="stat in statuses"
+                            ng-value="stat.code_desc_id"
+                          >
+                            {{stat.code_desc}}
+                          </option>
+                        </select>
+            </div>
             
-            <div class="col-xl-3">
-                <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: auto;">
-            </div>
-            <div class="col-xl-3">
-                <select id="taskStatus" class="form-control">
-      <option value="">-- Filter by Status --</option>
-      <option ng-repeat="stat in statuses" ng-model="status_id_" ng-value="stat.id">
-        {{stat.f_name}}</option>
-    </select>
-            </div>
-            <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner' ">
-                <select id="department_s" class="form-control">
-      <option value="0">--Filter by Department--</option>
-      <option ng-value="department.code_desc_id" ng-repeat="department in departments">{{department.code_desc}}
-      </option>
-    </select>
-            </div>
-
-            <div class="col-xl-2" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
-                <a data-toggle="modal" data-target="#modal-search">
-                    <button type="submit" class="btn btn-info" data-toggle="modal" data-toggle="#modal-search">
-                        Advanced Search
-                    </button>
-                </a>
-            </div>
-            <!-- <div class="col-xl-3" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
-    <select class="form-control " required ng-model="tableSearch_by_status_id">
-      <option value="">-- project Status--</option>
-      <option ng-value="status.status_id" ng-repeat="status in status_of_project">{{ status.status}}</option>
-    </select>
-  </div> -->
-            <!-- <div class="col-xl-2">
-      <button class="btn btn-info text-uppercase" ng-click="apply_filter(filter_department, filter_status)">apply</button>
-    </div> -->
-            <!-- <div class="col-xl-2" ng-show="user_info.role == 'admin' || user_info.role == 'assigner'">
-    <button class="btn btn-info text-uppercase" ng-click="clear_filter()">clear</button>
-  </div> -->
         </div>
     </div>
       

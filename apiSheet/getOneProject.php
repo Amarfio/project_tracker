@@ -135,6 +135,7 @@ require_once 'functions/usableFunctions.php';
             $taskConflictsNo = getNoOfConflictingTasks($task_arr[$i]['task_id'], $conn);
             // echo($taskConflictsNo); 
             $task_arr[$i]['noOfConflictsTask'] = $taskConflictsNo;
+            $task_arr[$i]['dept'] = get_department_name($task_arr[$i]['department'], $conn);
         }
         return $task_arr;
     }

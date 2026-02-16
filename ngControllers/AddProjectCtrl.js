@@ -454,20 +454,20 @@ sheetApp.controller(
       let startDate = new Date(start_date_);
       startDate.setHours(0, 0, 0, 0);
 
-      if (backDated == 0) {
-        if (start_date_ <= todaysDate) {
-          console.log(
-            "Start date must be 3 or more days later than today for approval!!"
-          );
-          Swal.fire({
-            type: "error",
-            title: "Invalid date",
-            text: "Start date must be 3 days later than today for approval!!",
-          });
+      // if (backDated == 0) {
+      //   if (start_date_ <= todaysDate) {
+      //     console.log(
+      //       "Start date must be 3 or more days later than today for approval!!"
+      //     );
+      //     Swal.fire({
+      //       type: "error",
+      //       title: "Invalid date",
+      //       text: "Start date must be 3 days later than today for approval!!",
+      //     });
 
-          return false;
-        }
-      }
+      //     return false;
+      //   }
+      // }
 
       // return false;
       if (end_date_ < start_date_) {

@@ -1,0 +1,279 @@
+
+<?php
+
+header('Access-Control-Allow-Origin: *');
+header("Content-Type: application/json; charset=UTF-8");
+header('Access-Control-Allow-Methods: GET');
+header("Access-Control-Allow-Headers: X-Requested-With");
+header("Access-Control-Max-Age: 3600");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+require_once 'connect.php';
+
+
+function get_total_project_count( $conn, $department_id ){
+
+
+        
+    // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
+    // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
+    $query = "SELECT COUNT(p.project_id) total_project_count FROM projects p LEFT JOIN tasks p_task ON p_task.project_id = p.project_id  WHERE  p_task.department = '$department_id' AND p.is_archive= 0";
+    $result = mysqli_query($conn, $query); 
+    // $num = mysqli_num_rows($result);
+    $count_total_status = array();
+
+        $row = mysqli_fetch_assoc($result);
+            // $count_total_status[] = $row;
+              
+        return array(
+            'description' => 'total',
+            'total_projects' => $row['total_project_count']
+        );
+
+
+}
+
+
+function get_status_count($status_id, $department_id, $conn){
+        
+    // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
+    // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
+    
+    // $query = "";
+    $query = "SELECT COUNT(p.status) total_project_count FROM projects p LEFT JOIN tasks p_task ON p_task.project_id = p.project_id WHERE  p.status  = '$status_id' AND p_task.department = '$department_id' AND p.is_archive = 0";
+
+    if($status_id == 116 ){
+        // $query = "SELECT COUNT(project_id) total_overdue FROM projects WHERE NOW()>end_date AND dept_id = '$department_id'";
+        // $query = "SELECT COUNT(p.status) total_project_count FROM projects p LEFT JOIN tasks p_task ON p_task.project_id = p.project_id WHERE (CURRENT_DATE > end_date AND p.is_approved=1) AND (SELECT AVG(t.completion)<100 from tasks t WHERE (t.status = 59 OR t.status = 61) AND t.project_id = p.project_id) AND p_task.department = '$department_id' AND p.is_archive = 0";
+    }
+    elseif($status_id == 85 ){
+        // $query = "SELECT COUNT(project_id) total_overdue FROM projects WHERE NOW()>end_date AND dept_id = '$department_id'";
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p LEFT JOIN tasks p_task ON p_task.project_id = p.project_id WHERE ( p.is_approved=1) AND p_task.department = '$department_id' AND p.is_archive = 0";
+    }
+    elseif($status_id == 131 ){
+        // $query = "SELECT COUNT(project_id) total_overdue FROM projects WHERE NOW()>end_date AND dept_id = '$department_id'";
+        $query = "SELECT COUNT(p.status) total_project_count FROM projects p LEFT JOIN tasks p_task ON p_task.project_id = p.project_id WHERE p_task.department = '$department_id' AND p.is_archive = 1";
+    }
+    // elseif($status_id == 88){
+    //     $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE (p.is_approved=1) AND (SELECT AVG(t.completion)=100 from tasks t WHERE t.project_id = p.project_id) AND p_task.department = '$department_id'";
+      
+    // }
+    // else{
+    //     $query = "SELECT COUNT(p.status) total_project_count FROM projects p WHERE  p.status  = '$status_id' AND p.dept_id = '$department_id'";
+    // }
+    $result = mysqli_query($conn, $query);
+    // $num = mysqli_num_rows($result);
+    $count_total_status = array();
+
+        $row = mysqli_fetch_assoc($result);
+            // $count_total_status[] = $row;
+        
+        return $row['total_project_count'];
+
+}
+
+
+
+
+if (isset($_GET['init'])  ) {
+    $init = mysqli_escape_string($conn, $_GET['init']);
+    $department_id = mysqli_escape_string($conn, $_GET['department_id']);
+
+    $query = "SELECT * FROM code_desc co_psta WHERE co_psta.init = '$init' ";
+
+
+    $result = mysqli_query($conn, $query); 
+
+    $num = mysqli_num_rows($result);
+
+    $codes = array();
+
+
+    if ($num > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            // extract($row);
+            if (!isset($codes[$row['init']])) {
+                // If this is the first row for this contact, create an entry in the results
+                $codes[$row['init']] = array(
+                    "init" => $row['init'],
+                    "code_desc" => array(),
+                    "total_projects" => get_total_project_count( $conn, $department_id )
+                );
+            }
+            // Add this phone number to the `PhoneNumbers` array
+            $codes[$row['init']]['code_desc'][] = array(
+                'status_id' => $row['id'],
+                'status_init' => $row['init'],
+                "status_init_desc" => $row['init_desc'],
+                "status" => $row['desc'],
+                "code_color" => $row['color'],
+                "status_count" =>get_status_count($row['id'],$department_id, $conn)
+            );
+        }
+        $codes = array_values($codes);
+
+        echo json_encode($codes);
+    } else {
+        echo 'empty';
+    }
+}
+
+
+
+<?php
+
+header('Access-Control-Allow-Origin: *');
+header("Content-Type: application/json; charset=UTF-8");
+header('Access-Control-Allow-Methods: GET');
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+
+require_once 'connect.php';
+
+
+/*
+|--------------------------------------------------------------------------
+| GET TOTAL PROJECT COUNT (NO DUPLICATES)
+|--------------------------------------------------------------------------
+*/
+function get_total_project_count($conn, $department_id)
+{
+    $query = "
+        SELECT COUNT(*) AS total_project_count
+        FROM projects p
+        WHERE p.is_archive = 0
+        AND EXISTS (
+            SELECT 1
+            FROM tasks t
+            WHERE t.project_id = p.project_id
+            AND t.department = ?
+        )
+    ";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $department_id);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    return array(
+        'description' => 'total',
+        'total_projects' => $row['total_project_count']
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| GET STATUS COUNT (NO DUPLICATES)
+|--------------------------------------------------------------------------
+*/
+function get_status_count($status_id, $department_id, $conn)
+{
+    // Default query
+    $query = "
+        SELECT COUNT(*) AS total_project_count
+        FROM projects p
+        WHERE p.status = ?
+        AND p.is_archive = 0
+        AND EXISTS (
+            SELECT 1
+            FROM tasks t
+            WHERE t.project_id = p.project_id
+            AND t.department = ?
+        )
+    ";
+
+    // Special cases
+    if ($status_id == 85) {
+        $query = "
+            SELECT COUNT(*) AS total_project_count
+            FROM projects p
+            WHERE p.is_approved = 1
+            AND p.is_archive = 0
+            AND EXISTS (
+                SELECT 1
+                FROM tasks t
+                WHERE t.project_id = p.project_id
+                AND t.department = ?
+            )
+        ";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $department_id);
+    }
+    elseif ($status_id == 131) {
+        $query = "
+            SELECT COUNT(*) AS total_project_count
+            FROM projects p
+            WHERE p.is_archive = 1
+            AND EXISTS (
+                SELECT 1
+                FROM tasks t
+                WHERE t.project_id = p.project_id
+                AND t.department = ?
+            )
+        ";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $department_id);
+    }
+    else {
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ii", $status_id, $department_id);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    return $row['total_project_count'];
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| MAIN REQUEST
+|--------------------------------------------------------------------------
+*/
+if (isset($_GET['init'])) {
+
+    $init = $_GET['init'];
+    $department_id = (int) $_GET['department_id'];
+
+    $query = "SELECT * FROM code_desc WHERE init = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $init);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $codes = array();
+
+    if ($result->num_rows > 0) {
+
+        while ($row = $result->fetch_assoc()) {
+
+            if (!isset($codes[$row['init']])) {
+
+                $codes[$row['init']] = array(
+                    "init" => $row['init'],
+                    "code_desc" => array(),
+                    "total_projects" => get_total_project_count($conn, $department_id)
+                );
+            }
+
+            $codes[$row['init']]['code_desc'][] = array(
+                'status_id' => $row['id'],
+                'status_init' => $row['init'],
+                "status_init_desc" => $row['init_desc'],
+                "status" => $row['desc'],
+                "code_color" => $row['color'],
+                "status_count" => get_status_count($row['id'], $department_id, $conn)
+            );
+        }
+
+        echo json_encode(array_values($codes));
+    } else {
+        echo json_encode([]);
+    }
+}

@@ -45,7 +45,7 @@ if (
     isset($data) && isset($data->user_id) && isset($data->project_id) && isset($data->task_name) && isset($data->assigned_by) &&
     isset($data->assigned_to) && isset($data->t_start_date) && isset($data->t_end_date) && isset($data->p_start_date) && isset($data->p_end_date)
 ) {
-    // echo json_encode($data);die();
+    // echo json_encode($data);die(); 
 
     $user_id = mysqli_real_escape_string($conn, $data->user_id);
     $project_id = mysqli_real_escape_string($conn, $data->project_id);

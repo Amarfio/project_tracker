@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sheetApp">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" />
+    <style>
+        /* Your existing styles remain unchanged */
+        
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .navbar-vertical {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 260px;
+            background-color: #fff;
+            border-right: 1px solid #e9ecef;
+            transition: transform 0.3s ease;
+        }
+        
+        .header {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            padding: 0.5rem 1rem;
+            background-color: #11cdef;
+            border-radius: 0.25rem;
+        }
+        
+        .navbar-top {
+            background: linear-gradient(90deg, #5e72e4 0%, #825ee4 100%);
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-dark .navbar-nav .nav-link {
+            color: #fff;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .media-body {
+            margin-left: 0.5rem;
+        }
+        
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+        
+        .content-container {
+            padding: 15px;
+        }
+        
+        .metric-card {
+            position: relative;
+            background: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 1rem;
+            transition: transform 0.2s ease;
+            padding: 1rem;
+            color: #1f2a44;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .metric-card-total::after,
+        .metric-card-closed::after,
+        .metric-card-suspended::after,
+        .metric-card-active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            clip-path: polygon(40% 0, 100% 0, 100% 100%, 0% 100%);
+            z-index: 0;
+        }
+        
+        .metric-card-total::after {
+            background: linear-gradient(135deg, #d6dcfc 0%, #e2e4fc 100%);
+        }
+        
+        .metric-card-closed::after {
+            background: linear-gradient(135deg, #d1f0d9 0%, #e0f5e5 100%);
+        }
+        
+        .metric-card-suspended::after {
+            background: linear-gradient(135deg, #fff4cc 0%, #fff9e0 100%);
+        }
+        
+        .metric-card-active::after {
+            background: linear-gradient(135deg, #ccedf7 0%, #e0f5fb 100%);
+        }
+        
+        .metric-card-icon {
+            position: absolute;
+            top: 50%;
+            right: 0.5rem;
+            transform: translateY(-50%);
+            font-size: 2.5rem;
+            opacity: 1;
+            z-index: 1;
+        }
+        
+        .metric-card-total .metric-card-icon {
+            color: #b0b8f5;
+        }
+        
+        .metric-card-closed .metric-card-icon {
+            color: #a8e0b5;
+        }
+        
+        .metric-card-suspended .metric-card-icon {
+            color: #ffe8a3;
+        }
+        
+        .metric-card-active .metric-card-icon {
+            color: #a5e0f0;
+        }
+        
+        .metric-content {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+        
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .metric-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .metric-line {
+            width: 3px;
+            height: 18px;
+            border-radius: 2px;
+        }
+        
+        .metric-card-total .metric-line {
+            background-color: #d6dcfc;
+        }
+        
+        .metric-card-closed .metric-line {
+            background-color: #d1f0d9;
+        }
+        
+        .metric-card-suspended .metric-line {
+            background-color: #fff4cc;
+        }
+        
+        .metric-card-active .metric-line {
+            background-color: #ccedf7;
+        }
+        
+        .metric-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1f2a44;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2a44;
+            margin-top: 0.6rem;
+        }
+        
+        .pipeline-table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.75rem;
+            background-color: #fff;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pipeline-table th,
+        .pipeline-table td {
+            border-right: 1px solid #e9ecef;
+            border-bottom: 1px solid #e9ecef;
+            padding: 0.75rem;
+            text-align: left;
+            vertical-align: middle;
+        }
+        
+        .pipeline-table th {
+            font-weight: 600;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .pipeline-table th:last-child,
+        .pipeline-table td:last-child {
+            border-right: none;
+        }
+        
+        .pipeline-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .pipeline-table th:nth-child(1),
+        .pipeline-table td:nth-child(1) {
+            width: 12%;
+        }
+        
+        .pipeline-table th:nth-child(2),
+        .pipeline-table td:nth-child(2) {
+            width: 25%;
+        }
+        
+        .pipeline-table th:nth-child(3),
+        .pipeline-table td:nth-child(3) {
+            width: 15%;
+        }
+        
+        .pipeline-table th:nth-child(4),
+        .pipeline-table td:nth-child(4) {
+            width: 15%;
+        }
+        
+        .pipeline-table th:nth-child(5),
+        .pipeline-table td:nth-child(5) {
+            width: 15%;
+        }
+        
+        .pipeline-table th:nth-child(6),
+        .pipeline-table td:nth-child(6) {
+            width: 18%;
+        }
+        
+        .pipeline-link {
+            color: #5e72e4;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .pipeline-link:hover {
+            text-decoration: underline;
+        }
+        
+        .action-btn {
+            padding: 0.2rem;
+            border: none;
+            background: transparent;
+            color: #5e72e4;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .table-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        
+        .filter-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-right: 0.5rem;
+        }
+        
+        .filter-select {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            background-color: #f9fafb;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-select:focus {
+            border-color: #5e72e4;
+            box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.2);
+            background-color: #fff;
+        }
+        
+        .button-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .add-pipeline-btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .export-pdf-btn {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border-radius: 50%;
+            background-color: #5e72e4;
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .export-pdf-btn:hover {
+            background-color: #485fe0;
+        }
+        
+        .export-pdf-btn i {
+            font-size: 0.9rem;
+        }
+        
+        .modal-content {
+            border-radius: 0.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            background-color: #f9fafb;
+            border: none;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background: linear-gradient(90deg, #5e72e4 0%, #825ee4 100%);
+            color: #fff;
+            padding: 1.25rem 1.5rem;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+            border-bottom: none;
+        }
+        
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        
+        .modal-body {
+            padding: 1.5rem 2rem;
+            background-color: #fff;
+        }
+        
+        .modal-body .row {
+            margin: 0 -15px;
+        }
+        
+        .col-md-6 {
+            padding: 0 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-control,
+        .form-select {
+            font-size: 0.85rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            padding: 0.65rem 0.75rem;
+            transition: all 0.2s ease;
+            background-color: #f9fafb;
+            width: 100%;
+            box-sizing: border-box;
+            height: 38px;
+        }
+        
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #5e72e4;
+            box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.2);
+            background-color: #fff;
+        }
+        
+        .form-control:disabled,
+        .form-select:disabled {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            height: 120px;
+            font-size: 0.85rem;
+        }
+        
+        .modal-footer {
+            border-top: none;
+            padding: 1rem 1.5rem;
+            background-color: #fff;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+        
+        .btn-save,
+        .btn-edit,
+        .btn-close-pipeline,
+        .btn-suspend {
+            background-color: #5e72e4;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.65rem 1.25rem;
+            border-radius: 0.375rem;
+            border: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        
+        .btn-save:hover,
+        .btn-edit:hover,
+        .btn-close-pipeline:hover,
+        .btn-suspend:hover {
+            background-color: #485fe0;
+            transform: translateY(-1px);
+        }
+        
+        .btn-save:disabled,
+        .btn-edit:disabled,
+        .btn-close-pipeline:disabled,
+        .btn-suspend:disabled {
+            background-color: #a3bffa;
+            cursor: not-allowed;
+        }
+        
+        .btn-cancel {
+            background-color: #edf2f7;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.65rem 1.25rem;
+            border-radius: 0.375rem;
+            border: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        
+        .modal.fade .modal-dialog {
+            transition: transform 0.3s ease-out;
+            transform: translate(0, -50px);
+        }
+        
+        .modal.show .modal-dialog {
+            transform: translate(0, 0);
+        }
+        
+        .modal-xl {
+            max-width: 1000px;
+        }
+        
+        .participant-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            min-height: 100px;
+            align-items: flex-start;
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .participant-tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e2e8f0;
+            color: #2d3748;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.25rem;
+            margin: 0.2rem;
+        }
+        
+        .participant-tag-remove {
+            margin-left: 0.4rem;
+            cursor: pointer;
+            color: #718096;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+        
+        .participant-tag-remove:hover {
+            color: #e53e3e;
+        }
+        
+        .participant-select-container {
+            margin-bottom: 0.75rem;
+        }
+        
+        .form-select.participant-select {
+            width: 100%;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .chart-container.stats {
+            max-width: 350px;
+            height: 200px;
+        }
+        
+        .chart-container.analytics {
+            max-width: 600px;
+            height: 200px;
+        }
+        
+        #pipelineStatisticsChart,
+        #pipelineAnalyticsChart {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+        
+        .chart-card-header {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+        }
+        
+        .chart-card-header .header-text {
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+        }
+        
+        .chart-card-header .header-text-statistics::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, rgba(209, 240, 217, 0.3) 0%, rgba(224, 245, 229, 0.3) 100%);
+            z-index: -1;
+            border-radius: 2px;
+        }
+        
+        .chart-card-header .header-text-analytics::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, rgba(204, 237, 247, 0.3) 0%, rgba(224, 245, 251, 0.3) 100%);
+            z-index: -1;
+            border-radius: 2px;
+        }
+        
+        .chart-card-header h6 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .chart-card-header i {
+            position: relative;
+            z-index: 1;
+            color: #6b7280;
+        }
+        
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            width: 300px;
+        }
+        
+        .custom-alert {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(90deg, #5e72e4 0%, #825ee4 100%);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-in-out;
+            opacity: 1;
+        }
+        
+        .custom-alert .alert-icon {
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+        
+        .custom-alert .alert-message {
+            flex: 1;
+        }
+        
+        .custom-alert .alert-close {
+            margin-left: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #fff;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+        
+        .custom-alert .alert-close:hover {
+            opacity: 1;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 991.98px) {
+            .navbar-vertical {
+                transform: translateX(-260px);
+            }
+            .navbar-vertical.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .alert-container {
+                width: 90%;
+                right: 5%;
+            }
+        }
+        
+        @media (max-width: 767.98px) {
+            .metric-card {
+                padding: 0.75rem;
+            }
+            .metric-title {
+                font-size: 0.75rem;
+            }
+            .metric-value {
+                font-size: 1.2rem;
+            }
+            .metric-card-icon {
+                font-size: 2rem;
+            }
+            .chart-container.stats {
+                max-width: 80vw;
+                height: 180px;
+            }
+            .chart-container.analytics {
+                max-width: 80vw;
+                height: 180px;
+            }
+            .pipeline-table {
+                font-size: 0.65rem;
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            .pipeline-table th,
+            .pipeline-table td {
+                padding: 0.5rem;
+            }
+            .pipeline-table th:nth-child(1),
+            .pipeline-table td:nth-child(1) {
+                min-width: 80px;
+            }
+            .pipeline-table th:nth-child(2),
+            .pipeline-table td:nth-child(2) {
+                min-width: 120px;
+            }
+            .pipeline-table th:nth-child(3),
+            .pipeline-table td:nth-child(3) {
+                min-width: 80px;
+            }
+            .pipeline-table th:nth-child(4),
+            .pipeline-table td:nth-child(4) {
+                min-width: 100px;
+            }
+            .pipeline-table th:nth-child(5),
+            .pipeline-table td:nth-child(5) {
+                min-width: 100px;
+            }
+            .pipeline-table th:nth-child(6),
+            .pipeline-table td:nth-child(6) {
+                min-width: 100px;
+            }
+            .modal-xl {
+                max-width: 90vw;
+            }
+            .modal-body {
+                padding: 1rem;
+            }
+            .form-group label {
+                font-size: 0.75rem;
+            }
+            .form-control,
+            .form-select {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.6rem;
+                height: 34px;
+            }
+            textarea.form-control {
+                min-height: 100px;
+                height: 100px;
+            }
+            .btn-save,
+            .btn-edit,
+            .btn-close-pipeline,
+            .btn-suspend,
+            .btn-cancel {
+                font-size: 0.75rem;
+                padding: 0.5rem 1rem;
+            }
+            .filter-label {
+                font-size: 0.75rem;
+            }
+            .filter-select {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .add-pipeline-btn {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .export-pdf-btn {
+                width: 24px;
+                height: 24px;
+            }
+            .export-pdf-btn i {
+                font-size: 0.8rem;
+            }
+            .button-container {
+                gap: 0.3rem;
+            }
+            .alert-container {
+                width: 90%;
+                right: 5%;
+            }
+            .custom-alert {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.75rem;
+            }
+            .custom-alert .alert-icon {
+                font-size: 1rem;
+            }
+            .custom-alert .alert-close {
+                font-size: 0.9rem;
+            }
+            .chart-card-header h6 {
+                font-size: 0.85rem;
+            }
+            .participant-tags {
+                min-height: 80px;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .metric-card {
+                padding: 0.5rem;
+            }
+            .metric-title {
+                font-size: 0.7rem;
+            }
+            .metric-value {
+                font-size: 1rem;
+            }
+            .metric-card-icon {
+                font-size: 1.5rem;
+            }
+            .chart-container.stats {
+                max-width: 90vw;
+                height: 150px;
+            }
+            .chart-container.analytics {
+                max-width: 90vw;
+                height: 150px;
+            }
+            .pipeline-table {
+                font-size: 0.6rem;
+            }
+            .add-pipeline-btn {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .export-pdf-btn {
+                width: 24px;
+                height: 24px;
+            }
+            .export-pdf-btn i {
+                font-size: 0.8rem;
+            }
+            .filter-label {
+                font-size: 0.7rem;
+            }
+            .filter-select {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .button-container {
+                gap: 0.2rem;
+            }
+            .alert-container {
+                width: 90%;
+                right: 5%;
+            }
+            .custom-alert {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+            .custom-alert .alert-icon {
+                font-size: 0.9rem;
+            }
+            .custom-alert .alert-close {
+                font-size: 0.8rem;
+            }
+            .chart-card-header h6 {
+                font-size: 0.8rem;
+            }
+            .participant-tags {
+                min-height: 70px;
+            }
+            /* Ensure SweetAlert2 modal appears above Bootstrap modal */
+            .swal2-container {
+                z-index: 2000 !important;
+                /* Higher than Bootstrap modal (1050) and backdrop (1040) */
+            }
+        }
+    </style>
+</head>
+
+<body ng-controller="PipelineCtrl">
+    <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+        <ng-include src="'./side_nav.html'" ng-controller="SideNavCtrl"></ng-include>
+    </nav>
+    <div class="main-content">
+        <div class="alert-container" id="alertContainer"></div>
+        <div class="header bg-gradient-primary pb-2 pt-3 pt-md-4">
+            <div class="container-fluid">
+                <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+                    <div class="container-fluid d-flex align-items-center justify-content-end">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidenav-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <ul class="navbar-nav align-items-center">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="media align-items-center">
+                                        <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true == null">
+                                            <span ng-if="user_info.gender == 'Male'">
+                                                <img src="./assets/img/theme/m_profile_icon.jpg" class="rounded-circle" />
+                                            </span>
+                                        <span ng-if="user_info.gender == 'Female'">
+                                                <img src="./assets/img/theme/f_profile_icon.png" class="rounded-circle" />
+                                            </span>
+                                        </span>
+                                        <span class="avatar avatar-sm rounded-circle" ng-if="profile_pic_true != null">
+                                            <img alt="" ng-src="{{ profile_pic }}" />
+                                        </span>
+                                        <div class="media-body ml-2 d-none d-lg-block">
+                                            <span class="mb-0 text-sm font-weight-bold text-uppercase">{{user_info.username}}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                                    <div class="dropdown-header noti-title">
+                                        <h6 class="text-overflow m-0">Welcome {{user_info.username}}</h6>
+                                    </div>
+                                    <a href="profile" class="dropdown-item">
+                                        <i class="ni ni-single-02"></i>
+                                        <span>My profile</span>
+                                    </a>
+                                    <a class="dropdown-item">
+                                        <i class="ni ni-settings-gear-65"></i>
+                                        <span>Settings</span>
+                                    </a>
+                                    <a class="dropdown-item">
+                                        <i class="ni ni-calendar-grid-58"></i>
+                                        <span>Activity</span>
+                                    </a>
+                                    <a class="dropdown-item">
+                                        <i class="ni ni-support-16"></i>
+                                        <span>Support</span>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" ng-click="logout()">
+                                        <i class="ni ni-user-run"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="content-container">
+            <div class="row mb-4">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="metric-card metric-card-total">
+                        <div class="metric-content">
+                            <div class="metric-header">
+                                <div class="metric-title-wrapper">
+                                    <div class="metric-line"></div>
+                                    <span class="metric-title">Total Pipelines</span>
+                                </div>
+                            </div>
+                            <div class="metric-value">{{metrics.total}}</div>
+                        </div>
+                        <i class="bi bi-grid-fill metric-card-icon"></i>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="metric-card metric-card-active">
+                        <div class="metric-content">
+                            <div class="metric-header">
+                                <div class="metric-title-wrapper">
+                                    <div class="metric-line"></div>
+                                    <span class="metric-title">Active Pipelines</span>
+                                </div>
+                            </div>
+                            <div class="metric-value">{{metrics.active}}</div>
+                        </div>
+                        <i class="bi bi-play-circle-fill metric-card-icon"></i>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="metric-card metric-card-suspended">
+                        <div class="metric-content">
+                            <div class="metric-header">
+                                <div class="metric-title-wrapper">
+                                    <div class="metric-line"></div>
+                                    <span class="metric-title">Suspended Pipelines</span>
+                                </div>
+                            </div>
+                            <div class="metric-value">{{metrics.suspended}}</div>
+                        </div>
+                        <i class="bi bi-pause-circle-fill metric-card-icon"></i>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="metric-card metric-card-closed">
+                        <div class="metric-content">
+                            <div class="metric-header">
+                                <div class="metric-title-wrapper">
+                                    <div class="metric-line"></div>
+                                    <span class="metric-title">Closed Pipelines</span>
+                                </div>
+                            </div>
+                            <div class="metric-value">{{metrics.closed}}</div>
+                        </div>
+                        <i class="bi bi-check-circle-fill metric-card-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="card shadow-sm p-3">
+                        <div class="chart-card-header">
+                            <h6><span class="header-text header-text-statistics">Pipeline Statistics</span></h6>
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </div>
+                        <div class="chart-container stats">
+                            <canvas id="pipelineStatisticsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-6 col-sm-12">
+                    <div class="card shadow-sm p-3">
+                        <div class="chart-card-header">
+                            <h6><span class="header-text header-text-analytics">Pipeline Analytics</span></h6>
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </div>
+                        <div class="chart-container analytics">
+                            <canvas id="pipelineAnalyticsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-header-row">
+                <div class="filter-container">
+                    <select class="filter-select" ng-model="filterStatus">
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                        <option value="closed">Closed</option>
+                        <option value="suspended">Suspended</option>
+                        <option value="myPipelines">My Pipelines</option>
+                    </select>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-primary add-pipeline-btn" ng-click="openAddPipelineModal()">Add Pipeline</button>
+                    <button class="export-pdf-btn" title="Export to PDF" ng-click="exportToPDF()">
+                        <i class="bi bi-file-earmark-pdf"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card shadow">
+                <table class="pipeline-table">
+                    <thead>
+                        <tr>
+                            <th>Pipeline ID</th>
+                            <th>Pipeline Title</th>
+                            <!-- <th>Date</th> -->
+                            <th>Lead</th>
+                            <!-- <th>Source</th> -->
+                            <th>Next Date</th>
+                            <th>Status</th>
+                            <th>Posted Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="pipeline in pipelines | filter:filterPipelines">
+                            <td><a href="pipeline_details?id={{pipeline.id}}" class="pipeline-link">{{pipeline.pipeline_id}}</a></td>
+                            <td>{{pipeline.title}}</td>
+                            <!-- <td>{{pipeline.discussion_date_formatted}}</td> -->
+                            <td>{{pipeline.lead}}</td>
+                            <!--td>{{pipeline.source_name}}</!-td-->
+                            <td>{{pipeline.next_date_formatted}}</td>
+                            <td>{{ pipeline.status }}</td>
+                            <td>{{pipeline.created_date_formatted}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal fade" id="pipelineModal" tabindex="-1" aria-labelledby="pipelineModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="pipelineModalLabel">{{isEditingExisting ? 'View/Edit Pipeline' : 'Add New Pipeline'}}</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" ng-click="resetForm()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form name="addPipelineForm" novalidate>
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="pipelineTitle">Pipeline Title <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="pipelineTitle" ng-model="currentPipeline.title" ng-disabled="isEditingExisting && !isEditMode" required placeholder="Enter pipeline title">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pipelineDescription">Pipeline Description <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" id="pipelineDescription" ng-model="currentPipeline.description" ng-disabled="isEditingExisting && !isEditMode" required placeholder="Enter pipeline description"></textarea>
+                                        </div>
+                                        <div class="form-group" ng-if="isEditingExisting">
+                                            <label for=" createdBy ">Created By</label>
+                                            <input type="text " class="form-control " id="createdBy " ng-model="currentPipeline.created_by " readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12 ">
+                                        <div class="form-group ">
+                                            <label for="source ">Source <span class="text-danger ">*</span></label>
+                                            <!-- Updated ng-model to use source_name and adjusted ng-options -->
+                                            <select class="form-select " id="sourceName" ng-model="currentPipeline.source_name " ng-disabled="isEditingExisting && !isEditMode " required>
+                                                <option value=" " disabled selected>Select Source</option>
+                                                <option ng-repeat="client in clients " value="{{client.id}} {{ client.name }}">{{client.name}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="sourceOwner ">Source Owner <span class="text-danger ">*</span></label>
+                                            <!-- Updated ng-model to use source_owner -->
+                                            <select class="form-select " id="sourceOwner " ng-model="currentPipeline.source_owner " ng-disabled="(!currentPipeline.source_name || isEditingExisting && !isEditMode) " required>
+                                                <option value=" " disabled selected>Select Source Owner</option>
+                                                <option ng-repeat="member in members " value="{{member.name}} ">{{member.name}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="discussionLead ">Discussion Lead <span class="text-danger ">*</span></label>
+                                            <select class="form-select " id="discussionLead " ng-model="currentPipeline.lead_id " ng-disabled="isEditingExisting && !isEditMode " required>
+                                                <option value=" " disabled selected>Select Lead</option>
+                                                <option ng-repeat="user in users " value="{{user.id}} ">{{user.name}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="participants ">Participants <span class="text-danger ">*</span></label>
+                                            <div class="participant-select-container ">
+                                                <select class="form-select participant-select " ng-model="selectedParticipant " ng-change="addParticipant() " ng-options="user.id as user.name for user in users | filter:filterParticipants
+                                            " ng-disabled="isEditingExisting && !isEditMode ">
+                                                    <option value=" " disabled selected>Select Participant</option>
+                                                </select>
+                                            </div>
+                                            <div class="participant-tags ">
+                                                <span class="participant-tag " ng-repeat="participant in currentPipeline.participants track by $index ">
+                                                    {{ (users | filter:{id:participant}:true)[0].name }}
+                                                    <i class="bi bi-x participant-tag-remove " ng-click="removeParticipant(participant) " ng-if="isEditMode || !isEditingExisting "></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="discussionDate ">Discussion Date <span class="text-danger ">*</span></label>
+                                            <input type="date" class="form-control " id="discussionDate " ng-model="currentPipeline.discussionDate " ng-model-options="{ updateOn: 'blur', timezone: 'GMT' } " ng-disabled="isEditingExisting && !isEditMode " required>
+                                        </div>
+                                        <div class="form-group ">
+                                            <div class="row ">
+                                                <div class="col-6 ">
+                                                    <label for="nextDiscussionDate ">Next Discussion Date <span class="text-danger ">*</span></label>
+                                                    <input type="date" class="form-control " id="nextDiscussionDate " ng-model="currentPipeline.nextDate " ng-model-options="{ updateOn: 'blur', timezone: 'GMT' } " ng-disabled="isEditingExisting && !isEditMode
+                                            " required ng-attr-min="{{minNextDate}} ">
+                                                </div>
+                                                <div class="col-6 ">
+                                                    <label for="nextDiscussionTime ">Next Discussion Time <span class="text-danger">*</span></label>
+                                                    <!-- Added separate ng-model for time -->
+                                                    <input type="time" class="form-control " id="nextDiscussionTime " ng-model="currentPipeline.nextTime" ng-model-options="{ updateOn: 'blur', timezone: 'GMT' } " ng-disabled="isEditingExisting && !isEditMode " required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-edit" ng-click="enableEditMode()" ng-if="isEditingExisting && !isEditMode">Edit</button>
+                            <button type="button" class="btn btn-close-pipeline" ng-click="closePipeline()" ng-if="isEditingExisting && currentPipeline.status==='active'">Close Pipeline</button>
+                            <button type="button" class="btn btn-suspend" ng-click="suspendPipeline()" ng-if="isEditingExisting && currentPipeline.status==='active'">Suspend Pipeline</button>
+                            <button type="button" class="btn btn-save" ng-click="savePipeline()" ng-disabled="addPipelineForm.$invalid || currentPipeline.participants.length==0 || !currentPipeline.source_name || !currentPipeline.source_owner || isSaving">
+                                {{isSaving ? 'Saving...' : 'Save'}}
+                            </button>
+                            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" ng-click="resetForm()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Discussion Modal (unchanged, included for completeness) -->
+            <div class="modal fade " id="discussionModal " tabindex="-1 " aria-labelledby="discussionModalLabel " aria-hidden="true ">
+                <div class="modal-dialog modal-xl ">
+                    <div class="modal-content ">
+                        <div class="modal-header ">
+                            <h5 class="modal-title " id="discussionModalLabel ">Add Discussion</h5>
+                            <button type="button " class="btn-close btn-close-white " data-bs-dismiss="modal " aria-label="Close " ng-click="resetDiscussionForm() "></button>
+                        </div>
+                        <div class="modal-body ">
+                            <form name="discussionForm " novalidate>
+                                <div class="form-group ">
+                                    <label for="discussionTitle ">Discussion Title <span class="text-danger ">*</span></label>
+                                    <input type="text " class="form-control " id="discussionTitle " ng-model="newDiscussion.title " required placeholder="Enter discussion title ">
+                                </div>
+                                <div class="form-group ">
+                                    <label for="discussionDate ">Discussion Date <span class="text-danger ">*</span></label>
+                                    <input type="date " class="form-control " id="discussionDate " ng-model="newDiscussion.date " ng-model-options="{ updateOn: 'blur', timezone: 'GMT' } " required>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="discussionContent ">Discussion Content <span class="text-danger ">*</span></label>
+                                    <textarea class="form-control " id="discussionContent " ng-model="newDiscussion.content " required placeholder="Enter discussion content "></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer ">
+                            <button type="button " class="btn btn-save " ng-click="saveDiscussion() " ng-disabled="discussionForm.$invalid ">Save</button>
+                            <button type="button " class="btn btn-cancel " data-bs-dismiss="modal " ng-click="resetDiscussionForm() ">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js "></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js "></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js "></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js "></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
+        <script src="ngControllers/PipelineCtrl.js "></script>
+</body>
+
+</html>

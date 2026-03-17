@@ -179,7 +179,7 @@
                     <div class="col-xl-3">
                         <input class="form-control" placeholder="Search" type="text" ng-model="tableSearch" style="height: 100%;">
                     </div>
-                    <div class="col-xl-4" ng-show="user_info.role == 'admin' || user_info.role=='assigner'">
+                    <div class="col-xl-4">
                         <select class="form-control" required ng-model="tableSearch_by_developer_id">
                           <option value="">-- Filter by Developer --</option>
                           <option ng-repeat="user in all_users" ng-value="user.user_id" ng-hide="user.user_id == '1'">

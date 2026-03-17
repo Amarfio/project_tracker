@@ -151,6 +151,7 @@ sheetApp.controller(
       var start_date = $("#project_start_date").val();
       var end_date = $("#project_end_date").val();
       var project_description = $("#project_description").val();
+      var oldHashTag = $("#hash_tag_").val();
       // var project_owner = $("#project_owner_").val();
       // console.log(project_owner);
 
@@ -178,8 +179,15 @@ sheetApp.controller(
         console.log(client_);
       }
 
+      //get the client id
+      if (interested_person == "" || interested_person == undefined) {
+        var i_pern_ = $scope.project.i_pern_id;
+        console.log(i_pern_);
+      }
+
       console.log(department_id_);
       console.log(project_owner_);
+      console.log("has value "+ hash_tag);
       var data = {
         project_id: $scope.project_id,
         project_name: project_name,
@@ -188,15 +196,15 @@ sheetApp.controller(
         project_owner: project_owner_,
         dept_id: department_id_,
         user_id: $scope.user_id,
-        hash_tag: hash_tag,
+        hash_tag: oldHashTag,
         start_date: new Date(start_date),
         end_date: new Date(end_date),
-        interested_person: interested_person,
+        interested_person: i_pern_,
         client: client_,
       };
 
-      console.log(data);
-      return false;
+      // console.log(data);
+      // return false;
 
       Swal.queue([
         {
@@ -226,19 +234,19 @@ sheetApp.controller(
                   type: "success",
                   title: "PROJ-0000" + $res.project_id,
                   text: $res.message,
+                  showCancelButton: true,
+                    confirmButtonColor: "#5e72e4",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ok",
+                    cancelButtonText: "Cancel"
+                }).then(function(result){                  
+                    if(result.value){
+                      $timeout(
+                        (window.location = "project/ " + $scope.project_id),
+                        2000
+                      );
+                    }
                 });
-                // // $('#add_project_form')[0].reset();
-
-                // //    Swal.fire($res.status, "success");
-
-                // $("#add_project_form")[0].reset();
-
-                $timeout(
-                  (window.location = "project/ " + $scope.project_id),
-                  // $location.path('/add_task?project_id=' + $res.project_id + '&project_name=' + project_name_ + '&department_id=' + department_id_)
-
-                  2000
-                );
               } else {
                 Swal.fire({
                   type: "error",

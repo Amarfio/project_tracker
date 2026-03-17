@@ -16,7 +16,7 @@ function get_total_task_count($conn, $department_id)
 
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
-    $query = "SELECT COUNT(t.task_id) total_task_count FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE (p.dept_id = '$department_id') AND (t.is_archive = 0)  ";
+    $query = "SELECT COUNT(t.task_id) total_task_count FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE (t.department = '$department_id') AND t.is_archive = 0 AND (t.is_archive = 0)  ";
     $result = mysqli_query($conn, $query);
     // $num = mysqli_num_rows($result);
     $count_total_status = array();
@@ -36,16 +36,23 @@ function get_status_count($status_id, $conn, $department_id)
 
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.status) total_task_status FROM tasks t WHERE t.is_approved = 1 AND t.status = '$status_id'";
-    $query = "SELECT COUNT(t.status) total_task_status FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE t.status = '$status_id' AND (p.dept_id = '$department_id') AND (p.is_archive = 0 AND t.is_archive = 0)";
+    $query = "SELECT COUNT(t.status) total_task_status FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE t.status = '$status_id' AND (t.department = '$department_id') AND (p.is_archive = 0 AND t.is_archive = 0)";
     
     //check for the overdue status and query for its total number
     if($status_id==117){
-        $query = "SELECT COUNT(t.status) total_task_status FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE p.is_approved = 1 AND (CURRENT_DATE >t.end_date AND t.completion <> 100) AND (p.dept_id = '$department_id') AND p.is_archive = 0";
+        $query = "SELECT COUNT(t.status) total_task_status 
+        FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  
+        WHERE p.is_approved = 1 
+        AND (CURRENT_DATE > DATE(t.end_date) AND t.completion <> 100) 
+        AND (t.department = '$department_id') 
+        AND p.is_archive = 0 
+        AND t.is_archive = 0";
+        // $query = "SELECT t.task_id as task_id, pro.project_id project_id , pro.name project_name, t.description as task_description,t.start_date, t.end_date, pro.dept_id department_id, c_dpt.desc department, t.completion, cl.name as client,t.assigned_to as assigned_to_id, CONCAT(u_by.f_name, ' ' , u_by.l_name) as assigned_by, t.assigned_by as assigned_by_id, CONCAT(u_to.f_name, ' ' , u_to.l_name) as assigned_to, c_pri.desc as priority, c_sta.id status_id, c_sta.id, c_sta.desc as status  FROM tasks t LEFT JOIN users u_by ON u_by.id = t.assigned_by  LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN code_desc c_pri ON c_pri.id = t.priority LEFT JOIN code_desc c_sta ON c_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id LEFT JOIN projects pro ON pro.project_id = t.project_id LEFT JOIN code_desc c_dpt ON c_dpt.id = t.department WHERE (CURRENT_DATE >t.end_date AND t.completion <> 100) AND t.department = '$department_id' AND pro.is_archive = 0 AND t.is_archive = 0 ORDER BY t.task_id  DESC"
     }
 
     //code to check for archived tasks
     if($status_id == 132){
-        $query = "SELECT COUNT(t.status) total_task_status FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE (p.dept_id = '$department_id') AND (p.is_archive = 1 AND t.is_archive = 1)";
+        $query = "SELECT COUNT(t.status) total_task_status FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to  WHERE (t.department = '$department_id') AND (p.is_archive = 1 AND t.is_archive = 1)";
     }
     $result = mysqli_query($conn, $query);
     // $num = mysqli_num_rows($result);
@@ -63,7 +70,7 @@ function get_approved_count($conn, $department_id)
 
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.task_id) approved_project FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id WHERE p.is_approved = 1";
-    $query = "SELECT COUNT(t.task_id) approved_project FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to WHERE p.is_approved = 1 AND (p.dept_id = '$department_id' AND p.is_archive = 0)";
+    $query = "SELECT COUNT(t.task_id) approved_project FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to WHERE (t.department = '$department_id' AND t.is_archive=0)";
     // echo($query); die();
     $result = mysqli_query($conn, $query);
     // $num = mysqli_num_rows($result);
@@ -84,7 +91,7 @@ function get_unapproved_count($conn, $department_id)
 
     // $query = "SELECT attach FROM comments c WHERE c.task_id = '$task_id' AND c.attach != ''";
     // $query = "SELECT COUNT(t.task_id) unapproved_project FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id WHERE p.is_approved = 0 ";
-    $query = "SELECT COUNT(t.task_id) unapproved_project FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to WHERE p.is_approved = 0 AND (p.dept_id = '$department_id' AND p.is_archive = 0)  ";
+    $query = "SELECT COUNT(t.task_id) unapproved_project FROM tasks t LEFT JOIN projects p ON p.project_id = t.project_id LEFT JOIN users u ON u.id =  t.assigned_to WHERE p.is_approved = 0 AND (t.department = '$department_id' AND p.is_archive = 0)  ";
 
     $result = mysqli_query($conn, $query);
     // $num = mysqli_num_rows($result);

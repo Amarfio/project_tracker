@@ -86,8 +86,10 @@ if(
     // echo($query); die();
     $result = mysqli_query($conn, $query);
 
+    
     if ($result == 1) {
         $project_id = mysqli_insert_id($conn);   
+        closePipeLine($conn, $pipelineId);
           
        
         $message = json_encode(
@@ -159,4 +161,11 @@ if(
     );
     exit($message);
 
+}
+
+//code to close the pipeline after the project is created
+ function closePipeLine($conn, $pipeline_id){
+    $query = "UPDATE pipelines SET status = 'closed' where id= '$pipeline_id'";
+    // echo($query); die();
+    $result = mysqli_query($conn, $query);
 }

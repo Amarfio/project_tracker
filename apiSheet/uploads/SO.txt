@@ -1,0 +1,20 @@
+IF GET_ACCTTYPE(c1_r.acct_link) != '9' THEN
+                IF BAL_CHK < REAL_AMT THEN
+                crt_default := crt_default + 1;
+
+                    IF crt_default >= c1_r.processing_tries THEN
+                        UPDATE standing_order
+                        SET order_status = 'C', default_count = crt_default, date_cancelled = c1_r.posting_date,
+                            cancel_sys_date = SYSDATE, cancel_sys_time = TO_CHAR(SYSDATE, 'HH24:MI:SS'), cancelled_by = USER
+                        WHERE order_number = c1_r.order_number;
+                    ELSE
+                        UPDATE standing_order SET default_count = crt_default WHERE order_number = c1_r.order_number;
+                    END IF;
+
+                f_reason := 'Insufficient balance';
+                INSERT INTO unsuccessful_standing_orders(order_number, execution_date, failure_reason, account_balance, order_amount, estimated_fee)
+                VALUES (c1_r.order_number, c1_r.posting_date, f_reason, BAL_CHK, c1_r.due_amount, lcfeeamount);
+
+                    CONTINUE;  ----****  second continue
+                END IF;
+END IF;

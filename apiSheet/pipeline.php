@@ -3,7 +3,6 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 // Set time zone to match database
 date_default_timezone_set('UTC');
 
@@ -448,16 +447,16 @@ try {
             $mail->Subject = 'Pipeline ' . $action_title . ': ' . $pipeline['title'];
             $mail->Body = $emailBody;
             
-            // if (!$mail->send()) {
-            //     error_log('Failed to send pipeline action email: ' . $mail->ErrorInfo);
-            //     return false;
-            // } else {
-            //     // error_log('Pipeline action email sent successfully to: ' . implode(', ', $participant_emails));
-            //     // return true;
-            // }
+            if (!$mail->send()) {
+                // error_log('Failed to send pipeline action email: ' . $mail->ErrorInfo);
+                return false;
+            } else {
+                // error_log('Pipeline action email sent successfully to: ' . implode(', ', $participant_emails));
+                return true;
+            }
             
         } catch (Exception $e) {
-            error_log('Error sending pipeline action email: ' . $e->getMessage());
+            // error_log('Error sending pipeline action email: ' . $e->getMessage());
             return false;
         }
     }
@@ -551,6 +550,10 @@ try {
                 $row['next_date_formatted'] = date('Y-m-d', strtotime($row['next_date']));
                 $row['lead'] = $row['lead_name'];
                 $row['created_by'] = $row['created_by_name'];
+
+                // get project id using pipeline id
+                $row['project_id'] = getProjectId($row['id']);
+                
                 $pipelines[] = $row;
             }
             
@@ -1056,7 +1059,7 @@ try {
                     //     error_log('Pipeline creation email sent successfully to: ' . implode(', ', $participant_emails));
                     // }
                 } catch (Exception $e) {
-                    error_log('Failed to send pipeline creation email: ' . $e->getMessage());
+                    // error_log('Failed to send pipeline creation email: ' . $e->getMessage());
                 }
                 
                 echo json_encode([
@@ -1214,7 +1217,7 @@ try {
 
                 // Send update email with changes
                 $changes = isset($data['changes']) ? $data['changes'] : [];
-                sendPipelineActionEmail('update', $pipeline_id, ['changes' => $changes]);
+                // sendPipelineActionEmail('update', $pipeline_id, ['changes' => $changes]);
                 
                 echo json_encode([
                     'success' => true,
@@ -1276,7 +1279,7 @@ try {
                 $conn->commit();
 
                 // Send suspend email
-                sendPipelineActionEmail('suspend', $pipeline_id);
+                // sendPipelineActionEmail('suspend', $pipeline_id);
                 
                 echo json_encode([
                     'success' => true,
@@ -1337,7 +1340,7 @@ try {
                 $conn->commit();
 
                 // Send close email
-                sendPipelineActionEmail('close', $pipeline_id);
+                // sendPipelineActionEmail('close', $pipeline_id);
                 
                 echo json_encode([
                     'success' => true,
@@ -1466,13 +1469,13 @@ try {
                         // System logs are created when actions like update/close/suspend happen
                         // Those actions already send their own emails
                         if (!$is_system_log) {
-                            error_log('Sending discussion email for user-created discussion');
-                            // Send discussion email
-                            sendPipelineActionEmail('discussion', $data['pipeline_id'], [
-                                'content' => $data['content']
-                            ]);
+                            // error_log('Sending discussion email for user-created discussion');
+                            // // Send discussion email
+                            // sendPipelineActionEmail('discussion', $data['pipeline_id'], [
+                            //     'content' => $data['content']
+                            // ]);
                         } else {
-                            error_log('Skipping email for system log discussion');
+                            // error_log('Skipping email for system log discussion');
                         }
                         
                         echo json_encode([
@@ -1556,5 +1559,25 @@ function getUsers() {
     }
     
     return $users;
+}
+
+function getProjectId($pipeline_id){
+    global $conn;
+
+    $sql = "SELECT project_id FROM projects WHERE pipeline_id = '$pipeline_id' LIMIT 1";
+    $result = $conn->query($sql);
+
+    if ($result === false) {
+        throw new Exception('Failed to fetch project_id: ' . $conn->error);
+    }
+
+    $row = $result->fetch_assoc();
+
+    if ($row) {
+        $projec_details = array("id"=> $row['project_id'], "refined_project_id"=> "PROJ-0000-".$row['project_id']);
+        return $projec_details;
+    }
+
+    return "N/A"; // if no project found
 }
 ?>

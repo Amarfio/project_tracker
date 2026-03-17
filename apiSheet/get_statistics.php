@@ -164,7 +164,7 @@ try {
                 AND t.status NOT IN (60, 61)
                 AND p.approved_date IS NOT NULL
                 AND p.approved_date BETWEEN ? AND ?
-                AND (t.updated_at IS NULL OR t.updated_at > ?)";
+                AND (t.updated_at IS NULL OR DATE(t.updated_at) > ?)";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             throw new Exception('Prepare failed: ' . $conn->error);
@@ -190,7 +190,7 @@ try {
                 AND (
                     (t.status NOT IN (60, 61) AND t.end_date < CURRENT_DATE)
                     OR
-                    (t.status = 61 AND t.updated_at > t.end_date)
+                    (t.status = 61 AND DATE(t.updated_at) > t.end_date)
                 )";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
@@ -253,10 +253,10 @@ try {
 
     // Query for Completed Projects
     $sql_completed_projects = "SELECT COUNT(*) as completed_projects
-                              FROM projects
-                              WHERE status = 88
-                              AND updated_at IS NOT NULL
-                              AND updated_at >= ? AND updated_at <= ?";
+                              FROM projects p
+                              WHERE (SELECT COUNT(*) FROM tasks t WHERE t.project_id = p.project_id) > 0
+                              AND (SELECT COUNT(*) FROM tasks t WHERE t.project_id = p.project_id AND t.status != 61) = 0
+                              AND (SELECT MAX(t.updated_at) FROM tasks t WHERE t.project_id = p.project_id) BETWEEN ? AND ?";
     $stmt = $conn->prepare($sql_completed_projects);
     if (!$stmt) {
         throw new Exception('Prepare failed: ' . $conn->error);

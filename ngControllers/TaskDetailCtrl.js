@@ -20,7 +20,8 @@ sheetApp.controller(
     check_auth,
     myConfig,
     $location,
-    $localStorage
+    $localStorage,
+    $timeout,
   ) {
     // $scope.task_id = atob($routeParams.task_id);
     $scope.task_id = $routeParams.task_id;
@@ -60,7 +61,7 @@ sheetApp.controller(
         },
         function errorCallback(response) {
           // alert("Error. Try Again!");
-        }
+        },
       );
     };
     $scope.get_all_attachments();
@@ -99,7 +100,11 @@ sheetApp.controller(
           console.log($scope.project.task_end_date);
           var task_start_date = new Date($scope.project.task_start_date);
           var task_end_date = new Date($scope.project.task_end_date);
-          var today_date = new Date("yyyy-mm-dd");
+          var today_date = new Date();
+          // Reset time to midnight for consistent date comparison
+          today_date.setHours(0, 0, 0, 0);
+          task_end_date.setHours(0, 0, 0, 0);
+          task_start_date.setHours(0, 0, 0, 0);
 
           $scope.get_get_actual_no_days_in_milliseconds =
             task_end_date.getTime() - today_date.getTime();
@@ -144,7 +149,7 @@ sheetApp.controller(
 
             //    console.log($scope.progress_bar_percentage)
             console.log(
-              "progress bar percentage: " + $scope.progress_bar_percentage
+              "progress bar percentage: " + $scope.progress_bar_percentage,
             );
             // console.log('$scope.number_of_days_till_today: ' + $scope.number_of_days_till_today)
             // console.log('$scope.number_of_days_till_end: ' + $scope.number_of_days_till_end)
@@ -157,6 +162,12 @@ sheetApp.controller(
 
             //    console.log($scope.progress_bar_percentage)
             console.log("It is pass due date dates");
+          }
+
+          // Force green (success) for completed tasks regardless of deadline
+          if ($scope.oneTask.status == '61' || $scope.oneTask.status == 'Completed' || $scope.oneTask.status == 'completed' || $scope.percentage_completion >= 100) {
+            $scope.progress_bar_percentage = 100;
+            $scope.progress_bar_percentage_color = "success";
           }
 
           // if ((get_spent_task_date_in_milliseconds > get_total_task_date_in_milliseconds) >) {
@@ -196,7 +207,7 @@ sheetApp.controller(
         },
         function errorCallback(response) {
           // alert("Error. Try Again!");
-        }
+        },
       );
     };
     $scope.get_one_task();
@@ -216,7 +227,7 @@ sheetApp.controller(
         },
         function errorCallback(response) {
           // alert("Error. Try Again!");
-        }
+        },
       );
     };
 
@@ -234,12 +245,274 @@ sheetApp.controller(
         },
         function errorCallback(response) {
           // alert("Error. Try Again!");
-        }
+        },
       );
     };
     $scope.get_task_comments();
 
     setInterval($scope.get_task_comments(), 100000);
+
+    // ===== Schedule meeting support (copied/adapted from TaskCtrl) =====
+    $scope.showScheduleModal = false;
+    $scope.selectedMembers = [];
+    $scope.selectedMemberDropdown = "";
+    $scope.selectedDepartmentDropdown = "";
+    $scope.meetingForm = {};
+    $scope.meetingFormLoading = false;
+    $scope.allUsers = [];
+    $scope.allDepartments = [];
+
+    $scope.showAlert = function (message, type) {
+      type = type || "success";
+      var alertDiv = document.getElementById("alertContainer");
+      if (!alertDiv) {
+        alertDiv = document.createElement("div");
+        alertDiv.id = "alertContainer";
+        alertDiv.className = "alert-container";
+        document.body.appendChild(alertDiv);
+      }
+      var alert = document.createElement("div");
+      alert.className = "custom-alert";
+      alert.innerHTML =
+        '<span class="alert-message">' +
+        message +
+        '</span><span class="alert-close">&times;</span>';
+      alertDiv.appendChild(alert);
+      alert
+        .querySelector(".alert-close")
+        .addEventListener("click", function () {
+          alert.style.animation = "slideOut 0.3s ease forwards";
+          setTimeout(() => alert.remove(), 300);
+        });
+      setTimeout(() => {
+        alert.style.animation = "slideOut 0.3s ease forwards";
+        setTimeout(() => alert.remove(), 300);
+      }, 4000);
+    };
+
+    $scope.loadAllUsers = function () {
+      $http.get("apiSheet/getAllUsers.php").then(function (response) {
+        if (Array.isArray(response.data)) {
+          $scope.allUsers = response.data.map(function (user) {
+            return {
+              id: user.user_id || user.id,
+              f_name: user.f_name,
+              l_name: user.l_name,
+              dept: user.department || user.dept,
+              email: user.email,
+              is_active: user.is_active,
+            };
+          });
+          var deptSet = {};
+          $scope.allUsers.forEach(function (user) {
+            if (user.dept && user.is_active) deptSet[user.dept] = true;
+          });
+          $scope.allDepartments = Object.keys(deptSet).sort();
+        }
+      });
+    };
+
+    $scope.openScheduleModal = function (event) {
+      if (event) event.stopPropagation();
+      $scope.loadAllUsers();
+      $scope.showScheduleModal = true;
+      $scope.selectedMembers = [];
+      $scope.selectedMemberDropdown = "";
+      $scope.selectedDepartmentDropdown = "";
+
+      var taskTitle =
+        $scope.oneTask && $scope.oneTask.task_description
+          ? $scope.oneTask.task_description
+          : "Task Meeting";
+      var taskDescription =
+        $scope.oneTask &&
+        $scope.oneTask.task_id &&
+        $scope.oneTask.task_description
+          ? "REF-0000" +
+            $scope.oneTask.task_id +
+            " - " +
+            $scope.oneTask.task_description
+          : "";
+      $scope.meetingForm = {
+        date: new Date(),
+        time: "",
+        title: taskTitle,
+        description: taskDescription,
+      };
+      $scope.meetingFormLoading = false;
+      $timeout(function () {
+        var modal = angular.element(
+          document.querySelector(".schedule-modal-backdrop"),
+        );
+        if (modal.length) modal.addClass("show");
+      }, 50);
+    };
+
+    $scope.closeScheduleModal = function () {
+      var modal = angular.element(
+        document.querySelector(".schedule-modal-backdrop"),
+      );
+      if (modal.length) modal.removeClass("show");
+      $timeout(function () {
+        $scope.showScheduleModal = false;
+      }, 300);
+    };
+
+    $scope.addMemberToSchedule = function () {
+      if (!$scope.selectedMemberDropdown) {
+        $scope.showAlert("Please select a member", "error");
+        return;
+      }
+      var userId = $scope.selectedMemberDropdown;
+      if (
+        $scope.selectedMembers.some(function (m) {
+          return String(m.id) === String(userId);
+        })
+      ) {
+        $scope.showAlert("This member is already selected", "error");
+        return;
+      }
+      var user = $scope.allUsers.find(function (u) {
+        return String(u.id) === String(userId);
+      });
+      if (user) {
+        $scope.selectedMembers.push(user);
+        $scope.selectedMemberDropdown = "";
+        $scope.showAlert(user.f_name + " added to meeting", "success");
+      } else {
+        $scope.showAlert("Member not found", "error");
+      }
+    };
+
+    $scope.removeMemberFromSchedule = function (userId) {
+      $scope.selectedMembers = $scope.selectedMembers.filter(function (m) {
+        return m.id !== userId;
+      });
+      $scope.showAlert("Member removed", "success");
+    };
+
+    $scope.addDepartmentMembersToSchedule = function () {
+      if (!$scope.selectedDepartmentDropdown) {
+        $scope.showAlert("Please select a department", "error");
+        return;
+      }
+      var selectedDept = $scope.selectedDepartmentDropdown;
+      var deptMembers = $scope.allUsers.filter(function (user) {
+        return user.dept === selectedDept && user.is_active;
+      });
+      if (deptMembers.length === 0) {
+        $scope.showAlert("No active members found in " + selectedDept, "error");
+        return;
+      }
+      var addedCount = 0;
+      deptMembers.forEach(function (member) {
+        if (
+          !$scope.selectedMembers.some(function (m) {
+            return m.id === member.id;
+          })
+        ) {
+          $scope.selectedMembers.push(member);
+          addedCount++;
+        }
+      });
+      $scope.selectedDepartmentDropdown = "";
+      $scope.showAlert(
+        "Added " + addedCount + " members from " + selectedDept,
+        "success",
+      );
+    };
+
+    $scope.submitMeetingForm = function () {
+      if (
+        !$scope.meetingForm.title ||
+        !$scope.meetingForm.date ||
+        !$scope.meetingForm.time ||
+        $scope.selectedMembers.length === 0
+      ) {
+        $scope.showAlert(
+          "Please fill in all required fields and select at least one member",
+          "error",
+        );
+        return;
+      }
+      var meetingDate = new Date($scope.meetingForm.date);
+      var dateString =
+        meetingDate.getFullYear() +
+        "-" +
+        String(meetingDate.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(meetingDate.getDate()).padStart(2, "0");
+      var timeStr = $scope.meetingForm.time;
+      if (timeStr instanceof Date) {
+        timeStr =
+          String(timeStr.getHours()).padStart(2, "0") +
+          ":" +
+          String(timeStr.getMinutes()).padStart(2, "0");
+      } else if (typeof timeStr === "string" && timeStr.length > 5) {
+        timeStr = timeStr.substring(0, 5);
+      }
+      if (!timeStr || !/^\d{2}:\d{2}$/.test(timeStr)) {
+        $scope.showAlert("Time must be in HH:MM format", "error");
+        return;
+      }
+      $scope.meetingFormLoading = true;
+      $scope.meetingForm.time = timeStr;
+      var meetingData = $scope.collectMeetingData(timeStr, dateString);
+      $scope.saveMeetingSchedule(meetingData);
+    };
+
+    $scope.collectMeetingData = function (timeStr, dateString) {
+      var participantIds = $scope.selectedMembers
+        .map(function (m) {
+          return m.id;
+        })
+        .join(",");
+      return {
+        title: $scope.meetingForm.title,
+        description: $scope.meetingForm.description || "",
+        scheduled_date: dateString,
+        scheduled_time: timeStr,
+        participants: participantIds,
+        created_by: $scope.user_info.user_id,
+        reference_type: "task",
+        reference_id:
+          $scope.oneTask && $scope.oneTask.task_id
+            ? parseInt($scope.oneTask.task_id)
+            : null,
+      };
+    };
+
+    $scope.saveMeetingSchedule = function (meetingData) {
+      var requestUrl =
+        myConfig.url + "/schedule.php?action=save_scheduled_meeting";
+      $http({
+        method: "POST",
+        url: requestUrl,
+        data: meetingData,
+        headers: { "Content-Type": "application/json" },
+      }).then(
+        function (response) {
+          $scope.meetingFormLoading = false;
+          if (
+            response.data &&
+            (response.data.status === "success" || response.data.success)
+          ) {
+            $scope.showAlert("Meeting scheduled successfully!", "success");
+            $scope.closeScheduleModal();
+          } else {
+            $scope.showAlert(
+              response.data.message || "Failed to schedule meeting",
+              "error",
+            );
+          }
+        },
+        function (error) {
+          $scope.meetingFormLoading = false;
+          $scope.showAlert("Error scheduling meeting", "error");
+          console.error(error);
+        },
+      );
+    };
 
     // ATTACHMENT ICON FUNCTION
 
@@ -285,7 +558,6 @@ sheetApp.controller(
       if (comment_message == "" || comment_message == undefined) {
       } else {
         //  console.log(data);
-        //  return false;
         //$http POST function
 
         $scope.upload();
@@ -308,7 +580,7 @@ sheetApp.controller(
             } else {
             }
           },
-          function errorCallback(response) {}
+          function errorCallback(response) {},
         );
       }
     };
@@ -385,7 +657,7 @@ sheetApp.controller(
     $scope.replyComment = function (
       comment_id_for_reply,
       reply_message,
-      user_id
+      user_id,
     ) {
       console.log(comment_id_for_reply);
       console.log(reply_message);
@@ -417,7 +689,7 @@ sheetApp.controller(
             } else {
             }
           },
-          function errorCallback(response) {}
+          function errorCallback(response) {},
         );
       }
     };
@@ -451,7 +723,7 @@ sheetApp.controller(
 
           window.location.reload();
         },
-        function errorCallback(response) {}
+        function errorCallback(response) {},
       );
     };
 
@@ -466,7 +738,7 @@ sheetApp.controller(
         },
         function errorCallback(response) {
           console.log("error");
-        }
+        },
       );
     };
     $scope.get_code_desc("sta");
@@ -474,7 +746,7 @@ sheetApp.controller(
     $scope.saveTaskUpdate = function (
       taskStatus,
       ready_for_test,
-      percentage_completion
+      percentage_completion,
     ) {
       console.log(taskStatus);
       console.log(ready_for_test);
@@ -589,10 +861,10 @@ sheetApp.controller(
             });
           }
         },
-        function errorCallback(response) {}
+        function errorCallback(response) {},
       );
     };
 
     $scope.sendForTest = function (data) {};
-  }
+  },
 );

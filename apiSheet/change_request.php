@@ -69,7 +69,8 @@ try {
                     FROM change_requests cr
                     LEFT JOIN users u1 ON cr.submitted_by = u1.id
                     LEFT JOIN users u2 ON cr.request_by = u2.id
-                    LEFT JOIN users u3 ON cr.implementer = u3.id";
+                    LEFT JOIN users u3 ON cr.implementer = u3.id
+                    WHERE cr.is_active = 1";
             
             $where = [];
             $params = [];
@@ -956,7 +957,7 @@ function getQAPersonnel() {
     $personnel = [];
     $sql = "SELECT id, CONCAT(f_name, ' ', l_name) as name 
             FROM users 
-            WHERE dept IN (108, 135, 138) AND is_active = 1 
+            WHERE dept IN (108, 135) AND is_active = 1 
             ORDER BY name";
     $result = $conn->query($sql);
     
@@ -979,7 +980,7 @@ function getCEOPersonnel() {
     $personnel = [];
     $sql = "SELECT id, CONCAT(f_name, ' ', l_name) as name 
             FROM users 
-            WHERE id IN (145, 147, 151, 138, 196) AND is_active = 1 
+            WHERE id IN (145, 147, 151) AND is_active = 1 
             ORDER BY name";
     $result = $conn->query($sql);
     

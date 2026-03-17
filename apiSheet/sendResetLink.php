@@ -11,6 +11,27 @@ require_once 'connect.php';
 require_once 'mailer.php';
 require_once 'functions/passwordResetTemplate.php';
 
+// $mail->isSMTP();
+// $mail->Host = "mail.unionsg.com";
+// $mail->SMTPAuth = true;
+// $mail->Username = "support24x7@unionsg.com";
+// $mail->Password = "xz1i8Hmnoj!D";
+// $mail->Port = 587;
+// $mail->SMTPSecure = "tls";
+
+$mail->isSMTP();
+$mail->Host       = "mail.unionsg.com";
+$mail->SMTPAuth   = true;
+$mail->Username   = "support24x7@unionsg.com";
+$mail->Password   = "xz1i8Hmnoj!D"; // change immediately
+// $mail->SMTPSecure = "tls";
+$mail_secure = true;
+$mail->Port       = 465;
+
+$mail->Timeout = 10;
+$mail->SMTPKeepAlive = false;
+$mail->SMTPAutoTLS = true;
+
 
 //method to check if the email exists in the database
 function check_if_email_exist($email, $conn){
@@ -59,60 +80,84 @@ if (isset($_GET['email'])) {
         $up_result = mysqli_query($conn, $up_query);
         // echo($up_result); die();
         if ($up_result == 1) {
-            $valueLink = 'http://10.203.14.97/project_tracker/set_password/' . $set_password;
-            // echo json_encode($valueLink);
-            // die();
-            $from = "Project Tracker (USG)";
-            $name = "no-reply";
-            $subject = "UNION SYSTEMS GLOBAL";
-            // $txt = 'http://10.203.14.97/project_tracker/set_password/' . $set_password;
-            $txt = emailForPasswordReset($first_name, $email, $set_password);
-            $headers = "From: UNION SYSTEMS GLOBAL" ;
-            
-        //Email Settings
-        $mail->isHTML(true);
-        $mail->setFrom("support24x7@unionsg.com", $name);
-        $mail->addAddress($email);
-        $mail->Subject=$subject;
-        $mail->Body = $txt;
-        $done = $mail->send();
 
-        // mail($to,$subject,$txt,$headers)
-        if ($done) { 
-            $message = json_encode(
-                array(
+            $setPasswordLink = 'http://10.203.14.97/project_tracker/set_password/' . $set_password;
+        
+            $subject = "UNION SYSTEMS GLOBAL";
+            $message = emailForPasswordReset($first_name, $email, $set_password);
+        
+            // API endpoint (replace with your actual endpoint)
+            $url = "https://10.203.14.97:3001/send-email";
+        
+            // JSON payload
+            $data = array(
+                "to" => $email,
+                "subject" => $subject,
+                "message" => $message,
+                "name" => $first_name
+            );
+        
+            $payload = json_encode($data);
+        
+            // Initialize cURL
+            $ch = curl_init($url);
+
+curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => $payload,
+    CURLOPT_HTTPHEADER => [
+        'Content-Type: application/json'
+    ],
+    CURLOPT_CONNECTTIMEOUT => 5,
+    CURLOPT_TIMEOUT => 10,
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_SSL_VERIFYHOST => false
+]);
+
+$response = curl_exec($ch);
+
+if (curl_errno($ch)) {
+    echo json_encode([
+        "status" => "failed",
+        "error" => curl_error($ch)
+    ]);
+    curl_close($ch);
+    exit;
+}
+
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+        
+            if ($httpCode == 200) {
+        
+                $message = json_encode(array(
                     'message' => 'Check email for password reset link',
                     'status' => 'success',
-                    'set_password' => 'http://10.203.14.97/project_tracker/set_password/' . $set_password
-                )
-            );
-            exit($message);
-            
-        }else {
-            $message = json_encode(
-                array(
+                    'set_password' => $setPasswordLink
+                ));
+        
+                exit($message);
+        
+            } else {
+        
+                $message = json_encode(array(
                     'message' => 'Could not send you the link',
                     'status' => 'failed'
-                )
-            );
+                ));
+        
+                exit($message);
+            }
+        
+        } else {
+        
+            $message = json_encode(array(
+                'message' => 'Could not send you the link',
+                'status' => 'failed'
+            ));
+        
             exit($message);
-
         }
-
-
-
-
-        }else {
-            $message = json_encode(
-                array(
-                    'message' => 'Could not send you the link',
-                    'status' => 'failed'
-                )
-            );
-            exit($message);
-
-        }
-
 
 
         

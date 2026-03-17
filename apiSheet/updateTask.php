@@ -29,6 +29,30 @@ function getUsernameById($user_id)
  
 }
 
+function changeStatusToCompleted($project_id, $conn){
+    $query = "UPDATE `projects` SET status = 88, completed_date=NOW() where project_id = '$project_id'";
+    // echo($query); die();
+    mysqli_query($conn, $query);
+    // echo "done updating the status to completed"+$result;
+}
+
+function project_avg_percentage($project_id, $conn){
+
+    $query = "SELECT AVG(ALL t.completion) project_average_completion FROM tasks t WHERE (t.status <> 137 AND t.is_archive<>1) AND t.project_id = '$project_id'";
+    // $query = "SELECT AVG(ALL t.completion) project_average_completion FROM tasks t WHERE t.project_id = '$project_id'";
+    $result = mysqli_query($conn, $query);
+   $row = mysqli_fetch_array($result);
+   $per = intval($row ['project_average_completion']);
+//    echo($per);die();
+
+   if ($per >= 100){
+        changeStatusToCompleted($project_id, $conn);
+   }
+   return $row['project_average_completion'];
+
+
+}
+
 
 
 
@@ -67,12 +91,16 @@ if(
 
     $result = mysqli_query($conn, $query);
 
+
+    //change the project status to completed when all its tasks are 100 %
+    // project_avg_percentage($project_id, $conn);
+
     if ($result == 1) {
 
                 
         $message = json_encode(
             array(
-                'message' => 'task created successfully',
+                'message' => 'task updated successfully',
                 'status' => 'success',
                 'data' => [
                     'task_name' => $task_name,

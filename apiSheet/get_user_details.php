@@ -234,7 +234,8 @@ function calculateTaskMetrics($conn, $user_id, $start_date, $end_date) {
         FROM tasks t
         JOIN projects p ON t.project_id = p.project_id
         WHERE t.assigned_to = ?
-        AND p.completed_date IS NOT NULL
+        AND (SELECT COUNT(*) FROM tasks t2 WHERE t2.project_id = p.project_id) > 0
+        AND (SELECT COUNT(*) FROM tasks t2 WHERE t2.project_id = p.project_id AND t2.status != 61) = 0
         $date_conditions
     ";
     

@@ -13,26 +13,15 @@ require_once 'functions/noOfConflictingTasks.php';
 require_once 'functions/usableFunctions.php';
 
 
-
-    //method to update project status to completed
-    function changeStatusToCompleted($project_id, $conn){
-        $query = "UPDATE `projects` SET status = 88 where project_id = '$project_id'";
-        // echo($query); die();
-        mysqli_query($conn, $query);
-        // echo "done updating the status to completed"+$result;
-    }
-
+//method to check if project percentage is 100%
     function project_avg_percentage($project_id, $conn){
 
-        $query = "SELECT AVG(ALL t.completion) project_average_completion FROM tasks t WHERE (t.status <> 137) AND t.project_id = '$project_id'";
+        $query = "SELECT AVG(ALL t.completion) project_average_completion FROM tasks t WHERE (t.status <> 137 AND t.is_archive<>1) AND t.project_id = '$project_id'";
         // $query = "SELECT AVG(ALL t.completion) project_average_completion FROM tasks t WHERE t.project_id = '$project_id'";
         $result = mysqli_query($conn, $query);
        $row = mysqli_fetch_array($result);
        $per = intval($row ['project_average_completion']);
-
-       if ($per == 100){
-            changeStatusToCompleted($project_id, $conn);
-       }
+    
        return $row['project_average_completion'];
     
   
@@ -178,7 +167,7 @@ if (isset($_GET['project_id'])) {
                 "version_name"   => $row['version_name'],
                 "name" => $row['NAME'],
                 "description" => $row['description'],
-                // "client_id" => $row['client'],
+                "client_id" => $row['CLIENT'],
                 "client_name"=> $row['client_name'],
                 "pipeline_id"=> $pipeId,
                 "pipeline_num"=> $pipelin_id,
@@ -195,6 +184,7 @@ if (isset($_GET['project_id'])) {
                 "sec_owner_id" => $row['s_owner'],
                 "sec_owner" => $row['s_own'],
                 "i_pern" => $row['i_pern'],
+                "i_pern_id" => $row['i_person'],
                 "department_id" => $row['dept_id'],
                 "department" => get_department_name($row['dept_id'], $conn), 
                 // "comment" => $row['comment'],

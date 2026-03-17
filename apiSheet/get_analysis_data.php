@@ -67,7 +67,7 @@ function calculateTaskMetrics($conn, $user_id, $start_date, $end_date) {
         JOIN projects p ON t.project_id = p.project_id
         WHERE t.assigned_to = ?
         AND t.status = 61
-        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND DATE(t.updated_at) <= t.end_date
         $date_conditions
     ";
     
@@ -109,12 +109,12 @@ function calculateTaskMetrics($conn, $user_id, $start_date, $end_date) {
 
     // Query to get average task completion time (in days)
     $sql_avg_time = "
-        SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)) as avg_completion_days
+        SELECT AVG(DATEDIFF(DATE(t.updated_at), p.approved_date)) as avg_completion_days
         FROM tasks t
         JOIN projects p ON t.project_id = p.project_id
         WHERE t.assigned_to = ?
         AND t.status = 61
-        AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
+        AND DATE(t.updated_at) >= p.approved_date
         $date_conditions
     ";
     
@@ -137,7 +137,8 @@ function calculateTaskMetrics($conn, $user_id, $start_date, $end_date) {
         FROM tasks t
         JOIN projects p ON t.project_id = p.project_id
         WHERE t.assigned_to = ?
-        AND p.completed_date IS NOT NULL
+        AND (SELECT COUNT(*) FROM tasks t2 WHERE t2.project_id = p.project_id) > 0
+        AND (SELECT COUNT(*) FROM tasks t2 WHERE t2.project_id = p.project_id AND t2.status != 61) = 0
         $date_conditions
     ";
     
@@ -232,7 +233,7 @@ function calculateDepartmentMetrics($conn, $dept_id, $start_date, $end_date) {
         JOIN users u ON t.assigned_to = u.id
         WHERE u.dept = ?
         AND t.status = 61
-        AND COALESCE(t.updated_at, t.end_date) <= t.end_date
+        AND DATE(COALESCE(t.updated_at, t.end_date)) <= t.end_date
         $date_conditions
     ";
     $stmt_efficient = $conn->prepare($sql_efficient);
@@ -400,8 +401,8 @@ try {
                 SUM(CASE WHEN t.status = 61 THEN 1 ELSE 0 END) AS completed_tasks,
                 AVG(
                     CASE 
-                        WHEN t.status = 61 AND COALESCE(t.updated_at, t.end_date) >= p.approved_date
-                        THEN DATEDIFF(COALESCE(t.updated_at, t.end_date), p.approved_date)
+                        WHEN t.status = 61 AND DATE(t.updated_at) >= p.approved_date
+                        THEN DATEDIFF(DATE(t.updated_at), p.approved_date)
                         ELSE NULL
                     END
                 ) AS avg_task_cycle_time
@@ -451,11 +452,16 @@ try {
                 cd_dept.`desc` AS department,
                 COUNT(t.task_id) AS total_tasks,
                 SUM(CASE WHEN t.status = 61 THEN 1 ELSE 0 END) AS completed_tasks,
-                SUM(CASE WHEN t.status = 61 AND COALESCE(t.updated_at, t.end_date) > t.end_date THEN 1 ELSE 0 END) AS overdue_tasks,
+                SUM(CASE 
+                    WHEN (t.status = 61 AND DATE(t.updated_at) > t.end_date) 
+                    OR (t.status != 61 AND t.end_date < CURRENT_DATE) 
+                    THEN 1 ELSE 0 END) AS overdue_tasks,
                 AVG(
                     CASE 
-                        WHEN t.status = 61 AND COALESCE(t.updated_at, t.end_date) > t.end_date
-                        THEN DATEDIFF(COALESCE(t.updated_at, t.end_date), t.end_date)
+                        WHEN t.status = 61 AND DATE(t.updated_at) > t.end_date
+                        THEN DATEDIFF(DATE(t.updated_at), t.end_date)
+                        WHEN t.status != 61 AND t.end_date < CURRENT_DATE
+                        THEN DATEDIFF(CURRENT_DATE, t.end_date)
                         ELSE NULL
                     END
                 ) AS avg_delay_days
@@ -552,8 +558,8 @@ try {
     } elseif ($type === 'task_timelines') {
         $sql_delivery_status = "
             SELECT 
-                SUM(CASE WHEN t.status = 61 AND COALESCE(t.updated_at, t.end_date) <= t.end_date THEN 1 ELSE 0 END) AS on_time_tasks,
-                SUM(CASE WHEN t.status = 61 AND COALESCE(t.updated_at, t.end_date) > t.end_date THEN 1 ELSE 0 END) AS late_tasks
+                SUM(CASE WHEN t.status = 61 AND DATE(t.updated_at) <= t.end_date THEN 1 ELSE 0 END) AS on_time_tasks,
+                SUM(CASE WHEN (t.status = 61 AND DATE(t.updated_at) > t.end_date) OR (t.status != 61 AND t.end_date < CURRENT_DATE) THEN 1 ELSE 0 END) AS late_tasks
             FROM tasks t
             JOIN projects p ON t.project_id = p.project_id
             WHERE p.approved_date BETWEEN ? AND ?
@@ -570,11 +576,10 @@ try {
         $stmt_delivery_status->close();
 
         $sql_avg_delay = "
-            SELECT AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), t.end_date)) AS avg_delay_days
+            SELECT AVG(DATEDIFF(COALESCE(DATE(t.updated_at), CURRENT_DATE), t.end_date)) AS avg_delay_days
             FROM tasks t
             JOIN projects p ON t.project_id = p.project_id
-            WHERE t.status = 61
-            AND COALESCE(t.updated_at, t.end_date) > t.end_date
+            WHERE ((t.status = 61 AND DATE(t.updated_at) > t.end_date) OR (t.status != 61 AND t.end_date < CURRENT_DATE))
             AND p.approved_date BETWEEN ? AND ?
         ";
         debug_log("Executing sql_avg_delay: $sql_avg_delay with params: [$start_date, $end_date_inclusive]");
@@ -595,8 +600,7 @@ try {
     JOIN projects p ON t.project_id = p.project_id
     JOIN users u ON t.assigned_to = u.id
     LEFT JOIN code_desc cd_dept ON u.dept = cd_dept.id AND cd_dept.init = 'dpt'
-    WHERE t.status = 61
-    AND COALESCE(t.updated_at, t.end_date) > t.end_date
+    WHERE ((t.status = 61 AND DATE(t.updated_at) > t.end_date) OR (t.status != 61 AND t.end_date < CURRENT_DATE))
     AND p.approved_date BETWEEN ? AND ?
     ORDER BY delay_days DESC
     LIMIT 10";
@@ -619,11 +623,10 @@ try {
         $sql_trends = "
             SELECT 
                 DATE_FORMAT(p.approved_date, '%Y-%m') AS month,
-                AVG(DATEDIFF(COALESCE(t.updated_at, t.end_date), t.end_date)) AS avg_delay
+                AVG(DATEDIFF(COALESCE(DATE(t.updated_at), CURRENT_DATE), t.end_date)) AS avg_delay
             FROM tasks t
             JOIN projects p ON t.project_id = p.project_id
-            WHERE t.status = 61
-            AND COALESCE(t.updated_at, t.end_date) > t.end_date
+            WHERE ((t.status = 61 AND DATE(t.updated_at) > t.end_date) OR (t.status != 61 AND t.end_date < CURRENT_DATE))
             AND p.approved_date BETWEEN ? AND ?
             GROUP BY DATE_FORMAT(p.approved_date, '%Y-%m')
             ORDER BY month

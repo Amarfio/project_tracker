@@ -31,9 +31,15 @@ function query_total_tasks($user_id){
     }
     //code to check for tasks that are overdue
     if($status_id == 117){
-        $query_task_by_status = "SELECT t.task_id as task_id, pro.project_id project_id , pro.name project_name, t.description as task_description,t.start_date, t.end_date, pro.dept_id department_id, c_dpt.desc department, t.completion, cl.name as client,t.assigned_to as assigned_to_id, CONCAT(u_by.f_name, ' ' , u_by.l_name) as assigned_by, t.assigned_by as assigned_by_id, CONCAT(u_to.f_name, ' ' , u_to.l_name) as assigned_to, c_pri.desc as priority, c_sta.id status_id, c_sta.id, c_sta.desc as status  FROM tasks t LEFT JOIN users u_by ON u_by.id = t.assigned_by  LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN code_desc c_pri ON c_pri.id = t.priority LEFT JOIN code_desc c_sta ON c_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id LEFT JOIN projects pro ON pro.project_id = t.project_id LEFT JOIN code_desc c_dpt ON c_dpt.id = pro.dept_id WHERE u_to.id = '$user_id' AND NOW() > t.end_date AND pro.is_approved = 1 AND t.is_archive = 0 ORDER BY t.task_id  DESC";
+        $query_task_by_status = "SELECT t.task_id as task_id, pro.project_id project_id , pro.name project_name, t.description as task_description,t.start_date, t.end_date, pro.dept_id department_id, c_dpt.desc department, t.completion, cl.name as client,t.assigned_to as assigned_to_id, CONCAT(u_by.f_name, ' ' , u_by.l_name) as assigned_by, t.assigned_by as assigned_by_id, CONCAT(u_to.f_name, ' ' , u_to.l_name) as assigned_to, c_pri.desc as priority, c_sta.id status_id, c_sta.id, c_sta.desc as status  
+        FROM tasks t LEFT JOIN users u_by ON u_by.id = t.assigned_by  LEFT JOIN users u_to ON u_to.id = t.assigned_to LEFT JOIN code_desc c_pri ON c_pri.id = t.priority LEFT JOIN code_desc c_sta ON c_sta.id = t.status LEFT JOIN clients cl ON cl.client_id = t.client_id LEFT JOIN projects pro ON pro.project_id = t.project_id LEFT JOIN code_desc c_dpt ON c_dpt.id = pro.dept_id 
+        WHERE u_to.id = '$user_id' 
+        AND CURRENT_DATE > DATE(t.end_date) 
+        AND t.completion <> 100 
+        AND t.is_archive = 0 ORDER BY t.task_id  DESC";
     }
 
+    // echo($query_task_by_status); die();
     return $query_task_by_status;
   }
 
@@ -120,5 +126,3 @@ elseif (isset($_GET['user_id']) && isset($_GET['is_approved'])) {
 }
 
 // result_from_query ($conn, $query_total_tasks);
-
-

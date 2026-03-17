@@ -191,6 +191,9 @@ sheetApp.config([
             .when("/404", {
                 templateUrl: "./templates/404.html",
             })
+            .when("/maintenance",{
+                templateUrl: "./templates/maintenance.html"
+            })
             .otherwise({
                 redirectTo: "/404",
                 templateUrl: "./templates/404.html",

@@ -90,21 +90,7 @@ sheetApp.controller(
     };
     $scope.get_one_project();
 
-    $scope.get_departments = function () {
-      $http({
-        method: "GET",
-        url: myConfig.url + "/getAllDepartments.php",
-      }).then(
-        function successCallback(response) {
-          $scope.departments = response.data;
-          console.log($scope.departments);
-        },
-        function errorCallback(response) {
-          alert("Error. Try Again!");
-        }
-      );
-    };
-    $scope.get_departments();
+
 
     $scope.getDetailsWithId = function (task_id, assigned_to) {
       console.log("test task id ", task_id);

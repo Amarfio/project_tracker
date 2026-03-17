@@ -42,7 +42,10 @@ $query_users_by_department_id = "SELECT us.id user_id, us.f_name, us.l_name, co_
 
     execution($conn, $query_users_by_department_id);
 
-} else{
+} else if(isset($_GET['all_users'])){
+    $query_all_users="SELECT us.id user_id, us.f_name, us.l_name, co_d.desc, us.email, us.phone, us.gender, us.profile_pic, us.bio, us.country, us.city, us.postal_addr, us.is_active, co_d.id department_id, co_d.desc department, co_r.desc role FROM users us LEFT JOIN code_desc co_d ON co_d.id = us.dept LEFT JOIN code_desc co_r ON co_r.id = us.role";
+    execution($conn, $query_all_users);
+}else{
     
 $query_all_users = "SELECT us.id user_id, us.f_name, us.l_name, co_d.desc, us.email, us.phone, us.gender, us.profile_pic, us.bio, us.country, us.city, us.postal_addr, us.is_active, co_d.id department_id, co_d.desc department, co_r.desc role FROM users us LEFT JOIN code_desc co_d ON co_d.id = us.dept LEFT JOIN code_desc co_r ON co_r.id = us.role  WHERE us.is_active = 1";
 

@@ -1,16 +1,16 @@
-sheetApp.service('DateRangeService', function() {
+sheetApp.service('DateRangeService', function () {
     var dateRange = {
         startDate: null,
         endDate: null
     };
     return {
-        setDateRange: function(start, end) {
+        setDateRange: function (start, end) {
             dateRange.startDate = start ? new Date(start) : null;
             dateRange.endDate = end ? new Date(end) : null;
             localStorage.setItem('fromDate', start ? new Date(start).toISOString().split('T')[0] : '');
             localStorage.setItem('toDate', end ? new Date(end).toISOString().split('T')[0] : '');
         },
-        getDateRange: function() {
+        getDateRange: function () {
             return {
                 startDate: dateRange.startDate ? new Date(dateRange.startDate) : null,
                 endDate: dateRange.endDate ? new Date(dateRange.endDate) : null
@@ -19,7 +19,7 @@ sheetApp.service('DateRangeService', function() {
     };
 });
 
-sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $timeout, DateRangeService) {
+sheetApp.controller("TasksAnalysisCtrl", function ($scope, $http, $location, $timeout, DateRangeService) {
     // Initialize chart instances
     var efficiencyChartInstance = null;
     var trendChartInstance = null;
@@ -51,19 +51,19 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
     $scope.deliveryData = {};
 
     // Format date for API
-    $scope.formatDateForAPI = function(date) {
+    $scope.formatDateForAPI = function (date) {
         return date ? new Date(date).toISOString().split('T')[0] : '';
     };
 
     // Calculate delay percentage for severity indicator
-    $scope.getDelayPercentage = function(delay) {
+    $scope.getDelayPercentage = function (delay) {
         // Cap at 100 days for visualization
         const cappedDelay = Math.min(delay, 100);
         return (cappedDelay / 100) * 100;
     };
 
     // Function to show metric information in a modal
-    $scope.showMetricInfo = function(metricType) {
+    $scope.showMetricInfo = function (metricType) {
         const metricInfo = {
             departmentTaskOverview: {
                 title: 'Department Task Overview',
@@ -125,7 +125,7 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
     };
 
     // Initialize charts for department performance
-    $scope.initCharts = function(data) {
+    $scope.initCharts = function (data) {
         if (!$scope.isDepartmentPerformance || !data || !data.departments) return;
 
         console.log('Initializing department charts with data:', JSON.stringify(data, null, 2));
@@ -259,7 +259,7 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
                         },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     var value = context.parsed.y;
                                     return context.dataset.label + ': ' + value.toFixed(2) + '%';
                                 }
@@ -277,7 +277,7 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
                             },
                             ticks: {
                                 font: { size: 12 },
-                                callback: function(value) { return value + '%'; }
+                                callback: function (value) { return value + '%'; }
                             }
                         },
                         x: {
@@ -302,7 +302,7 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
     };
 
     // Initialize charts for task delivery insights
-    $scope.initDeliveryCharts = function() {
+    $scope.initDeliveryCharts = function () {
         if (!$scope.isTaskDeliveryInsights || !$scope.deliveryData) {
             console.error('Not initializing delivery charts: isTaskDeliveryInsights=' + $scope.isTaskDeliveryInsights + ', deliveryData=' + JSON.stringify($scope.deliveryData));
             return;
@@ -310,7 +310,7 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
 
         console.log('Initializing delivery charts with data:', JSON.stringify($scope.deliveryData, null, 2));
 
-        $timeout(function() {
+        $timeout(function () {
             // Pie Chart for On-time vs Late Deliveries
             var pieCtx = document.getElementById('deliveryPieChart');
             if (pieCtx) {
@@ -346,7 +346,7 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
                             },
                             tooltip: {
                                 callbacks: {
-                                    label: function(context) {
+                                    label: function (context) {
                                         var label = context.label || '';
                                         var value = context.raw || 0;
                                         var percentage = Math.round((value / total) * 100);
@@ -479,7 +479,7 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
     };
 
     // Watch for changes in deliveryData
-    $scope.$watch('deliveryData', function(newData) {
+    $scope.$watch('deliveryData', function (newData) {
         if (newData && $scope.isTaskDeliveryInsights) {
             console.log('deliveryData changed:', JSON.stringify(newData, null, 2));
             $scope.initDeliveryCharts();
@@ -487,7 +487,7 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
     }, true);
 
     // Fetch data based on analysis type
-    $scope.fetchAnalysisData = function() {
+    $scope.fetchAnalysisData = function () {
         if (!$scope.fromDate || !$scope.toDate) {
             console.error('Please select both from and to dates');
             return;
@@ -512,7 +512,7 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
         console.log('Fetching analysis data with params:', JSON.stringify(params));
 
         $http.get('apiSheet/get_analysis_data.php', { params: params })
-            .then(function(response) {
+            .then(function (response) {
                 console.log('API response:', JSON.stringify(response.data, null, 2));
                 if (response.data.success) {
                     console.log('Analysis data loaded:', JSON.stringify(response.data.data, null, 2));
@@ -536,7 +536,7 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
                     $scope.filteredDepartments = [];
                     $scope.deliveryData = {};
                 }
-            }, function(error) {
+            }, function (error) {
                 console.error('Error fetching analysis data:', error);
                 $scope.tasks = [];
                 $scope.filteredTasks = [];
@@ -547,28 +547,87 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
     };
 
     // Filter tasks based on search query
-    $scope.filterTasks = function() {
+    $scope.sortColumn = 'task_completion_efficiency';
+    $scope.sortReverse = true;
+
+    $scope.sortBy = function (column) {
+        if ($scope.sortColumn === column) {
+            $scope.sortReverse = !$scope.sortReverse;
+        } else {
+            $scope.sortColumn = column;
+            $scope.sortReverse = true;
+        }
+        $scope.filterTasks();
+    };
+
+    // Filter and Sort tasks based on search query
+    $scope.filterTasks = function () {
         if ($scope.analysisType !== 'individual_tasks') {
             $scope.filteredTasks = $scope.tasks;
             return;
         }
         var query = ($scope.searchQuery || '').toLowerCase();
-        if (!query) {
-            $scope.filteredTasks = $scope.tasks;
-            return;
+        var tasksToFilter = $scope.tasks || [];
+
+        if (query) {
+            tasksToFilter = tasksToFilter.filter(function (task) {
+                return (
+                    (task.user || '').toLowerCase().includes(query) ||
+                    (task.department || '').toLowerCase().includes(query) ||
+                    (task.role || '').toLowerCase().includes(query) ||
+                    (task.email || '').toLowerCase().includes(query)
+                );
+            });
         }
-        $scope.filteredTasks = $scope.tasks.filter(function(task) {
-            return (
-                (task.user || '').toLowerCase().includes(query) ||
-                (task.department || '').toLowerCase().includes(query) ||
-                (task.role || '').toLowerCase().includes(query) ||
-                (task.email || '').toLowerCase().includes(query)
-            );
+
+        // Apply sorting
+        $scope.filteredTasks = tasksToFilter.slice().sort(function (a, b) {
+            var valA = a[$scope.sortColumn];
+            var valB = b[$scope.sortColumn];
+
+            // Handle string comparison
+            if (typeof valA === 'string') {
+                valA = valA.toLowerCase();
+                valB = valB.toLowerCase();
+            }
+
+            if (valA < valB) return $scope.sortReverse ? 1 : -1;
+            if (valA > valB) return $scope.sortReverse ? -1 : 1;
+
+            // TIE-BREAKERS
+            // Tier 1: Efficiency
+            if ($scope.sortColumn !== 'task_completion_efficiency') {
+                if (a.task_completion_efficiency < b.task_completion_efficiency) return 1;
+                if (a.task_completion_efficiency > b.task_completion_efficiency) return -1;
+            }
+
+            // Tier 2: Task Count
+            if ($scope.sortColumn !== 'task_count') {
+                if (a.task_count < b.task_count) return 1;
+                if (a.task_count > b.task_count) return -1;
+            }
+
+            // Tier 3: Avg Completion Time (Ascending)
+            if ($scope.sortColumn !== 'avg_completion_days') {
+                if (a.avg_completion_days < b.avg_completion_days) return -1;
+                if (a.avg_completion_days > b.avg_completion_days) return 1;
+            }
+
+            // Tier 4: Name
+            return strcmp(a.user, b.user);
         });
     };
 
+    function strcmp(a, b) {
+        a = a.toLowerCase();
+        b = b.toLowerCase();
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    }
+
     // Filter departments based on search query
-    $scope.filterDepartments = function() {
+    $scope.filterDepartments = function () {
         if ($scope.analysisType !== 'department_performance') {
             $scope.filteredDepartments = $scope.departments.departments || [];
             return;
@@ -578,10 +637,9 @@ sheetApp.controller("TasksAnalysisCtrl", function($scope, $http, $location, $tim
             $scope.filteredDepartments = $scope.departments.departments || [];
             return;
         }
-        $scope.filteredDepartments = ($scope.departments.departments || []).filter(function(dept) {
+        $scope.filteredDepartments = ($scope.departments.departments || []).filter(function (dept) {
             return (dept.department || '').toLowerCase().includes(query);
         });
-        console.log('Filtered departments:', $scope.filteredDepartments);
     };
 
     // Initialize

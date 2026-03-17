@@ -81,7 +81,7 @@ try {
             $params = [$start_date, $end_date, $end_date];
             break;
         case 'tasks_exceeded':
-            $conditions = "t.end_date IS NOT NULL AND p.approved_date IS NOT NULL AND p.approved_date BETWEEN ? AND ? AND ((t.status NOT IN (60, 61) AND t.end_date < CURRENT_DATE) OR (t.status = 61 AND t.updated_at > t.end_date))";
+            $conditions = "t.end_date IS NOT NULL AND p.approved_date IS NOT NULL AND p.approved_date BETWEEN ? AND ? AND ((t.status NOT IN (60, 61) AND t.end_date < CURRENT_DATE) OR (t.status = 61 AND DATE(t.updated_at) > t.end_date))";
             $params = [$start_date, $end_date];
             break;
         case 'avg_days_to_complete':
@@ -147,7 +147,9 @@ try {
         $placeholders = implode(',', array_fill(0, count(array_unique($userIds)), '?'));
         $stmt_users = $conn->prepare("SELECT id, CONCAT(f_name, ' ', l_name) as full_name FROM users WHERE id IN ($placeholders)");
         if (!$stmt_users) throw new Exception('Prepare failed: ' . $conn->error);
-        $stmt_users->bind_param(str_repeat('i', count(array_unique($userIds))), ...array_unique($userIds));
+        $uniqueUserIds = array_values(array_unique($userIds));
+        $types = str_repeat('i', count($uniqueUserIds));
+        $stmt_users->bind_param($types, ...$uniqueUserIds);
         $stmt_users->execute();
         foreach ($stmt_users->get_result() as $user) {
             $users[$user['id']] = $user['full_name'];

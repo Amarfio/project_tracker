@@ -76,7 +76,7 @@ sheetApp.controller('UserCtrl', function ($scope, $http, check_auth, myConfig, $
     $scope.get_all_users = function () {
         $http({
             method: 'GET',
-            url: myConfig.url + '/getAllUsers.php'
+            url: myConfig.url + '/getAllUsers.php?all_users=1'
 
         }).then(function successCallback(response) {
 
